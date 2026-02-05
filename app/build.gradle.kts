@@ -91,7 +91,7 @@ dependencies {
 
     // Mockk
     testImplementation(libs.mockk)
-    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     // Lifecycle
     implementation(libs.androidx.lifecycle.runtime.compose)
