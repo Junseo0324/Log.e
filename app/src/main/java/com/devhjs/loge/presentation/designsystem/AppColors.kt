@@ -1,0 +1,19 @@
+package com.devhjs.loge.presentation.designsystem
+
+import androidx.compose.ui.graphics.Color
+
+object AppColors {
+    val background = Color(0xFF1E1E1E)
+    val cardBackground = Color(0xFF0D0D0D)
+    val iconPrimary =  Color(0xFF00D492)
+    val primary =  Color(0xFF00BC7D)
+    val red = Color(0xFFFF6467)
+    val border = Color(0xFF27272A)
+    val titleTextColor = Color(0xFFF4F4F5)
+    val contentTextColor = Color(0xFF9F9FA9)
+    val labelTextColor = Color(0xFF71717B)
+    val subTextColor =  Color(0xFFD4D4D8)
+    val placeholderTextColor = Color(0xFF52525C)
+    val white = Color(0xFFFFFFFF)
+    val black = Color(0xFF000000)
+}
