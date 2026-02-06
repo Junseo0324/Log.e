@@ -12,10 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
-import java.time.Instant
-import java.time.YearMonth
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import com.devhjs.loge.core.util.DateUtils
 import javax.inject.Inject
 import kotlinx.coroutines.flow.map as flowMap
 
@@ -52,9 +49,7 @@ class TilRepositoryImpl @Inject constructor(
     }
 
     override fun getMonthlyStats(month: String): Flow<Stat> {
-        val yearMonth = YearMonth.parse(month)
-        val startOfMonth = yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        val endOfMonth = yearMonth.atEndOfMonth().atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val (startOfMonth, endOfMonth) = DateUtils.getMonthStartEndTimestamps(month)
 
         return tilDao.getTilsBetween(startOfMonth, endOfMonth).flowMap { entities: List<TilEntity> ->
             val tils: List<Til> = entities.map { entity -> entity.toDomain() }
@@ -77,20 +72,14 @@ class TilRepositoryImpl @Inject constructor(
             val avgDifficulty = tils.map { it.difficultyLevel }.average().toFloat()
             
             val emotionScoreList = tils.map { til: Til ->
-                val date = Instant.ofEpochMilli(til.createdAt)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
                 ChartPoint(
-                    x = date.dayOfMonth.toFloat(), 
+                    x = DateUtils.getDayOfMonth(til.createdAt).toFloat(), 
                     y = til.emotionScore.toFloat()
                 )
             }.sortedBy { it.x }
 
             val learnedDates = tils.map { til: Til ->
-                Instant.ofEpochMilli(til.createdAt)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
-                    .format(DateTimeFormatter.ISO_DATE)
+                DateUtils.formatToIsoDate(til.createdAt)
             }.distinct()
 
             Stat(

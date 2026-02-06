@@ -5,10 +5,9 @@ import com.devhjs.loge.domain.model.ChartPoint
 import com.devhjs.loge.domain.model.Stat
 import com.devhjs.loge.domain.model.Til
 import com.devhjs.loge.domain.repository.TilRepository
+import com.devhjs.loge.core.util.DateUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.time.Instant
-import java.time.ZoneId
 import javax.inject.Inject
 
 class MockRepositoryImpl @Inject constructor() : TilRepository {
@@ -65,20 +64,14 @@ class MockRepositoryImpl @Inject constructor() : TilRepository {
          val avgDifficulty = tils.map { it.difficultyLevel }.average().toFloat()
             
          val emotionScoreList = tils.map { til ->
-            val date = Instant.ofEpochMilli(til.createdAt)
-                 .atZone(ZoneId.systemDefault())
-                 .toLocalDate()
              ChartPoint(
-                 x = date.dayOfMonth.toFloat(), 
+                 x = DateUtils.getDayOfMonth(til.createdAt).toFloat(), 
                  y = til.emotionScore.toFloat()
              )
          }.sortedBy { it.x }
 
          val learnedDates = tils.map { til ->
-             Instant.ofEpochMilli(til.createdAt)
-                 .atZone(ZoneId.systemDefault())
-                 .toLocalDate()
-                 .toString()
+             DateUtils.formatToIsoDate(til.createdAt)
          }.distinct()
 
          emit(
