@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OpenAiRequest(
-    val model: String = "gpt-3.5-turbo",
+    val model: String = "gpt-4",
     val messages: List<ApiMessage>,
     @SerialName("max_tokens") val maxTokens: Int = 1000
 )
