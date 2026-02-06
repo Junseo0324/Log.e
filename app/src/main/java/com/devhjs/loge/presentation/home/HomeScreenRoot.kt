@@ -35,10 +35,6 @@ fun HomeScreenRoot(
     // 순수 UI 컴포넌트에 State와 Action 전달
     HomeScreen(
         state = state,
-        action = HomeAction(
-            onAddClick = viewModel::onAddClick,
-            onLogClick = viewModel::onLogClick,
-            onRefresh = viewModel::loadLogs
-        )
+        onAction = viewModel::onAction
     )
 }
