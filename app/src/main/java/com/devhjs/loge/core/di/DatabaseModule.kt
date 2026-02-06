@@ -1,4 +1,4 @@
-package com.devhjs.loge.di
+package com.devhjs.loge.core.di
 
 import android.content.Context
 import androidx.room.Room
