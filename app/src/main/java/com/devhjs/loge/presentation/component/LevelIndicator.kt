@@ -1,4 +1,4 @@
-package com.devhjs.loge.presentation.home.component
+package com.devhjs.loge.presentation.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

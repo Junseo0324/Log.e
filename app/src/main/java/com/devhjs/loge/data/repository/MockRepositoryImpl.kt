@@ -1,11 +1,12 @@
 package com.devhjs.loge.data.repository
 
+import com.devhjs.loge.core.util.DateUtils
 import com.devhjs.loge.domain.model.AiReport
 import com.devhjs.loge.domain.model.ChartPoint
+import com.devhjs.loge.domain.model.EmotionType
 import com.devhjs.loge.domain.model.Stat
 import com.devhjs.loge.domain.model.Til
 import com.devhjs.loge.domain.repository.TilRepository
-import com.devhjs.loge.core.util.DateUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class MockRepositoryImpl @Inject constructor() : TilRepository {
                     learned = "오늘 안드로이드 개발에 대해 새로운 것을 배웠습니다. 항목 $i",
                     difficult = "특별히 어려운 점은 없었습니다.",
                     emotionScore = (50..100).random(),
-                    emotion = "행복",
+                    emotion = EmotionType.SATISFACTION,
                     difficultyLevel = (1..5).random(),
                     updatedAt = System.currentTimeMillis()
                 )

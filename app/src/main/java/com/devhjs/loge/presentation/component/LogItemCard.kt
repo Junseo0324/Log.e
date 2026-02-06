@@ -1,4 +1,4 @@
-package com.devhjs.loge.presentation.home.component
+package com.devhjs.loge.presentation.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,10 +23,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.devhjs.loge.core.util.DateUtils
+import com.devhjs.loge.domain.model.EmotionType
+import com.devhjs.loge.domain.model.Til
 import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
-import com.devhjs.loge.presentation.home.EmotionType
-import com.devhjs.loge.presentation.home.LogItem
 
 /**
  * 로그 아이템 카드 컴포넌트
@@ -34,10 +35,12 @@ import com.devhjs.loge.presentation.home.LogItem
  */
 @Composable
 fun LogItemCard(
-    item: LogItem,
+    item: Til,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val time = DateUtils.formatToTime(item.createdAt)
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -63,7 +66,7 @@ fun LogItemCard(
                 
                 // 시간
                 Text(
-                    text = item.time,
+                    text = time,
                     style = AppTextStyles.Pretendard.Label.copy(
                         color = AppColors.labelTextColor,
                         fontSize = 14.sp
@@ -96,7 +99,7 @@ fun LogItemCard(
             
             // 내용 미리보기
             Text(
-                text = item.content,
+                text = item.learned,
                 style = AppTextStyles.Pretendard.Body.copy(
                     color = AppColors.contentTextColor,
                     fontSize = 14.sp
@@ -108,7 +111,7 @@ fun LogItemCard(
             Spacer(modifier = Modifier.height(12.dp))
             
             // 난이도 레벨 표시 (점 5개)
-            LevelIndicator(level = item.level)
+            LevelIndicator(level = item.difficultyLevel)
         }
     }
 }
@@ -119,17 +122,16 @@ fun LogItemCard(
 @Composable
 private fun LogItemCardPreview() {
     LogItemCard(
-        item = LogItem(
+        item = Til(
             id = 1,
-            emotion = EmotionType.HAPPY,
-            emotionScore = 88,
-            time = "오전 08:15",
+            createdAt = System.currentTimeMillis(),
             title = "Next.js App Router 마이그레이션",
-            content = "Pages Router에서 App Router로 전환하면서 Server Component와 Client Component의 차이를 이해했다.",
-            level = 4,
-            date = "2026.02.05",
-            dayOfWeek = "목",
-            isToday = true
+            learned = "Pages Router에서 App Router로 전환하면서 Server Component와 Client Component의 차이를 이해했다.",
+            difficult = "",
+            emotionScore = 95,
+            emotion = EmotionType.FULFILLMENT,
+            difficultyLevel = 4,
+            updatedAt = System.currentTimeMillis()
         ),
         onClick = {}
     )
@@ -139,17 +141,16 @@ private fun LogItemCardPreview() {
 @Composable
 private fun LogItemCardConfusedPreview() {
     LogItemCard(
-        item = LogItem(
+        item = Til(
             id = 2,
-            emotion = EmotionType.CONFUSED,
-            emotionScore = 62,
-            time = "오전 06:40",
+            createdAt = System.currentTimeMillis(),
             title = "Docker 컨테이너 이해하기",
-            content = "Docker로 개발 환경을 격리할 수 있다는 점이 인상 깊었다. Dockerfile 작성법과 docker-compose를 배웠다.",
-            level = 4,
-            date = "2026.02.04",
-            dayOfWeek = "수",
-            isToday = false
+            learned = "Docker로 개발 환경을 격리할 수 있다는 점이 인상 깊었다.",
+            difficult = "",
+            emotionScore = 45,
+            emotion = EmotionType.DIFFICULTY,
+            difficultyLevel = 4,
+            updatedAt = System.currentTimeMillis()
         ),
         onClick = {}
     )
@@ -159,17 +160,16 @@ private fun LogItemCardConfusedPreview() {
 @Composable
 private fun LogItemCardStrugglePreview() {
     LogItemCard(
-        item = LogItem(
+        item = Til(
             id = 3,
-            emotion = EmotionType.STRUGGLE,
-            emotionScore = 55,
-            time = "오전 07:00",
+            createdAt = System.currentTimeMillis(),
             title = "비동기 처리와 Promise",
-            content = "비동기 처리의 개념을 이해하고 Promise와 async/await 문법을 학습했다.",
-            level = 5,
-            date = "2026.02.03",
-            dayOfWeek = "화",
-            isToday = false
+            learned = "비동기 처리의 개념을 이해하고 Promise와 async/await 문법을 학습했다.",
+            difficult = "",
+            emotionScore = 15,
+            emotion = EmotionType.FRUSTRATION,
+            difficultyLevel = 5,
+            updatedAt = System.currentTimeMillis()
         ),
         onClick = {}
     )
