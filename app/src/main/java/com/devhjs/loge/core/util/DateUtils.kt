@@ -27,4 +27,22 @@ object DateUtils {
             .toLocalDate()
             .dayOfMonth
     }
+
+    fun formatToTime(timestamp: Long): String {
+        return Instant.ofEpochMilli(timestamp)
+            .atZone(ZoneId.systemDefault())
+            .format(DateTimeFormatter.ofPattern("a hh:mm", java.util.Locale.KOREA))
+    }
+
+    fun formatToDate(timestamp: Long): String {
+        return Instant.ofEpochMilli(timestamp)
+            .atZone(ZoneId.systemDefault())
+            .format(DateTimeFormatter.ofPattern("yyyy.MM.dd", java.util.Locale.KOREA))
+    }
+
+    fun formatToDayOfWeek(timestamp: Long): String {
+        return Instant.ofEpochMilli(timestamp)
+            .atZone(ZoneId.systemDefault())
+            .format(DateTimeFormatter.ofPattern("E", java.util.Locale.KOREA))
+    }
 }
