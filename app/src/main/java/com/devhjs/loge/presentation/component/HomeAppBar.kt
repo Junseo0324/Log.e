@@ -23,8 +23,17 @@ import com.devhjs.loge.R
 import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
+/**
+ * 홈 화면 상단 앱바 컴포넌트
+ * 상태 호이스팅을 적용하여 외부에서 데이터와 콜백을 주입받음
+ */
 @Composable
-fun HomeAppBar(modifier: Modifier = Modifier) {
+fun HomeAppBar(
+    currentDate: String,
+    logCount: Int,
+    onAddClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -60,6 +69,7 @@ fun HomeAppBar(modifier: Modifier = Modifier) {
                     contentDescription = "Add Icon",
                     text = "추가",
                     contentColor = AppColors.black,
+                    onClick = onAddClick
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))
@@ -68,7 +78,7 @@ fun HomeAppBar(modifier: Modifier = Modifier) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "2026.02.03",
+                    text = currentDate,
                     style = AppTextStyles.Pretendard.Label.copy(color = AppColors.homeLabelTextColor)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -80,7 +90,7 @@ fun HomeAppBar(modifier: Modifier = Modifier) {
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    text = "15 logs",
+                    text = "$logCount logs",
                     style = AppTextStyles.Pretendard.Label.copy(color = AppColors.homeLabelTextColor)
                 )
             }
@@ -91,5 +101,9 @@ fun HomeAppBar(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 private fun HomeAppBarPreview() {
-    HomeAppBar()
+    HomeAppBar(
+        currentDate = "2026.02.05",
+        logCount = 15,
+        onAddClick = {}
+    )
 }

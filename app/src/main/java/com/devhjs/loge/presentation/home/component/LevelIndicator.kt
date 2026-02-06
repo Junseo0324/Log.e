@@ -1,0 +1,56 @@
+package com.devhjs.loge.presentation.home.component
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.AppTextStyles
+
+/**
+ * 난이도 레벨 표시 컴포넌트
+ * 점 5개로 레벨 표시
+ */
+@Composable
+fun LevelIndicator(
+    level: Int,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Text(
+            text = "level:",
+            style = AppTextStyles.Pretendard.Label.copy(
+                color = AppColors.labelTextColor,
+                fontSize = 12.sp
+            )
+        )
+        
+        Spacer(modifier = Modifier.width(4.dp))
+        
+        // 5개의 점 (레벨에 따라 색상 적용)
+        repeat(5) { index ->
+            Box(
+                modifier = Modifier
+                    .size(8.dp)
+                    .background(
+                        color = if (index < level) AppColors.primary else AppColors.labelTextColor.copy(alpha = 0.3f),
+                        shape = CircleShape
+                    )
+            )
+        }
+    }
+}

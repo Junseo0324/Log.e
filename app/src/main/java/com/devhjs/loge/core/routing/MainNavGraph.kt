@@ -21,7 +21,17 @@ fun MainNavGraph(
         startDestination = MainRoute.Home.route,
         modifier = modifier
     ) {
-        composable(MainRoute.Home.route) { HomeScreenRoot() }
+        composable(MainRoute.Home.route) {
+            HomeScreenRoot(
+                onNavigateToDetail = { logId ->
+                    // TODO: logId를 Detail 화면에 전달하는 방식으로 수정 필요
+                    navController.navigate(MainRoute.Detail.route)
+                },
+                onNavigateToWrite = {
+                    navController.navigate(MainRoute.Write.route)
+                }
+            )
+        }
         composable(MainRoute.Stat.route) { StatScreenRoot() }
         composable(MainRoute.Setting.route) { SettingScreenRoot() }
         composable(MainRoute.Detail.route) { DetailScreenRoot() }
