@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
+import java.time.Instant
 import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -51,7 +52,6 @@ class TilRepositoryImpl @Inject constructor(
     }
 
     override fun getMonthlyStats(month: String): Flow<Stat> {
-        // month format: YYYY-MM
         val yearMonth = YearMonth.parse(month)
         val startOfMonth = yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
         val endOfMonth = yearMonth.atEndOfMonth().atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
@@ -77,7 +77,7 @@ class TilRepositoryImpl @Inject constructor(
             val avgDifficulty = tils.map { it.difficultyLevel }.average().toFloat()
             
             val emotionScoreList = tils.map { til: Til ->
-                val date = java.time.Instant.ofEpochMilli(til.createdAt)
+                val date = Instant.ofEpochMilli(til.createdAt)
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate()
                 ChartPoint(
@@ -87,10 +87,10 @@ class TilRepositoryImpl @Inject constructor(
             }.sortedBy { it.x }
 
             val learnedDates = tils.map { til: Til ->
-                java.time.Instant.ofEpochMilli(til.createdAt)
+                Instant.ofEpochMilli(til.createdAt)
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate()
-                    .format(DateTimeFormatter.ISO_DATE) // YYYY-MM-DD
+                    .format(DateTimeFormatter.ISO_DATE)
             }.distinct()
 
             Stat(
