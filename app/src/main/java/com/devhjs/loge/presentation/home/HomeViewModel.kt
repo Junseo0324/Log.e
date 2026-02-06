@@ -70,7 +70,7 @@ class HomeViewModel @Inject constructor(
                                     errorMessage = error.message
                                 )
                             }
-                            _event.emit(HomeEvent.ShowError(error.message ?: "알 수 없는 오류가 발생했습니다."))
+                            _event.emit(HomeEvent.ShowError(error.message ?: "다시 시도해주세요."))
                         }
                     }
                 }

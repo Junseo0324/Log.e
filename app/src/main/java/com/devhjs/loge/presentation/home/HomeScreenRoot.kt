@@ -1,15 +1,20 @@
 package com.devhjs.loge.presentation.home
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.devhjs.loge.presentation.component.LogESnackbar
 
-/**
- * HomeScreenRoot - ViewModel 연결 및 Navigation 처리를 담당하는 컴포넌트
- * 상태 호이스팅을 적용하여 Navigation 콜백을 외부로 노출
- */
+// ... imports
+
 @Composable
 fun HomeScreenRoot(
     onNavigateToDetail: (Long) -> Unit,
@@ -19,6 +24,9 @@ fun HomeScreenRoot(
     // ViewModel에서 State 수집
     val state by viewModel.state.collectAsStateWithLifecycle()
     
+    // Snackbar 상태 관리
+    val snackbarHostState = remember { SnackbarHostState() }
+    
     // 일회성 이벤트 처리
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
@@ -26,15 +34,24 @@ fun HomeScreenRoot(
                 is HomeEvent.NavigateToDetail -> onNavigateToDetail(event.logId)
                 is HomeEvent.NavigateToWrite -> onNavigateToWrite()
                 is HomeEvent.ShowError -> {
-                    // TODO: Snackbar 표시
+                    snackbarHostState.showSnackbar(event.message)
                 }
             }
         }
     }
     
-    // 순수 UI 컴포넌트에 State와 Action 전달
-    HomeScreen(
-        state = state,
-        onAction = viewModel::onAction
-    )
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                LogESnackbar(data = data)
+            }
+        }
+    ) { paddingValues ->
+        // 순수 UI 컴포넌트에 State와 Action 전달
+        HomeScreen(
+            modifier = Modifier.padding(paddingValues),
+            state = state,
+            onAction = viewModel::onAction
+        )
+    }
 }
