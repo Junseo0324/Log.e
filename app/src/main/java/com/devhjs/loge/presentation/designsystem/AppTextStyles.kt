@@ -31,6 +31,12 @@ object AppTextStyles {
             fontSize = 16.sp,
             lineHeight = 24.sp
         )
+        val Header5 = TextStyle(
+            fontFamily = AppFonts.pretendard,
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp,
+            lineHeight = 20.sp
+        )
         val Body = TextStyle(
             fontFamily = AppFonts.pretendard,
             fontWeight = FontWeight.Normal,

@@ -13,6 +13,7 @@ object AppColors {
     val contentTextColor = Color(0xFF9F9FA9)
     val labelTextColor = Color(0xFF71717B)
     val subTextColor =  Color(0xFFD4D4D8)
+    val homeLabelTextColor =  Color(0xFF90A1B9)
     val placeholderTextColor = Color(0xFF52525C)
     val white = Color(0xFFFFFFFF)
     val black = Color(0xFF000000)

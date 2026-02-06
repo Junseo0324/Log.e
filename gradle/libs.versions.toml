@@ -6,11 +6,11 @@ junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.12.2"
-kotlin = "2.0.21"
+kotlin = "2.3.0"
 composeBom = "2024.09.00"
 hilt = "2.59"
-ksp = "2.0.21-1.0.27"
-room = "2.6.1"
+ksp = "2.3.4"
+room = "2.8.4"
 retrofit = "2.11.0"
 okhttp = "4.12.0"
 serialization = "1.7.3"
@@ -20,6 +20,7 @@ navigation = "2.8.3"
 timber = "5.0.1"
 mockk = "1.13.12"
 leakcanary = "2.14"
+desugar_jdk_libs = "2.1.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -79,6 +80,7 @@ androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lif
 leakcanary-android = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary" }
 
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version = "1.9.0" }
+android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
