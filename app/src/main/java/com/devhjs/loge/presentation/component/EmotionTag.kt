@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.domain.model.EmotionType
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
-import com.devhjs.loge.presentation.home.color
-import com.devhjs.loge.presentation.home.iconResId
+import com.devhjs.loge.presentation.util.color
+import com.devhjs.loge.presentation.util.iconResId
 
 /**
  * 감정 태그 컴포넌트

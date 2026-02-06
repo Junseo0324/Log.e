@@ -1,6 +1,7 @@
 package com.devhjs.loge.data.mapper
 
 import com.devhjs.loge.data.local.entity.TilEntity
+import com.devhjs.loge.domain.model.EmotionType
 import com.devhjs.loge.domain.model.Til
 
 fun TilEntity.toDomain(): Til {
@@ -11,7 +12,7 @@ fun TilEntity.toDomain(): Til {
         learned = learned,
         difficult = difficult,
         emotionScore = emotionScore,
-        emotion = emotion,
+        emotion = EmotionType.fromString(emotion),
         difficultyLevel = difficultyLevel,
         updatedAt = updatedAt,
         aiFeedBack = aiFeedBack
@@ -26,7 +27,7 @@ fun Til.toEntity(): TilEntity {
         learned = learned,
         difficult = difficult,
         emotionScore = emotionScore,
-        emotion = emotion,
+        emotion = emotion.label,
         difficultyLevel = difficultyLevel,
         updatedAt = updatedAt,
         aiFeedBack = aiFeedBack

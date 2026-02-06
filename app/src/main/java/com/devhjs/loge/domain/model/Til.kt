@@ -7,7 +7,7 @@ data class Til(
     val learned: String,
     val difficult: String,
     val emotionScore: Int,
-    val emotion: String,
+    val emotion: EmotionType,
     val difficultyLevel: Int,
     val updatedAt: Long,
     val aiFeedBack: String? = null
