@@ -1,4 +1,4 @@
-package com.devhjs.loge.presentation.home.component
+package com.devhjs.loge.presentation.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -44,7 +44,7 @@ fun DateSectionHeader(
         
         Spacer(modifier = Modifier.width(8.dp))
         
-        // 날짜 텍스트 "2026.02.05 (목)"
+        // 날짜 텍스트
         Text(
             text = "$date ($dayOfWeek)",
             style = AppTextStyles.Pretendard.Header4.copy(
@@ -52,7 +52,7 @@ fun DateSectionHeader(
             )
         )
         
-        // today 뱃지 (오늘인 경우만 표시)
+        // today 뱃지 오늘인 경우만 표시
         if (isToday) {
             Spacer(modifier = Modifier.width(12.dp))
             
@@ -65,7 +65,7 @@ fun DateSectionHeader(
                     .padding(horizontal = 12.dp, vertical = 4.dp)
             ) {
                 Text(
-                    text = "today",
+                    text = "오늘",
                     style = AppTextStyles.Pretendard.Label.copy(
                         color = AppColors.black,
                         fontSize = 12.sp

@@ -6,8 +6,10 @@ import com.devhjs.loge.domain.model.Til
 import com.devhjs.loge.domain.usecase.GetTilsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
@@ -34,8 +36,8 @@ class HomeViewModel @Inject constructor(
     val state: StateFlow<HomeState> = _state.asStateFlow()
 
     // 일회성 이벤트 (Channel로 관리)
-    private val _event = Channel<HomeEvent>()
-    val event = _event.receiveAsFlow()
+    private val _event = MutableSharedFlow<HomeEvent>()
+    val event = _event.asSharedFlow()
 
     init {
         loadLogs()
