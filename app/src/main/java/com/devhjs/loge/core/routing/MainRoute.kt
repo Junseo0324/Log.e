@@ -1,0 +1,9 @@
+package com.devhjs.loge.core.routing
+
+sealed class MainRoute(val route: String) {
+    data object Home : MainRoute("home")
+    data object Stat : MainRoute("stat")
+    data object Setting : MainRoute("setting")
+    data object Detail : MainRoute("detail")
+    data object Write : MainRoute("write")
+}
