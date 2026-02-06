@@ -1,6 +1,7 @@
 package com.devhjs.loge.presentation.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,8 +46,9 @@ fun LogItemCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 6.dp)
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(10.dp))
             .background(AppColors.cardBackground)
+            .border(1.dp, AppColors.border, RoundedCornerShape(10.dp))
             .clickable(onClick = onClick)
             .padding(16.dp)
     ) {
