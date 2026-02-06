@@ -1,0 +1,90 @@
+package com.devhjs.loge.data.repository
+
+import com.devhjs.loge.BuildConfig
+import com.devhjs.loge.data.dto.ApiMessage
+import com.devhjs.loge.data.dto.OpenAiRequest
+import com.devhjs.loge.data.remote.OpenAiService
+import com.devhjs.loge.domain.model.AiReport
+import com.devhjs.loge.domain.repository.AiRepository
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import javax.inject.Inject
+
+class AiRepositoryImpl @Inject constructor(
+    private val openAiService: OpenAiService,
+    private val json: Json
+) : AiRepository {
+
+    override suspend fun getAiFeedback(
+        date: String,
+        emotions: List<String>,
+        scores: List<Int>,
+        difficulties: List<Int>
+    ): Result<AiReport> {
+        return try {
+            val prompt = """
+                $date 월의 다음 사용자 데이터를 분석하고 JSON 형식으로 보고서를 제공하세요.
+                
+                데이터:
+                - 감정: $emotions
+                - 점수: $scores
+                - 난이도: $difficulties
+                
+                다음 필드를 포함하는 JSON 객체만 반환하세요:
+                - emotion: 전체적인 감정 요약 (String, 다음 중 하나: "성취감", "만족", "평범", "어려움", "좌절")
+                - emotionScore: 평균 점수 (Int, 1-5)
+                - difficultyLevel: 전체적인 난이도 요약 (String, 다음 중 하나: "쉬움", "보통", "어려움", "매우 어려움")
+                - comment: 도움이 되는 피드백 코멘트 (String, 한국어)
+                
+                중요: JSON의 모든 문자열 값은 한국어여야 합니다.
+                
+                예시 JSON:
+                {
+                    "emotion": "만족",
+                    "emotionScore": 4,
+                    "difficultyLevel": "보통",
+                    "comment": "이번 달은 훌륭했어요! 꾸준히 학습하는 모습이 좋습니다."
+                }
+            """.trimIndent()
+
+            val request = OpenAiRequest(
+                messages = listOf(
+                    ApiMessage(role = "system", content = "당신은 사용자 로그를 분석하고 JSON 형식으로 피드백을 제공하는 유용한 어시스턴트입니다."),
+                    ApiMessage(role = "user", content = prompt)
+                )
+            )
+
+            val authorization = "Bearer ${BuildConfig.OPENAI_API_KEY}"
+            val response = openAiService.getCompletion(authorization, request)
+            
+            val content = response.choices.firstOrNull()?.message?.content ?: throw Exception("No response from AI")
+            
+            val jsonString = content.substring(
+                content.indexOf("{"),
+                content.lastIndexOf("}") + 1
+            )
+
+            val parsedResponse = json.decodeFromString<AiResponseJson>(jsonString)
+
+            val aiReport = AiReport(
+                date = System.currentTimeMillis(),
+                emotion = parsedResponse.emotion,
+                emotionScore = parsedResponse.emotionScore,
+                difficultyLevel = parsedResponse.difficultyLevel,
+                comment = parsedResponse.comment
+            )
+
+            Result.success(aiReport)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    @Serializable
+    private data class AiResponseJson(
+        val emotion: String,
+        val emotionScore: Int,
+        val difficultyLevel: String,
+        val comment: String
+    )
+}
