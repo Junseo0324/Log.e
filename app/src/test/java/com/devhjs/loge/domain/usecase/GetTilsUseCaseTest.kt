@@ -1,5 +1,6 @@
 package com.devhjs.loge.domain.usecase
 
+import com.devhjs.loge.domain.model.EmotionType
 import com.devhjs.loge.domain.model.Til
 import com.devhjs.loge.domain.repository.TilRepository
 import io.mockk.every
@@ -22,8 +23,9 @@ class GetTilsUseCaseTest {
         val start = 100L
         val end = 200L
         val mockTils = listOf(
-            Til(1, 150, "Title", "Learned", "Difficult", 80, "Happy", 3, 150),
-            Til(2, 160, "Title2", "Learned2", "Difficult2", 90, "Sad", 2, 160)
+            Til(1, 150, "Title", "Learned", "Difficult", 80, EmotionType.SATISFACTION, 3, 150),
+            Til(2, 160, "Title2", "Learned2", "Difficult2", 90, EmotionType.DIFFICULTY, 2, 160)
+
         )
         every { repository.getAllTil(start, end) } returns flowOf(mockTils)
 

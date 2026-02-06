@@ -1,5 +1,6 @@
 package com.devhjs.loge.domain.usecase
 
+import com.devhjs.loge.domain.model.EmotionType
 import com.devhjs.loge.domain.model.Til
 import com.devhjs.loge.domain.repository.TilRepository
 import io.mockk.every
@@ -20,7 +21,7 @@ class GetTilUseCaseTest {
     fun `repository에서_TIL을_가져와야_한다`() = runTest {
         // Given
         val id = 1L
-        val mockTil = Til(id, 150, "Title", "Learned", "Difficult", 80, "Happy", 3, 150)
+        val mockTil = Til(id, 150, "Title", "Learned", "Difficult", 80, EmotionType.SATISFACTION, 3, 150)
         every { repository.getTil(id) } returns flowOf(mockTil)
 
         // When
