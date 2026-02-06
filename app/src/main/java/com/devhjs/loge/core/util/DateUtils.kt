@@ -45,4 +45,15 @@ object DateUtils {
             .atZone(ZoneId.systemDefault())
             .format(DateTimeFormatter.ofPattern("E", java.util.Locale.KOREA))
     }
+
+    fun getCurrentMonthStartEnd(): Pair<Long, Long> {
+        val now = YearMonth.now()
+        val startOfMonth = now.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val endOfMonth = now.atEndOfMonth().atTime(23, 59, 59, 999_999_999).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        return Pair(startOfMonth, endOfMonth)
+    }
+
+    fun getTodayString(): String {
+        return formatToDate(System.currentTimeMillis())
+    }
 }
