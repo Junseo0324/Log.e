@@ -34,7 +34,13 @@ fun MainNavGraph(
         }
         composable(MainRoute.Stat.route) { StatScreenRoot() }
         composable(MainRoute.Setting.route) { SettingScreenRoot() }
-        composable(MainRoute.Detail.route) { DetailScreenRoot() }
+        composable(MainRoute.Detail.route) {
+            DetailScreenRoot(
+                onBackClick = { navController.popBackStack() },
+                onEditClick = { /* TODO */ },
+                onDeleteClick = { /* TODO */ }
+            )
+        }
         composable(MainRoute.Write.route) { WriteScreenRoot() }
     }
 }

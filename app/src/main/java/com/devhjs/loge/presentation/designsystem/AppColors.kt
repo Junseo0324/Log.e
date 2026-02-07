@@ -20,4 +20,6 @@ object AppColors {
     val placeholderTextColor = Color(0xFF52525C)
     val white = Color(0xFFFFFFFF)
     val black = Color(0xFF000000)
+    val lightBlue = Color(0xFF00D3F2)
+    val lightBlue30 = Color(0x3000B8DB)
 }
