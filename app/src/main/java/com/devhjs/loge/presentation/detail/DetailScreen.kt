@@ -149,7 +149,7 @@ fun DetailScreen(
         ContentCard(
             title = "어려웠던 점",
             content = "flex-grow, flex-shrink, flex-basis를 함께 사용할 때 우선순위가 헷갈렸다.",
-            titleColor = AppColors.orange // AppColors에서 정의된 orange 사용
+            titleColor = AppColors.orange
         )
 
         Spacer(modifier = Modifier.height(16.dp))
