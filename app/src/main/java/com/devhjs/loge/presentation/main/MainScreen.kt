@@ -1,5 +1,6 @@
 package com.devhjs.loge.presentation.main
 
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -14,7 +15,7 @@ fun MainScreen(
     content: @Composable (Modifier) -> Unit
 ) {
     Scaffold(
-        containerColor = AppColors.background,
+        containerColor = AppColors.cardBackground,
         bottomBar = {
             BottomNavigationBar(
                 selectedRoute = selectedRoute,
@@ -22,6 +23,10 @@ fun MainScreen(
             )
         }
     ) { innerPadding ->
-        content(Modifier.padding(innerPadding))
+        content(
+            Modifier
+                .padding(innerPadding)
+                .consumeWindowInsets(innerPadding)
+        )
     }
 }
