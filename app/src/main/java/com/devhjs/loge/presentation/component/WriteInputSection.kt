@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
@@ -28,7 +29,7 @@ import com.devhjs.loge.presentation.designsystem.AppTextStyles
 fun WriteInputSection(
     label: String,
     placeholder: String,
-    minHeight: androidx.compose.ui.unit.Dp,
+    minHeight: Dp,
     singleLine: Boolean = true
 ) {
     var text by remember { mutableStateOf("") }

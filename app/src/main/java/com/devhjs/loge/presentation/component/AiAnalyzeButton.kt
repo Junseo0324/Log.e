@@ -45,7 +45,7 @@ fun AiAnalyzeButton(
                 shape = RoundedCornerShape(8.dp)
             )
             .clip(RoundedCornerShape(8.dp))
-            .clickable(enabled = !isLoading) { onClick() } // Uncomment when ready to use
+            .clickable(enabled = !isLoading) { onClick() }
             .padding(horizontal = 16.dp),
         contentAlignment = Alignment.Center
     ) {
