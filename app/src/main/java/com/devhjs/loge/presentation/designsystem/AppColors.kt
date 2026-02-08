@@ -11,6 +11,7 @@ object AppColors {
     val blue = Color(0xFF42A5F5)
     val amber = Color(0xFFFFCA28)
     val orange = Color(0xFFFFA726)
+    val pink = Color(0xFFFB64B6)
     val border = Color(0xFF27272A)
     val titleTextColor = Color(0xFFF4F4F5)
     val contentTextColor = Color(0xFF9F9FA9)

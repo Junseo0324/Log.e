@@ -22,13 +22,13 @@ fun StatSummarySection() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             StatCard(
-                icon = R.drawable.ic_code,
+                icon = R.drawable.ic_home_filled,
                 label = "commits",
                 value = "6",
                 iconTint = AppColors.primary
             )
             StatCard(
-                icon = R.drawable.ic_stat_filled,
+                icon = R.drawable.ic_growth,
                 label = "avg score",
                 value = "67",
                 iconTint = AppColors.orange
@@ -39,11 +39,11 @@ fun StatSummarySection() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             StatCard(
-                icon = R.drawable.ic_growth,
+                icon = R.drawable.ic_heart,
                 label = "mood",
                 value = "성장",
                 valueSize = 20,
-                iconTint = AppColors.blue
+                iconTint = AppColors.pink
             )
             StatCard(
                 icon = R.drawable.ic_difficulty,
