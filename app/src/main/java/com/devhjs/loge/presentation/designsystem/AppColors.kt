@@ -13,6 +13,7 @@ object AppColors {
     val orange = Color(0xFFFFA726)
     val pink = Color(0xFFFB64B6)
     val border = Color(0xFF27272A)
+    val border2 = Color(0xFF314158)
     val titleTextColor = Color(0xFFF4F4F5)
     val contentTextColor = Color(0xFF9F9FA9)
     val labelTextColor = Color(0xFF71717B)
@@ -23,8 +24,7 @@ object AppColors {
     val black = Color(0xFF000000)
     val lightBlue = Color(0xFF00D3F2)
     val lightBlue30 = Color(0x3000B8DB)
-
-
+    val darkBlue = Color(0x601D293D)
     // 그라데이션
     val gradient1 = Color(0xFF009966)
     val gradient2 = Color(0xFF0092B8)

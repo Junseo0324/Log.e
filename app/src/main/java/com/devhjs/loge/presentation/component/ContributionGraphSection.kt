@@ -57,12 +57,12 @@ fun ContributionGraphSection() {
                                     modifier = Modifier
                                         .size(16.dp)
                                         .background(
-                                            color = if (isFilled) AppColors.iconPrimary else Color.Transparent,
+                                            color = if (isFilled) AppColors.iconPrimary else AppColors.darkBlue,
                                             shape = RoundedCornerShape(2.dp)
                                         )
                                         .border(
                                             width = 1.dp,
-                                            color = if (isFilled) Color.Transparent else AppColors.border,
+                                            color = if (isFilled) Color.Transparent else AppColors.border2,
                                             shape = RoundedCornerShape(2.dp)
                                         )
                                 )
@@ -81,7 +81,7 @@ fun ContributionGraphSection() {
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("총 15개 로그", style = AppTextStyles.Pretendard.Label.copy(color = AppColors.contentTextColor))
+                        Text("총 14개 로그", style = AppTextStyles.Pretendard.Label.copy(color = AppColors.contentTextColor))
                         Spacer(modifier = Modifier.width(16.dp))
                         Box(
                             modifier = Modifier
