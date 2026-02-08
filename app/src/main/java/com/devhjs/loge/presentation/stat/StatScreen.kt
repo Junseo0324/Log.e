@@ -25,8 +25,8 @@ import com.devhjs.loge.R
 import com.devhjs.loge.presentation.component.ContributionGraphSection
 import com.devhjs.loge.presentation.component.LogETopBar
 import com.devhjs.loge.presentation.component.MoodDistributionSection
+import com.devhjs.loge.presentation.component.MoodFrequencySection
 import com.devhjs.loge.presentation.component.MoodTrendSection
-import com.devhjs.loge.presentation.component.ScoreDifficultySection
 import com.devhjs.loge.presentation.component.StatSummarySection
 import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
@@ -93,7 +93,7 @@ fun StatScreen(
             item { StatSummarySection() }
             item { MoodTrendSection() }
             item { MoodDistributionSection() }
-            item { ScoreDifficultySection() }
+            item { MoodFrequencySection() }
         }
     }
 }
