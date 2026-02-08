@@ -23,9 +23,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
@@ -77,7 +78,6 @@ fun MoodDistributionSection() {
                                 val x = offset.x - center.x
                                 val y = offset.y - center.y
                                 
-
                                 var angle = Math.toDegrees(atan2(y.toDouble(), x.toDouble())).toFloat()
                                 if (angle < 0) angle += 360f
                                 
@@ -102,25 +102,49 @@ fun MoodDistributionSection() {
                     val defaultStrokeWidth = 30.dp.toPx()
                     val selectedStrokeWidth = 40.dp.toPx()
                     
-                    val radius = size.minDimension / 2f - selectedStrokeWidth / 2f
+                    val baseRadius = size.minDimension / 2f - selectedStrokeWidth / 2f
                     val center = Offset(size.width / 2f, size.height / 2f)
+                    val borderStrokeWidth = 2.dp.toPx()
                     
                     var startAngle = -90f
                     
                     slices.forEachIndexed { index, (fraction, color, _) ->
                         val sweepAngle = fraction * 360f
                         val isSelected = index == selectedIndex
-                        val currentStrokeWidth = if (isSelected) selectedStrokeWidth else defaultStrokeWidth
+                        val currentWidth = if (isSelected) selectedStrokeWidth else defaultStrokeWidth
                         
-                        drawArc(
-                            color = color,
-                            startAngle = startAngle,
-                            sweepAngle = sweepAngle,
-                            useCenter = false,
-                            topLeft = Offset(center.x - radius, center.y - radius),
-                            size = Size(radius * 2, radius * 2), // Float 연산
-                            style = Stroke(width = currentStrokeWidth, cap = StrokeCap.Butt)
-                        )
+                        val outerRadius = baseRadius + currentWidth / 2f
+                        val innerRadius = baseRadius - currentWidth / 2f
+                        
+                        val path = Path().apply {
+                            arcTo(
+                                rect = Rect(
+                                    left = center.x - outerRadius,
+                                    top = center.y - outerRadius,
+                                    right = center.x + outerRadius,
+                                    bottom = center.y + outerRadius
+                                ),
+                                startAngleDegrees = startAngle,
+                                sweepAngleDegrees = sweepAngle,
+                                forceMoveTo = false
+                            )
+                            arcTo(
+                                rect = Rect(
+                                    left = center.x - innerRadius,
+                                    top = center.y - innerRadius,
+                                    right = center.x + innerRadius,
+                                    bottom = center.y + innerRadius
+                                ),
+                                startAngleDegrees = startAngle + sweepAngle,
+                                sweepAngleDegrees = -sweepAngle,
+                                forceMoveTo = false
+                            )
+                            close()
+                        }
+
+                        drawPath(path = path, color = color, style = Fill)
+                        drawPath(path = path, color = Color.White, style = Stroke(width = borderStrokeWidth))
+                        
                         startAngle += sweepAngle
                     }
                 }
