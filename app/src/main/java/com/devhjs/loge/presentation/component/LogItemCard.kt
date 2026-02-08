@@ -112,8 +112,8 @@ fun LogItemCard(
             
             Spacer(modifier = Modifier.height(12.dp))
             
-            // 난이도 레벨 표시 (점 5개)
-            LevelIndicator(level = item.difficultyLevel)
+            // 난이도 레벨 표시
+            LevelIndicator(text ="level:", level = item.difficultyLevel)
         }
     }
 }

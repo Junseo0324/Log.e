@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.presentation.designsystem.AppColors
@@ -23,8 +24,9 @@ import com.devhjs.loge.presentation.designsystem.AppTextStyles
  */
 @Composable
 fun LevelIndicator(
-    level: Int,
-    modifier: Modifier = Modifier
+    text: String= "",
+    modifier: Modifier = Modifier,
+    level: Int = 0,
 ) {
     Row(
         modifier = modifier,
@@ -32,25 +34,33 @@ fun LevelIndicator(
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Text(
-            text = "level:",
+            text = text,
             style = AppTextStyles.Pretendard.Label.copy(
                 color = AppColors.labelTextColor,
                 fontSize = 12.sp
             )
         )
-        
+
         Spacer(modifier = Modifier.width(4.dp))
-        
+
         // 5개의 점 (레벨에 따라 색상 적용)
         repeat(5) { index ->
             Box(
                 modifier = Modifier
                     .size(8.dp)
                     .background(
-                        color = if (index < level) AppColors.primary else AppColors.labelTextColor.copy(alpha = 0.3f),
+                        color = if (index < level) AppColors.primary else AppColors.labelTextColor.copy(
+                            alpha = 0.3f
+                        ),
                         shape = CircleShape
                     )
             )
         }
     }
+}
+
+@Preview
+@Composable
+private fun LevelIndicatorPreview() {
+    LevelIndicator(level = 3)
 }
