@@ -39,7 +39,7 @@ fun AiAnalysisResultCard() {
             .padding(16.dp)
     ) {
         Column {
-            // Header
+            // Header 영역
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_ai),
@@ -57,7 +57,7 @@ fun AiAnalysisResultCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 감정 Row
+            // 감정
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -75,7 +75,7 @@ fun AiAnalysisResultCard() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 난이도 Row
+            // 난이도
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
