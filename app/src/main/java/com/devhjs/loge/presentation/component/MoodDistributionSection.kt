@@ -3,6 +3,7 @@ package com.devhjs.loge.presentation.component
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -22,10 +27,13 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
+import kotlin.math.atan2
 
 @Composable
 fun MoodDistributionSection() {
@@ -44,38 +52,102 @@ fun MoodDistributionSection() {
             )
             Spacer(modifier = Modifier.height(24.dp))
             
+            // 파이 차트 영역
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Canvas(modifier = Modifier.size(180.dp)) {
-                    val strokeWidth = 30.dp.toPx()
-                    val radius = size.minDimension / 2 - strokeWidth / 2
-                    val center = Offset(size.width / 2, size.height / 2)
+                var selectedIndex by remember { mutableIntStateOf(-1) }
+                
+                val slices = listOf(
+                    Triple(0.4f, AppColors.blue, "성장"),
+                    Triple(0.3f, Color(0xFF8B5CF6), "혼란"),
+                    Triple(0.2f, AppColors.amber, "고군분투"),
+                    Triple(0.1f, AppColors.red, "자부심")
+                )
+
+                Canvas(
+                    modifier = Modifier
+                        .size(180.dp)
+                        .pointerInput(Unit) {
+                            detectTapGestures { offset ->
+                                val center = Offset(size.width / 2f, size.height / 2f)
+                                val x = offset.x - center.x
+                                val y = offset.y - center.y
+                                
+
+                                var angle = Math.toDegrees(atan2(y.toDouble(), x.toDouble())).toFloat()
+                                if (angle < 0) angle += 360f
+                                
+                                angle = (angle + 90f) % 360f
+                                
+                                var currentAngle = 0f
+                                var clickedIndex = -1
+                                
+                                for ((index, slice) in slices.withIndex()) {
+                                    val sweepAngle = slice.first * 360f
+                                    if (angle >= currentAngle && angle < currentAngle + sweepAngle) {
+                                        clickedIndex = index
+                                        break
+                                    }
+                                    currentAngle += sweepAngle
+                                }
+                                
+                                selectedIndex = if (selectedIndex == clickedIndex) -1 else clickedIndex
+                            }
+                        }
+                ) {
+                    val defaultStrokeWidth = 30.dp.toPx()
+                    val selectedStrokeWidth = 40.dp.toPx()
                     
-                    val slices = listOf(
-                        Triple(0.4f, AppColors.blue, "성장"),
-                        Triple(0.3f, Color(0xFF8B5CF6), "혼란"),
-                        Triple(0.2f, AppColors.amber, "고군분투"),
-                        Triple(0.1f, AppColors.red, "자부심")
-                    )
+                    val radius = size.minDimension / 2f - selectedStrokeWidth / 2f
+                    val center = Offset(size.width / 2f, size.height / 2f)
                     
                     var startAngle = -90f
                     
-                    slices.forEach { (fraction, color, _) ->
+                    slices.forEachIndexed { index, (fraction, color, _) ->
                         val sweepAngle = fraction * 360f
+                        val isSelected = index == selectedIndex
+                        val currentStrokeWidth = if (isSelected) selectedStrokeWidth else defaultStrokeWidth
+                        
                         drawArc(
                             color = color,
                             startAngle = startAngle,
                             sweepAngle = sweepAngle,
                             useCenter = false,
                             topLeft = Offset(center.x - radius, center.y - radius),
-                            size = Size(radius * 2, radius * 2),
-                            style = Stroke(width = strokeWidth, cap = StrokeCap.Butt)
+                            size = Size(radius * 2, radius * 2), // Float 연산
+                            style = Stroke(width = currentStrokeWidth, cap = StrokeCap.Butt)
                         )
                         startAngle += sweepAngle
+                    }
+                }
+                
+                // 중앙 텍스트 표시
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    if (selectedIndex != -1) {
+                        Text(
+                            text = slices[selectedIndex].third,
+                            style = AppTextStyles.Pretendard.Header4.copy(color = AppColors.white)
+                        )
+                        Text(
+                            text = "${(slices[selectedIndex].first * 100).toInt()}%",
+                            style = AppTextStyles.Pretendard.Label.copy(fontSize = 12.sp, color = AppColors.subTextColor)
+                        )
+                    } else {
+                        Text(
+                            text = "총 5개",
+                            style = AppTextStyles.Pretendard.Header4.copy(color = AppColors.white)
+                        )
+                        Text(
+                            text = "감정 기록",
+                            style = AppTextStyles.Pretendard.Label.copy(fontSize = 12.sp, color = AppColors.subTextColor)
+                        )
                     }
                 }
             }
