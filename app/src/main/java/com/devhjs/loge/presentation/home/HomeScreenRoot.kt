@@ -13,7 +13,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devhjs.loge.presentation.component.LogESnackbar
 
-// ... imports
 
 @Composable
 fun HomeScreenRoot(
