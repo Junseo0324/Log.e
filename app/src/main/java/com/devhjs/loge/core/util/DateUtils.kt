@@ -56,4 +56,18 @@ object DateUtils {
     fun getTodayString(): String {
         return formatToDate(System.currentTimeMillis())
     }
+
+    fun formatDate(timestamp: Long): String {
+        return formatToDate(timestamp)
+    }
+
+    fun formatTime(timestamp: Long): String {
+        return formatToTime(timestamp)
+    }
+
+    fun formatDateTime(timestamp: Long): String {
+        return Instant.ofEpochMilli(timestamp)
+            .atZone(ZoneId.systemDefault())
+            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", java.util.Locale.KOREA))
+    }
 }

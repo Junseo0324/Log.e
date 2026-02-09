@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
+import com.devhjs.loge.core.util.DateUtils
 import com.devhjs.loge.domain.model.EmotionType
+import com.devhjs.loge.domain.model.Til
 import com.devhjs.loge.presentation.component.ContentCard
 import com.devhjs.loge.presentation.component.InformationChip
 import com.devhjs.loge.presentation.component.LevelIndicator
@@ -38,8 +41,21 @@ import com.devhjs.loge.presentation.util.iconResId
 
 @Composable
 fun DetailScreen(
+    state: DetailState,
     modifier: Modifier = Modifier,
 ) {
+    if (state.isLoading) {
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(color = AppColors.primary)
+        }
+        return
+    }
+
+    val log = state.log ?: return
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -55,24 +71,21 @@ fun DetailScreen(
         ) {
             InformationChip(
                 icon = R.drawable.ic_date,
-                text = "2026.02.04 (수)"
+                text = DateUtils.formatDate(log.createdAt)
             )
             InformationChip(
                 icon = R.drawable.ic_detail,
-                text = "오전 04:45"
+                text = DateUtils.formatTime(log.createdAt)
             )
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
         // 감정 섹션 (커스텀 대형 UI)
-        val emotion = EmotionType.FULFILLMENT // TODO: 실제 데이터 반영
-        val score = 80
-        
         Box(
             modifier = Modifier
                 .background(
-                    color = emotion.color.copy(alpha = 0.15f),
+                    color = log.emotion.color.copy(alpha = 0.15f),
                     shape = RoundedCornerShape(32.dp)
                 )
                 .padding(horizontal = 24.dp, vertical = 12.dp)
@@ -81,16 +94,16 @@ fun DetailScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(id = emotion.iconResId),
+                    painter = painterResource(id = log.emotion.iconResId),
                     contentDescription = null,
-                    tint = emotion.color,
+                    tint = log.emotion.color,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "${emotion.label} · $score",
+                    text = "${log.emotion.label} · ${log.emotionScore}",
                     style = AppTextStyles.Pretendard.Header4.copy(
-                        color = emotion.color,
+                        color = log.emotion.color,
                         fontWeight = FontWeight.Bold
                     )
                 )
@@ -101,7 +114,7 @@ fun DetailScreen(
 
         // 큰 제목
         Text(
-            text = "CSS Flexbox 완벽 정리",
+            text = log.title,
             modifier = Modifier.fillMaxWidth(),
             style = AppTextStyles.Pretendard.Header1.copy(
                 color = AppColors.white,
@@ -130,7 +143,7 @@ fun DetailScreen(
                     text = "난이도",
                     style = AppTextStyles.Pretendard.Header3.copy(color = AppColors.white)
                 )
-                LevelIndicator(level = 2)
+                LevelIndicator(level = log.difficultyLevel)
             }
         }
 
@@ -139,7 +152,7 @@ fun DetailScreen(
         // 학습 내용 카드
         ContentCard(
             title = "학습 내용",
-            content = "justify-content와 align-items의 차이를 확실히 알게 됐다. flex-direction에 따라 main axis와 cross axis가 바뀌기 때문에 이를 이해하는 게 중요하다.",
+            content = log.learned,
             titleColor = AppColors.primary
         )
 
@@ -148,53 +161,55 @@ fun DetailScreen(
         // 어려웠던 점 카드
         ContentCard(
             title = "어려웠던 점",
-            content = "flex-grow, flex-shrink, flex-basis를 함께 사용할 때 우선순위가 헷갈렸다.",
+            content = log.difficult,
             titleColor = AppColors.orange
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        log.aiFeedBack?.let { feedback ->
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // AI 피드백 카드
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(AppColors.cardBackground, RoundedCornerShape(12.dp))
-                .border(1.dp, AppColors.lightBlue30, RoundedCornerShape(12.dp))
-                .padding(20.dp)
-        ) {
-            Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_ai),
-                        contentDescription = null,
-                        tint = AppColors.lightBlue,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
+            // AI 피드백 카드
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(AppColors.cardBackground, RoundedCornerShape(12.dp))
+                    .border(1.dp, AppColors.lightBlue30, RoundedCornerShape(12.dp))
+                    .padding(20.dp)
+            ) {
+                Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_ai),
+                            contentDescription = null,
+                            tint = AppColors.lightBlue,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "AI 피드백",
+                            style = AppTextStyles.Pretendard.Header3.copy(
+                                color = AppColors.white,
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "AI 피드백",
-                        style = AppTextStyles.Pretendard.Header3.copy(
-                            color = AppColors.white,
-                            fontWeight = FontWeight.Bold
+                        text = feedback,
+                        style = AppTextStyles.Pretendard.Body.copy(
+                            color = AppColors.subTextColor,
+                            fontSize = 15.sp,
+                            lineHeight = 22.sp
                         )
                     )
                 }
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Flexbox는 레이아웃의 기본이에요! flex 속성의 단축 문법(flex: 1 1 0%)을 익히면 더 효율적으로 코딩할 수 있어요. 잘하고 계세요!",
-                    style = AppTextStyles.Pretendard.Body.copy(
-                        color = AppColors.subTextColor,
-                        fontSize = 15.sp,
-                        lineHeight = 22.sp
-                    )
-                )
             }
         }
 
         Spacer(modifier = Modifier.height(40.dp))
 
         Text(
-            text = "created: 2026-02-05 04:45",
+            text = "created: ${DateUtils.formatDateTime(log.createdAt)}",
             style = AppTextStyles.Pretendard.Label.copy(
                 color = AppColors.labelTextColor,
                 fontSize = 12.sp
@@ -208,5 +223,19 @@ fun DetailScreen(
 @Preview(showBackground = true)
 @Composable
 private fun DetailScreenPreview() {
-    DetailScreen()
+    val dummyLog = Til(
+        id = 1,
+        createdAt = System.currentTimeMillis(),
+        title = "CSS Flexbox 완벽 정리",
+        learned = "justify-content와 align-items의 차이를 확실히 알게 됐다.",
+        difficult = "flex-grow, flex-shrink, flex-basis를 함께 사용할 때 우선순위가 헷갈렸다.",
+        emotionScore = 80,
+        emotion = EmotionType.FULFILLMENT,
+        difficultyLevel = 2,
+        updatedAt = System.currentTimeMillis(),
+        aiFeedBack = "Flexbox는 레이아웃의 기본이에요! 잘하고 계세요!"
+    )
+    DetailScreen(
+        state = DetailState(log = dummyLog)
+    )
 }

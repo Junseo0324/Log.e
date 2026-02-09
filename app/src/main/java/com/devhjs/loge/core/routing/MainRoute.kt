@@ -4,6 +4,8 @@ sealed class MainRoute(val route: String) {
     data object Home : MainRoute("home")
     data object Stat : MainRoute("stat")
     data object Setting : MainRoute("setting")
-    data object Detail : MainRoute("detail")
+    data object Detail : MainRoute("detail/{logId}") {
+        fun createRoute(logId: Long) = "detail/$logId"
+    }
     data object Write : MainRoute("write")
 }

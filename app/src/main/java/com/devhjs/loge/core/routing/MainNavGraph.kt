@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.devhjs.loge.presentation.detail.DetailScreenRoot
 import com.devhjs.loge.presentation.home.HomeScreenRoot
 import com.devhjs.loge.presentation.setting.SettingScreenRoot
@@ -24,8 +26,7 @@ fun MainNavGraph(
         composable(MainRoute.Home.route) {
             HomeScreenRoot(
                 onNavigateToDetail = { logId ->
-                    // TODO: logId를 Detail 화면에 전달하는 방식으로 수정 필요
-                    navController.navigate(MainRoute.Detail.route)
+                    navController.navigate(MainRoute.Detail.createRoute(logId))
                 },
                 onNavigateToWrite = {
                     navController.navigate(MainRoute.Write.route)
@@ -34,11 +35,15 @@ fun MainNavGraph(
         }
         composable(MainRoute.Stat.route) { StatScreenRoot() }
         composable(MainRoute.Setting.route) { SettingScreenRoot() }
-        composable(MainRoute.Detail.route) {
+        composable(
+            route = MainRoute.Detail.route,
+            arguments = listOf(
+                navArgument("logId") { type = NavType.LongType }
+            )
+        ) {
             DetailScreenRoot(
-                onBackClick = { navController.popBackStack() },
-                onEditClick = { /* TODO */ },
-                onDeleteClick = { /* TODO */ }
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToEdit = { logId -> /* TODO: Navigate to Edit with ID */ }
             )
         }
         composable(MainRoute.Write.route) { WriteScreenRoot() }

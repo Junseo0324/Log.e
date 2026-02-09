@@ -1,4 +1,7 @@
 package com.devhjs.loge.presentation.detail
 
-interface DetailAction {
+sealed interface DetailAction {
+    data object OnBackClick : DetailAction
+    data class OnEditClick(val id: Long) : DetailAction
+    data class OnDeleteClick(val id: Long) : DetailAction
 }
