@@ -61,7 +61,9 @@ class DetailViewModel @Inject constructor(
                 }
             }
             is DetailAction.OnDeleteClick -> {
-
+                viewModelScope.launch {
+                    _event.emit(DetailEvent.ShowDeleteDialog)
+                }
             }
             is DetailAction.OnDeleteConfirm -> {
                 deleteLog()

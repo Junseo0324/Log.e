@@ -9,6 +9,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -30,13 +31,16 @@ fun DetailScreenRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    var showDeleteDialog by remember { androidx.compose.runtime.mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
             when (event) {
                 is DetailEvent.NavigateBack -> onNavigateBack()
                 is DetailEvent.NavigateToEdit -> onNavigateToEdit(event.logId)
+                is DetailEvent.ShowDeleteDialog -> {
+                    showDeleteDialog = true
+                }
                 is DetailEvent.ShowError -> {
                     snackbarHostState.showSnackbar(event.message)
                 }
@@ -75,7 +79,7 @@ fun DetailScreenRoot(
                                 tint = AppColors.contentTextColor
                             )
                         }
-                        IconButton(onClick = { showDeleteDialog = true }) {
+                        IconButton(onClick = { viewModel.onAction(DetailAction.OnDeleteClick(logId)) }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_delete),
                                 contentDescription = "Delete",
