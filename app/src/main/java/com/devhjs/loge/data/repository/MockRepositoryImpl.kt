@@ -26,7 +26,8 @@ class MockRepositoryImpl @Inject constructor() : TilRepository {
                     emotionScore = (50..100).random(),
                     emotion = EmotionType.SATISFACTION,
                     difficultyLevel = (1..5).random(),
-                    updatedAt = System.currentTimeMillis()
+                    updatedAt = System.currentTimeMillis(),
+                    aiFeedBack = "Flexbox는 레이아웃의 기본이에요! flex 속성의 단축 문법(flex: 1 1 0%)을 익히면 더 효율적으로 코딩할 수 있어요. 잘하고 계세요!"
                 )
             )
         }
