@@ -1,11 +1,12 @@
 package com.devhjs.loge.presentation.write
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devhjs.loge.core.util.DateUtils
 import com.devhjs.loge.core.util.Result
 import com.devhjs.loge.domain.model.Til
-import com.devhjs.loge.domain.usecase.GetTilsUseCase
+import com.devhjs.loge.domain.usecase.GetTilUseCase
+import com.devhjs.loge.domain.usecase.GetTodayLogUseCase
 import com.devhjs.loge.domain.usecase.SaveTilUseCase
 import com.devhjs.loge.domain.usecase.UpdateTilUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,9 +23,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WriteViewModel @Inject constructor(
-    private val getTilsUseCase: GetTilsUseCase,
+    private val getTilUseCase: GetTilUseCase,
+    private val getTodayLogUseCase: GetTodayLogUseCase,
     private val saveTilUseCase: SaveTilUseCase,
-    private val updateTilUseCase: UpdateTilUseCase
+    private val updateTilUseCase: UpdateTilUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(WriteState())
@@ -34,37 +37,58 @@ class WriteViewModel @Inject constructor(
     val event = _event.asSharedFlow()
 
     init {
-        checkTodayLog()
+        val logId = savedStateHandle.get<Long>("logId")
+        if (logId != null && logId != -1L) {
+            loadLog(logId)
+        } else {
+            checkTodayLog()
+        }
+    }
+
+    private fun loadLog(logId: Long) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            getTilUseCase(logId).collect { log ->
+                _state.update {
+                    it.copy(
+                        isEditMode = true,
+                        originalLogId = log.id,
+                        createdAt = log.createdAt,
+                        emotionScore = log.emotionScore,
+                        emotion = log.emotion,
+                        difficultyLevel = log.difficultyLevel,
+                        title = log.title,
+                        learnings = log.learned,
+                        difficulties = log.difficult,
+                        isLoading = false
+                    )
+                }
+            }
+        }
     }
 
     private fun checkTodayLog() {
-        val (start, end) = DateUtils.getTodayStartEnd()
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val result = getTilsUseCase(start, end).first()
+            val todayLog = getTodayLogUseCase().first()
 
-            if (result is Result.Success) {
-                val todayLog = result.data.firstOrNull()
-                if (todayLog != null) {
-                    _state.update {
-                        it.copy(
-                            isEditMode = true,
-                            originalLogId = todayLog.id,
-                            createdAt = todayLog.createdAt,
-                            emotionScore = todayLog.emotionScore,
-                            emotion = todayLog.emotion,
-                            difficultyLevel = todayLog.difficultyLevel,
-                            title = todayLog.title,
-                            learnings = todayLog.learned,
-                            difficulties = todayLog.difficult,
-                            isLoading = false
-                        )
-                    }
-                } else {
-                    _state.update { it.copy(isLoading = false, isEditMode = false) }
+            if (todayLog != null) {
+                _state.update {
+                    it.copy(
+                        isEditMode = true,
+                        originalLogId = todayLog.id,
+                        createdAt = todayLog.createdAt,
+                        emotionScore = todayLog.emotionScore,
+                        emotion = todayLog.emotion,
+                        difficultyLevel = todayLog.difficultyLevel,
+                        title = todayLog.title,
+                        learnings = todayLog.learned,
+                        difficulties = todayLog.difficult,
+                        isLoading = false
+                    )
                 }
             } else {
-                _state.update { it.copy(isLoading = false) }
+                _state.update { it.copy(isLoading = false, isEditMode = false) }
             }
         }
     }

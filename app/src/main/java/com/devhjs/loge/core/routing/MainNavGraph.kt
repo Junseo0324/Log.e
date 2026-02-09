@@ -50,10 +50,20 @@ fun MainNavGraph(
         ) {
             DetailScreenRoot(
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateToEdit = { logId -> /* TODO: Navigate to Edit with ID */ }
+                onNavigateToEdit = { logId ->
+                    navController.navigate(MainRoute.Write.createRoute(logId))
+                }
             )
         }
-        composable(MainRoute.Write.route) {
+        composable(
+            route = MainRoute.Write.route,
+            arguments = listOf(
+                navArgument("logId") {
+                    type = NavType.LongType
+                    defaultValue = -1L
+                }
+            )
+        ) {
             WriteScreenRoot(
                 onBackClick = { navController.navigateUp() },
                 onSubmitSuccess = { message ->
