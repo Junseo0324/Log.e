@@ -190,7 +190,7 @@ fun MoodDistributionSection() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                MoodLegendItem(color = Color(0xFF8B5CF6), label = "혼란 (2)")
+                MoodLegendItem(color = AppColors.purple, label = "혼란 (2)")
                 MoodLegendItem(color = AppColors.red, label = "자부심 (1)")
             }
         }

@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,7 +58,7 @@ fun ScoreDifficultySection() {
     val xLabels = listOf("2/1", "2/2", "2/3", "2/4", "2/5")
 
     val scoreColor = AppColors.primary
-    val difficultyColor = Color(0xFF8E51FF)
+    val difficultyColor = AppColors.purple
 
     // 차트 라인 설정
     val lines = listOf(

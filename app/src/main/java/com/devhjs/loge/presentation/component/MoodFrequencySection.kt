@@ -51,7 +51,7 @@ fun MoodFrequencySection() {
         AppColors.iconPrimary,
         AppColors.blue,
         AppColors.amber,
-        Color(0xFF8B5CF6),
+        AppColors.purple,
         AppColors.red,
         Color(0xFF6B7280)
     )
