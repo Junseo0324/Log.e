@@ -61,6 +61,9 @@ class DetailViewModel @Inject constructor(
                 }
             }
             is DetailAction.OnDeleteClick -> {
+
+            }
+            is DetailAction.OnDeleteConfirm -> {
                 deleteLog()
             }
         }

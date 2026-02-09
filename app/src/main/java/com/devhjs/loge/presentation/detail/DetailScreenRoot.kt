@@ -10,12 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devhjs.loge.R
 import com.devhjs.loge.presentation.component.CustomAppBar
+import com.devhjs.loge.presentation.component.CustomDialog
 import com.devhjs.loge.presentation.component.LogESnackbar
 import com.devhjs.loge.presentation.designsystem.AppColors
 
@@ -28,6 +30,7 @@ fun DetailScreenRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    var showDeleteDialog by remember { androidx.compose.runtime.mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
@@ -39,6 +42,21 @@ fun DetailScreenRoot(
                 }
             }
         }
+    }
+
+    if (showDeleteDialog) {
+        CustomDialog(
+            title = "로그 TIL 삭제",
+            description = "정말로 이 TIL을 삭제하시겠습니까?\n삭제된 데이터는 복구할 수 없습니다.",
+            confirmText = "삭제",
+            onConfirm = {
+                state.log?.id?.let { id ->
+                    viewModel.onAction(DetailAction.OnDeleteConfirm(id))
+                }
+                showDeleteDialog = false
+            },
+            onDismiss = { showDeleteDialog = false }
+        )
     }
 
     Scaffold(
@@ -57,7 +75,7 @@ fun DetailScreenRoot(
                                 tint = AppColors.contentTextColor
                             )
                         }
-                        IconButton(onClick = { viewModel.onAction(DetailAction.OnDeleteClick(logId)) }) {
+                        IconButton(onClick = { showDeleteDialog = true }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_delete),
                                 contentDescription = "Delete",
