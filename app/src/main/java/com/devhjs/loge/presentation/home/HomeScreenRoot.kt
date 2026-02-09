@@ -19,7 +19,9 @@ import com.devhjs.loge.presentation.component.LogESnackbar
 fun HomeScreenRoot(
     onNavigateToDetail: (Long) -> Unit,
     onNavigateToWrite: () -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    snackbarMessage: String? = null,
+    onConsumeSnackbarMessage: () -> Unit = {}
 ) {
     // ViewModel에서 State 수집
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -37,6 +39,13 @@ fun HomeScreenRoot(
                     snackbarHostState.showSnackbar(event.message)
                 }
             }
+        }
+    }
+
+    LaunchedEffect(snackbarMessage) {
+        if (snackbarMessage != null) {
+            snackbarHostState.showSnackbar(snackbarMessage)
+            onConsumeSnackbarMessage()
         }
     }
     

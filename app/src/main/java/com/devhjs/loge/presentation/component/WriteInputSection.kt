@@ -29,10 +29,11 @@ import com.devhjs.loge.presentation.designsystem.AppTextStyles
 fun WriteInputSection(
     label: String,
     placeholder: String,
+    value: String,
+    onValueChange: (String) -> Unit,
     minHeight: Dp,
     singleLine: Boolean = true
 ) {
-    var text by remember { mutableStateOf("") }
     var isFocused by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -56,8 +57,8 @@ fun WriteInputSection(
             contentAlignment = if (singleLine) Alignment.CenterStart else Alignment.TopStart
         ) {
             BasicTextField(
-                value = text,
-                onValueChange = { text = it },
+                value = value,
+                onValueChange = onValueChange,
                 textStyle = AppTextStyles.Pretendard.Body.copy(color = AppColors.titleTextColor),
                 maxLines = if (singleLine) 1 else Int.MAX_VALUE,
                 modifier = Modifier
@@ -66,7 +67,7 @@ fun WriteInputSection(
                         isFocused = focusState.isFocused
                     },
                 decorationBox = { innerTextField ->
-                    if (text.isEmpty()) {
+                    if (value.isEmpty()) {
                         Text(
                             text = placeholder,
                             style = AppTextStyles.Pretendard.Body.copy(color = AppColors.placeholderTextColor)
@@ -85,6 +86,8 @@ private fun WriteInputSectionPreview() {
     WriteInputSection(
         label = "// 제목",
         placeholder = "오늘 무엇을 배웠나요?",
+        value = "",
+        onValueChange = {},
         minHeight = 44.dp
     )
 }

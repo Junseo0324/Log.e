@@ -53,6 +53,13 @@ object DateUtils {
         return Pair(startOfMonth, endOfMonth)
     }
 
+    fun getTodayStartEnd(): Pair<Long, Long> {
+        val now = java.time.LocalDate.now()
+        val startOfDay = now.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val endOfDay = now.atTime(23, 59, 59, 999_999_999).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        return Pair(startOfDay, endOfDay)
+    }
+
     fun getTodayString(): String {
         return formatToDate(System.currentTimeMillis())
     }

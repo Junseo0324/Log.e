@@ -23,13 +23,20 @@ fun MainNavGraph(
         startDestination = MainRoute.Home.route,
         modifier = modifier
     ) {
-        composable(MainRoute.Home.route) {
+        composable(MainRoute.Home.route) { backStackEntry ->
+            val savedStateHandle = backStackEntry.savedStateHandle
+            val snackbarMessage = savedStateHandle.get<String>("snackbar_message")
+
             HomeScreenRoot(
                 onNavigateToDetail = { logId ->
                     navController.navigate(MainRoute.Detail.createRoute(logId))
                 },
                 onNavigateToWrite = {
                     navController.navigate(MainRoute.Write.route)
+                },
+                snackbarMessage = snackbarMessage,
+                onConsumeSnackbarMessage = {
+                    savedStateHandle.remove<String>("snackbar_message")
                 }
             )
         }
@@ -46,6 +53,16 @@ fun MainNavGraph(
                 onNavigateToEdit = { logId -> /* TODO: Navigate to Edit with ID */ }
             )
         }
-        composable(MainRoute.Write.route) { WriteScreenRoot() }
+        composable(MainRoute.Write.route) {
+            WriteScreenRoot(
+                onBackClick = { navController.navigateUp() },
+                onSubmitSuccess = { message ->
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("snackbar_message", message)
+                    navController.popBackStack()
+                }
+            )
+        }
     }
 }
