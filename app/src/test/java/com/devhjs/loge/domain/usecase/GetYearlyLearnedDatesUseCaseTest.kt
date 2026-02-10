@@ -31,7 +31,6 @@ class GetYearlyLearnedDatesUseCaseTest {
         val year = 2023
         val date1 = LocalDate.of(2023, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
         val date2 = LocalDate.of(2023, 12, 31).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        // Duplicate date1 to test distinct
         val date3 = LocalDate.of(2023, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
         val tils = listOf(
