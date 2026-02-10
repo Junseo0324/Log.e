@@ -71,11 +71,11 @@ fun DetailScreen(
         ) {
             InformationChip(
                 icon = R.drawable.ic_date,
-                text = DateUtils.formatDate(log.createdAt)
+                text = DateUtils.formatDate(log.updatedAt)
             )
             InformationChip(
                 icon = R.drawable.ic_detail,
-                text = DateUtils.formatTime(log.createdAt)
+                text = DateUtils.formatTime(log.updatedAt)
             )
         }
 
