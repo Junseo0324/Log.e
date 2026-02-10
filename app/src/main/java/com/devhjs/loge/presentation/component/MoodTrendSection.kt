@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.devhjs.loge.domain.model.ChartPoint
 import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 import com.patrykandpatrick.vico.compose.axis.axisLabelComponent
@@ -32,20 +33,31 @@ import com.patrykandpatrick.vico.core.component.shape.LineComponent
 import com.patrykandpatrick.vico.core.component.shape.ShapeComponent
 import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.entryModelOf
+import com.patrykandpatrick.vico.core.entry.entryOf
 
 @Composable
-fun MoodTrendSection() {
-    // 차트 더미 데이터 설정
-    // X축은 인덱스, Y축은 감정 점수
-    val model = entryModelOf(50f, 72f, 60f, 70f, 92f, 58f)
-    val xLabels = listOf("1/26", "1/27", "1/28", "1/29", "1/30", "1/31")
+fun MoodTrendSection(
+    emotionScoreList: List<ChartPoint>
+) {
+    // 데이터가 없으면 빈 상태 표시
+    if (emotionScoreList.isEmpty()) {
+        EmptyChartSection(title = "감정 점수 추이")
+        return
+    }
 
-    // X축 라벨 포맷터 (인덱스를 날짜 텍스트로 변환)
+    // ChartPoint를 Vico Entry로 변환
+    val entries = emotionScoreList.mapIndexed { index, point ->
+        entryOf(index, point.y)
+    }
+    val model = entryModelOf(entries)
+
+    // X축 라벨: 일(day) 표시
+    val xLabels = emotionScoreList.map { "${it.x.toInt()}일" }
+
     val horizontalAxisValueFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, _ ->
         xLabels.getOrNull(value.toInt()) ?: ""
     }
 
-    // Y축 라벨 포맷터 (정수형으로 표시)
     val verticalAxisValueFormatter = AxisValueFormatter<AxisPosition.Vertical.Start> { value, _ ->
         value.toInt().toString()
     }
@@ -82,14 +94,14 @@ fun MoodTrendSection() {
                     lines = listOf(
                         LineChart.LineSpec(
                             lineColor = AppColors.iconPrimary.toArgb(),
-                            lineThicknessDp = 3f, // 선 두께
-                            lineBackgroundShader = null, // 하단 그라데이션 제거 (디자인에 따라 추가 가능)
-                            point = ShapeComponent( // 데이터 포인트 (원형 점)
+                            lineThicknessDp = 3f,
+                            lineBackgroundShader = null,
+                            point = ShapeComponent(
                                 shape = Shapes.pillShape,
                                 color = AppColors.iconPrimary.toArgb(),
                                 strokeWidthDp = 0f,
                             ),
-                            pointSizeDp = 10f, // 점 크기
+                            pointSizeDp = 10f,
                         )
                     )
                 ),
@@ -115,5 +127,14 @@ fun MoodTrendSection() {
 @Preview
 @Composable
 private fun MoodTrendSectionPreview() {
-    MoodTrendSection()
+    MoodTrendSection(
+        emotionScoreList = listOf(
+            ChartPoint(1f, 50f),
+            ChartPoint(2f, 72f),
+            ChartPoint(3f, 60f),
+            ChartPoint(4f, 70f),
+            ChartPoint(5f, 92f),
+            ChartPoint(6f, 58f)
+        )
+    )
 }
