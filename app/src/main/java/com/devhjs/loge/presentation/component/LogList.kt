@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +30,7 @@ import com.devhjs.loge.presentation.designsystem.AppColors
  * 1일 1로그 정책으로, 각 로그 상단에 날짜 섹션 헤더를 함께 표시함.
  * 리스트를 단순히 순회하며 헤더 + 카드를 그림.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogList(
     logs: List<Til>,
@@ -55,16 +58,14 @@ fun LogList(
             )
 
             // 2. 로그 아이템 카드 (SwipeToDismiss 적용)
-            val dismissState = rememberSwipeToDismissBoxState(
-                confirmValueChange = { dismissValue ->
-                    if (dismissValue == SwipeToDismissBoxValue.EndToStart) {
-                        onDeleteClick(til.id)
-                        false
-                    } else {
-                        false
-                    }
+            val dismissState = rememberSwipeToDismissBoxState()
+
+            LaunchedEffect(dismissState.currentValue) {
+                if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
+                    onDeleteClick(til.id)
+                    dismissState.snapTo(SwipeToDismissBoxValue.Settled)
                 }
-            )
+            }
 
             SwipeToDismissBox(
                 state = dismissState,
