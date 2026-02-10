@@ -40,11 +40,11 @@ fun ContributionGraphSection(
     // 선택된 월의 연도 추출
     val year = selectedMonth.take(4).toInt()
 
-    // 학습한 날짜 Set으로 변환하여 빠르게 조회
+    // 학습한 날짜 Set으로 변환
     val learnedDateSet = remember(yearlyLearnedDates) { yearlyLearnedDates.toSet() }
     val activeDays = yearlyLearnedDates.size
 
-    // DateUtils에서에서 그리드 정보 계산
+    // DateUtils에서 그리드 정보 계산
     val gridInfo = remember(year) { DateUtils.getYearGridInfo(year) }
 
     // 요일 라벨

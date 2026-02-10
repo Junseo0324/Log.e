@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devhjs.loge.domain.usecase.GetEmotionDistributionUseCase
 import com.devhjs.loge.domain.usecase.GetMonthlyStatUseCase
+import com.devhjs.loge.domain.usecase.GetYearlyLearnedDatesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class StatViewModel @Inject constructor(
     private val getMonthlyStatUseCase: GetMonthlyStatUseCase,
-    private val getEmotionDistributionUseCase: GetEmotionDistributionUseCase
+    private val getEmotionDistributionUseCase: GetEmotionDistributionUseCase,
+    private val getYearlyLearnedDatesUseCase: GetYearlyLearnedDatesUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(StatState())
@@ -33,6 +35,10 @@ class StatViewModel @Inject constructor(
 
     // 데이터 로딩 Job을 관리하여 월 변경 시 이전 Job 취소
     private var loadJob: Job? = null
+    private var yearlyJob: Job? = null
+
+    // 현재 로드된 연도를 추적 (같은 연도면 재로딩 방지)
+    private var loadedYear: Int? = null
 
     private val formatter = DateTimeFormatter.ofPattern("yyyy-MM")
 
@@ -84,6 +90,20 @@ class StatViewModel @Inject constructor(
                 _state.update { it.copy(isLoading = false) }
                 _event.emit(StatEvent.ShowError(e.message ?: "통계 데이터를 불러오는데 실패했습니다."))
             }.collect {}
+        }
+
+        // 연간 학습 날짜 로드 (연도가 바뀔 때만 재로딩)
+        val year = _state.value.selectedMonth.substring(0, 4).toInt()
+        if (year != loadedYear) {
+            loadedYear = year
+            yearlyJob?.cancel()
+            yearlyJob = viewModelScope.launch {
+                getYearlyLearnedDatesUseCase(year)
+                    .catch { /* 연간 데이터 실패 시 무시 */ }
+                    .collect { dates ->
+                        _state.update { it.copy(yearlyLearnedDates = dates) }
+                    }
+            }
         }
     }
 }
