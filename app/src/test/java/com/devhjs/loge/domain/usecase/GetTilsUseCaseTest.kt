@@ -1,5 +1,6 @@
 package com.devhjs.loge.domain.usecase
 
+import com.devhjs.loge.core.util.Result
 import com.devhjs.loge.domain.model.EmotionType
 import com.devhjs.loge.domain.model.Til
 import com.devhjs.loge.domain.repository.TilRepository
@@ -33,7 +34,7 @@ class GetTilsUseCaseTest {
         val result = useCase(start, end).first()
 
         // Then
-        assertEquals(mockTils, result)
+        assertEquals(Result.Success(mockTils), result)
         verify { repository.getAllTil(start, end) }
     }
 }

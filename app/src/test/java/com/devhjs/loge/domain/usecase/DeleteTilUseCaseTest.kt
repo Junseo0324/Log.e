@@ -21,14 +21,14 @@ class DeleteTilUseCaseTest {
     fun `repository_호출이_성공하면_Success를_반환해야_한다`() = runTest {
         // Given
         val til = Til(1, 150, "Title", "Learned", "Difficult", 80, EmotionType.SATISFACTION, 3, 150)
-        coEvery { repository.deleteTil(til) } returns Unit
+        coEvery { repository.deleteTil(til.id) } returns Unit
 
         // When
-        val result = useCase(til)
+        val result = useCase(til.id)
 
         // Then
         assertTrue(result is Result.Success)
-        coVerify { repository.deleteTil(til) }
+        coVerify { repository.deleteTil(til.id) }
     }
 
     @Test
@@ -36,14 +36,14 @@ class DeleteTilUseCaseTest {
         // Given
         val til = Til(1, 150, "Title", "Learned", "Difficult", 80, EmotionType.SATISFACTION, 3, 150)
         val exception = RuntimeException("Delete error")
-        coEvery { repository.deleteTil(til) } throws exception
+        coEvery { repository.deleteTil(til.id) } throws exception
 
         // When
-        val result = useCase(til)
+        val result = useCase(til.id)
 
         // Then
         assertTrue(result is Result.Error)
         assertEquals(exception, (result as Result.Error).error)
-        coVerify { repository.deleteTil(til) }
+        coVerify { repository.deleteTil(til.id) }
     }
 }
