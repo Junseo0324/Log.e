@@ -12,7 +12,6 @@ import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,13 +55,16 @@ fun LogList(
             )
 
             // 2. 로그 아이템 카드 (SwipeToDismiss 적용)
-            val dismissState = rememberSwipeToDismissBoxState()
-
-            LaunchedEffect(dismissState.currentValue) {
-                if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
-                    onDeleteClick(til.id)
+            val dismissState = rememberSwipeToDismissBoxState(
+                confirmValueChange = { dismissValue ->
+                    if (dismissValue == SwipeToDismissBoxValue.EndToStart) {
+                        onDeleteClick(til.id)
+                        false
+                    } else {
+                        false
+                    }
                 }
-            }
+            )
 
             SwipeToDismissBox(
                 state = dismissState,
