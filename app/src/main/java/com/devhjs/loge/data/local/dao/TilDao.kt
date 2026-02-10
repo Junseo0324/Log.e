@@ -26,4 +26,7 @@ interface TilDao {
 
     @Delete
     fun deleteTil(til: TilEntity)
+
+    @Query("DELETE FROM til WHERE id = :id")
+    fun deleteTilById(id: Long)
 }
