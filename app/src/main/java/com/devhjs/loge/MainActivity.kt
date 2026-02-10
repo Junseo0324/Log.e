@@ -8,7 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.devhjs.loge.ui.theme.LogETheme
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,4 +1,4 @@
-package com.devhjs.loge.ui.theme
+package com.devhjs.loge.presentation.designsystem
 
 import android.app.Activity
 import android.os.Build

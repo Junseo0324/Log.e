@@ -1,4 +1,4 @@
-package com.devhjs.loge.ui.theme
+package com.devhjs.loge.presentation.designsystem
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
