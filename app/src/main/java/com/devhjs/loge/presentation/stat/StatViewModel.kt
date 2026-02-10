@@ -1,0 +1,89 @@
+package com.devhjs.loge.presentation.stat
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.devhjs.loge.domain.usecase.GetEmotionDistributionUseCase
+import com.devhjs.loge.domain.usecase.GetMonthlyStatUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
+import javax.inject.Inject
+
+@HiltViewModel
+class StatViewModel @Inject constructor(
+    private val getMonthlyStatUseCase: GetMonthlyStatUseCase,
+    private val getEmotionDistributionUseCase: GetEmotionDistributionUseCase
+) : ViewModel() {
+
+    private val _state = MutableStateFlow(StatState())
+    val state: StateFlow<StatState> = _state.asStateFlow()
+
+    private val _event = MutableSharedFlow<StatEvent>()
+    val event = _event.asSharedFlow()
+
+    // 데이터 로딩 Job을 관리하여 월 변경 시 이전 Job 취소
+    private var loadJob: Job? = null
+
+    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM")
+
+    init {
+        loadStats()
+    }
+
+    fun onAction(action: StatAction) {
+        when (action) {
+            is StatAction.OnPreviousMonthClick -> {
+                val prevMonth = YearMonth.parse(_state.value.selectedMonth)
+                    .minusMonths(1).format(formatter)
+                _state.update { it.copy(selectedMonth = prevMonth) }
+                loadStats()
+            }
+            is StatAction.OnNextMonthClick -> {
+                val nextMonth = YearMonth.parse(_state.value.selectedMonth)
+                    .plusMonths(1).format(formatter)
+                _state.update { it.copy(selectedMonth = nextMonth) }
+                loadStats()
+            }
+        }
+    }
+
+    /**
+     * 선택된 월의 통계 데이터와 감정 분포를 동시에 로드
+     */
+    private fun loadStats() {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+
+            val monthString = _state.value.selectedMonth
+
+            // 두 UseCase의 Flow를 combine하여 동시에 수집
+            combine(
+                getMonthlyStatUseCase(monthString),
+                getEmotionDistributionUseCase(monthString)
+            ) { stat, tilAnalysis ->
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        stat = stat,
+                        emotionDistribution = tilAnalysis.emotionDistribution,
+                        difficultyChartPoints = tilAnalysis.difficultyChartPoints
+                    )
+                }
+            }.catch { e ->
+                _state.update { it.copy(isLoading = false) }
+                _event.emit(StatEvent.ShowError(e.message ?: "통계 데이터를 불러오는데 실패했습니다."))
+            }.collect {}
+        }
+    }
+}
