@@ -20,7 +20,7 @@ class MockRepositoryImpl @Inject constructor() : TilRepository {
                 Til(
                     id = idCounter++,
                     createdAt = System.currentTimeMillis() - (i * 86400000L),
-                    title = "테스트 제목 $i",
+                    title = "테테테테스트 제목 $i",
                     learned = "오늘 안드로이드 개발에 대해 새로운 것을 배웠습니다. 항목 $i",
                     difficult = "특별히 어려운 점은 없었습니다.",
                     emotionScore = (50..100).random(),
@@ -55,6 +55,10 @@ class MockRepositoryImpl @Inject constructor() : TilRepository {
 
     override suspend fun deleteTil(til: Til) {
         mockData.removeAll { it.id == til.id }
+    }
+
+    override suspend fun deleteTil(id: Long) {
+        mockData.removeAt(index = id.toInt())
     }
 
     override fun getMonthlyStats(month: String): Flow<Stat> = flow {
