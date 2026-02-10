@@ -13,10 +13,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.devhjs.loge.domain.model.EmotionType
 import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 import com.patrykandpatrick.vico.compose.axis.axisLabelComponent
@@ -32,39 +32,38 @@ import com.patrykandpatrick.vico.core.component.shape.LineComponent
 import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import com.patrykandpatrick.vico.core.entry.entryOf
+import com.devhjs.loge.presentation.util.color
 
 @Composable
-fun MoodFrequencySection() {
-    val joyEntries = listOf(entryOf(0, 3))
-    val growthEntries = listOf(entryOf(1, 1))
-    val struggleEntries = listOf(entryOf(2, 1))
-    val confusionEntries = listOf(entryOf(3, 1))
-    val prideEntries = listOf(entryOf(4, 2))
-    val normalEntries = listOf(entryOf(5, 1))
+fun MoodFrequencySection(
+    emotionDistribution: Map<EmotionType, Int>
+) {
+    // 데이터가 없으면 빈 상태 표시
+    if (emotionDistribution.isEmpty()) {
+        EmptyChartSection(title = "감정별 빈도")
+        return
+    }
 
-    val model = entryModelOf(joyEntries, growthEntries, struggleEntries, confusionEntries, prideEntries, normalEntries)
-    
-    val xLabels = listOf("기쁨", "성장", "고군분투", "혼란", "자부심", "평범")
+    // 모든 EmotionType에 대해 데이터 준비 (없는 감정은 0으로)
+    val allEmotions = EmotionType.entries
+    val entries = allEmotions.mapIndexed { index, emotion ->
+        listOf(entryOf(index, emotionDistribution[emotion] ?: 0))
+    }
+    val model = entryModelOf(*entries.toTypedArray())
 
-    // 2. 색상 설정
-    val colors = listOf(
-        AppColors.iconPrimary,
-        AppColors.blue,
-        AppColors.amber,
-        AppColors.purple,
-        AppColors.red,
-        Color(0xFF6B7280)
-    )
+    val xLabels = allEmotions.map { it.label }
 
-    val columns = colors.map { color ->
+    // 감정별 색상 매핑
+    // EmotionExtensions 확장 프로퍼티로 색상 매핑
+    val columns = allEmotions.map { emotion ->
         LineComponent(
-            color = color.toArgb(),
+            color = emotion.color.toArgb(),
             thicknessDp = 20f,
-            shape = Shapes.roundedCornerShape(topLeftPercent = 20, topRightPercent = 20) // 상단 둥글게
+            shape = Shapes.roundedCornerShape(topLeftPercent = 20, topRightPercent = 20)
         )
     }
 
-    // 3. 축 설정
+    // 축 설정
     val horizontalAxisValueFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, _ ->
         xLabels.getOrNull(value.toInt()) ?: ""
     }
@@ -124,5 +123,13 @@ fun MoodFrequencySection() {
 @Preview
 @Composable
 private fun MoodFrequencySectionPreview() {
-    MoodFrequencySection()
+    MoodFrequencySection(
+        emotionDistribution = mapOf(
+            EmotionType.FULFILLMENT to 3,
+            EmotionType.SATISFACTION to 1,
+            EmotionType.NORMAL to 1,
+            EmotionType.DIFFICULTY to 1,
+            EmotionType.FRUSTRATION to 2
+        )
+    )
 }
