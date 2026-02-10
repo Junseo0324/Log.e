@@ -121,8 +121,8 @@ object DateUtils {
 
         // 월 라벨 위치 계산 (각 월이 시작하는 주 인덱스)
         val monthNames = listOf(
-            "1월", "2월", "3월", "4월", "5월", "6월",
-            "7월", "8월", "9월", "10월", "11월", "12월"
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
         )
         val monthLabels = (1..12).map { month ->
             val dayOfYear = java.time.LocalDate.of(year, month, 1).dayOfYear
