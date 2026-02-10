@@ -24,7 +24,7 @@ import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
-private fun EmptyLogView() {
+fun EmptyLogView() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
