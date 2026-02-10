@@ -30,7 +30,12 @@ import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
-fun AiAnalysisResultCard() {
+fun AiAnalysisResultCard(
+    emotion: EmotionType,
+    score: Int,
+    difficultyLevel: Int,
+    comment: String
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -68,8 +73,8 @@ fun AiAnalysisResultCard() {
                     style = AppTextStyles.Pretendard.Body.copy(color = AppColors.subTextColor)
                 )
                 EmotionTag(
-                    emotion = EmotionType.FRUSTRATION,
-                    score = 75
+                    emotion = emotion,
+                    score = score
                 )
             }
 
@@ -85,7 +90,7 @@ fun AiAnalysisResultCard() {
                     text = "난이도:",
                     style = AppTextStyles.Pretendard.Body.copy(color = AppColors.subTextColor)
                 )
-                LevelIndicator(level = 3)
+                LevelIndicator(level = difficultyLevel)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -101,7 +106,7 @@ fun AiAnalysisResultCard() {
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "오늘도 열심히 학습하셨네요! 배운 내용을 실제 프로젝트에 적용해보면서 더 깊이 이해할 수 있을 거예요. 어려운 부분이 있어도 포기하지 마시고, 하나씩 해결해나가다 보면 분명 성장할 수 있습니다. 화이팅!",
+                text = comment,
                 style = AppTextStyles.Pretendard.Body.copy(color = AppColors.subTextColor, lineHeight = 20.sp)
             )
         }
@@ -111,5 +116,10 @@ fun AiAnalysisResultCard() {
 @Preview
 @Composable
 private fun AiAnalysisResultCardPreview() {
-    AiAnalysisResultCard()
+    AiAnalysisResultCard(
+        emotion = EmotionType.SATISFACTION,
+        score = 85,
+        difficultyLevel = 2,
+        comment = "오늘도 열심히 학습하셨네요! 배운 내용을 실제 프로젝트에 적용해보면서 더 깊이 이해할 수 있을 거예요."
+    )
 }

@@ -4,13 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devhjs.loge.core.util.Result
+import com.devhjs.loge.domain.model.EmotionType
 import com.devhjs.loge.domain.model.Til
+import com.devhjs.loge.domain.usecase.AnalyzeLogUseCase
 import com.devhjs.loge.domain.usecase.GetTilUseCase
 import com.devhjs.loge.domain.usecase.GetTodayLogUseCase
 import com.devhjs.loge.domain.usecase.SaveTilUseCase
 import com.devhjs.loge.domain.usecase.UpdateTilUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,6 +28,7 @@ class WriteViewModel @Inject constructor(
     private val getTodayLogUseCase: GetTodayLogUseCase,
     private val saveTilUseCase: SaveTilUseCase,
     private val updateTilUseCase: UpdateTilUseCase,
+    private val analyzeLogUseCase: AnalyzeLogUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -60,6 +62,7 @@ class WriteViewModel @Inject constructor(
                         title = log.title,
                         learnings = log.learned,
                         difficulties = log.difficult,
+                        aiFeedbackComment = log.aiFeedBack,
                         isLoading = false
                     )
                 }
@@ -84,6 +87,7 @@ class WriteViewModel @Inject constructor(
                         title = todayLog.title,
                         learnings = todayLog.learned,
                         difficulties = todayLog.difficult,
+                        aiFeedbackComment = todayLog.aiFeedBack,
                         isLoading = false
                     )
                 }
@@ -120,18 +124,59 @@ class WriteViewModel @Inject constructor(
     }
 
     private fun analyzeLog() {
-        // TODO: AI 분석 logic 연결 필요
-        if (_state.value.isLoading) return
+        val currentState = _state.value
+        if (currentState.isLoading) return
+        if (currentState.title.isBlank() || currentState.learnings.isBlank()) {
+             viewModelScope.launch {
+                 _event.emit(WriteEvent.ShowError("제목과 학습 내용을 입력해주세요."))
+             }
+             return
+        }
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            delay(3000) // Mock delay
-            _state.update {
-                it.copy(
-                    isLoading = false,
-                    showAiAnalysisResult = true
-                )
+            
+            val result = analyzeLogUseCase(
+                title = currentState.title,
+                learned = currentState.learnings,
+                difficult = currentState.difficulties
+            )
+
+            when (result) {
+                is Result.Success -> {
+                    val report = result.data
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            showAiAnalysisResult = true,
+                            emotion = EmotionType.fromString(report.emotion),
+                            emotionScore = report.emotionScore,
+                            difficultyLevel = mapDifficultyLevel(report.difficultyLevel),
+                            aiFeedbackComment = report.comment
+                        )
+                    }
+                }
+                is Result.Error -> {
+                    val error = result.error
+                     _state.update { 
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = error.message
+                        ) 
+                    }
+                    _event.emit(WriteEvent.ShowError("AI 분석에 실패했습니다: ${error.message}"))
+                }
             }
+        }
+    }
+
+    private fun mapDifficultyLevel(level: String): Int {
+        return when (level) {
+            "쉬움" -> 1
+            "보통" -> 2
+            "어려움" -> 3
+            "매우 어려움" -> 4
+            else -> 2
         }
     }
 
@@ -156,7 +201,8 @@ class WriteViewModel @Inject constructor(
                 emotionScore = currentState.emotionScore,
                 emotion = currentState.emotion,
                 difficultyLevel = currentState.difficultyLevel,
-                updatedAt = System.currentTimeMillis()
+                updatedAt = System.currentTimeMillis(),
+                aiFeedBack = currentState.aiFeedbackComment
             )
 
             val result = if (currentState.isEditMode) {

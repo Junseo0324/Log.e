@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ fun WriteScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.height(24.dp))
@@ -73,7 +75,12 @@ fun WriteScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         if (state.showAiAnalysisResult) {
-            AiAnalysisResultCard()
+            AiAnalysisResultCard(
+                emotion = state.emotion,
+                score = state.emotionScore,
+                difficultyLevel = state.difficultyLevel,
+                comment = state.aiFeedbackComment ?: "분석된 내용이 없습니다."
+            )
             Spacer(modifier = Modifier.height(16.dp))
             AiAnalysisPlaceholder()
         } else {
