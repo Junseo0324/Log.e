@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.devhjs.loge.core.routing.MainRoute
 import com.devhjs.loge.presentation.component.BottomNavigationBar
 import com.devhjs.loge.presentation.designsystem.AppColors
 
@@ -17,10 +18,16 @@ fun MainScreen(
     Scaffold(
         containerColor = AppColors.cardBackground,
         bottomBar = {
-            BottomNavigationBar(
-                selectedRoute = selectedRoute,
-                onItemClicked = onBottomNavSelected
-            )
+            val isBottomBarVisible = selectedRoute == MainRoute.Home.route ||
+                    selectedRoute == MainRoute.Stat.route ||
+                    selectedRoute == MainRoute.Setting.route
+
+            if (isBottomBarVisible) {
+                BottomNavigationBar(
+                    selectedRoute = selectedRoute,
+                    onItemClicked = onBottomNavSelected
+                )
+            }
         }
     ) { innerPadding ->
         content(
