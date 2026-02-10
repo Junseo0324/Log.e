@@ -115,10 +115,12 @@ fun ContributionGraphSection(
                                         Text(
                                             text = gridInfo.monthLabels[labelIndex].second,
                                             style = AppTextStyles.Pretendard.Label.copy(
-                                                fontSize = 8.sp,
+                                                fontSize = 7.sp,
                                                 color = AppColors.subTextColor
                                             ),
-                                            textAlign = TextAlign.Start
+                                            textAlign = TextAlign.Start,
+                                            softWrap = false,
+                                            maxLines = 1
                                         )
                                         labelIndex++
                                     }
