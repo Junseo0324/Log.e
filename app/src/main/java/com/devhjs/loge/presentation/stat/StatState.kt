@@ -16,5 +16,6 @@ data class StatState(
     val selectedMonth: String = YearMonth.now().format(DateTimeFormatter.ofPattern("yyyy-MM")),
     val stat: Stat? = null,
     val emotionDistribution: Map<EmotionType, Int> = emptyMap(),
-    val difficultyChartPoints: List<ChartPoint> = emptyList()
+    val difficultyChartPoints: List<ChartPoint> = emptyList(),
+    val yearlyLearnedDates: List<String> = emptyList() // 연간 학습 날짜 (ContributionGraph용)
 )
