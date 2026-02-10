@@ -7,5 +7,6 @@ package com.devhjs.loge.presentation.home
 sealed interface HomeAction {
     data object OnAddClick : HomeAction
     data class OnLogClick(val id: Long) : HomeAction
+    data class OnDeleteClick(val logId: Long) : HomeAction
     data object OnRefresh : HomeAction
 }
