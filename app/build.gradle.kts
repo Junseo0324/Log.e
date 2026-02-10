@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -21,7 +23,15 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
-        val openAiApiKey: String = project.findProperty("OPENAI_API_KEY") as? String ?: "MISSING_KEY"
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.inputStream().use { localProperties.load(it) }
+        }
+        
+        val openAiApiKey = localProperties.getProperty("OPENAI_API_KEY") 
+            ?: throw GradleException("OPENAI_API_KEY not found in local.properties. Please add 'OPENAI_API_KEY=your_key_here' to local.properties file.")
+            
         buildConfigField("String", "OPENAI_API_KEY", "\"$openAiApiKey\"")
     }
 
