@@ -9,14 +9,14 @@ import javax.inject.Inject
 class DeleteTilUseCase @Inject constructor(
     private val repository: TilRepository
 ) {
-    suspend operator fun invoke(til: Til): Result<Unit, Throwable> {
-        Timber.d("DeleteTilUseCase: Deleting log with id ${til.id}")
+    suspend operator fun invoke(id: Long): Result<Unit, Throwable> {
+        Timber.d("DeleteTilUseCase: Deleting log with id $id")
         return try {
-            repository.deleteTil(til)
-            Timber.d("DeleteTilUseCase: Successfully deleted log ${til.id}")
+            repository.deleteTil(id)
+            Timber.d("DeleteTilUseCase: Successfully deleted log $id")
             Result.Success(Unit)
         } catch (e: Exception) {
-            Timber.e(e, "DeleteTilUseCase: Failed to delete log ${til.id}")
+            Timber.e(e, "DeleteTilUseCase: Failed to delete log $id")
             Result.Error(e)
         }
     }

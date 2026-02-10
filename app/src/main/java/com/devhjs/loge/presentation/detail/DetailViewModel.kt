@@ -73,14 +73,14 @@ class DetailViewModel @Inject constructor(
 
     private fun deleteLog() {
         viewModelScope.launch {
-            val currentLog = _state.value.log ?: return@launch
-            when (val result = deleteTilUseCase(currentLog)) {
+            when (val result = deleteTilUseCase(logId)) {
                 is Result.Success -> {
                     _event.emit(DetailEvent.NavigateBack)
                 }
                 is Result.Error -> {
-                    _state.update { it.copy(errorMessage = result.error.message) }
-                    _event.emit(DetailEvent.ShowError(result.error.message ?: "삭제 실패"))
+                    val errorMessage = result.error.message ?: "삭제 실패"
+                    _state.update { it.copy(errorMessage = errorMessage) }
+                    _event.emit(DetailEvent.ShowError(errorMessage))
                 }
             }
         }

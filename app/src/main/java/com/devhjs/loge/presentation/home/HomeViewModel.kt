@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devhjs.loge.core.util.DateUtils
 import com.devhjs.loge.core.util.Result
+import com.devhjs.loge.domain.usecase.DeleteTilUseCase
 import com.devhjs.loge.domain.usecase.GetTilsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,7 +23,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getTilsUseCase: GetTilsUseCase
+    private val getTilsUseCase: GetTilsUseCase,
+    private val deleteTilUseCase: DeleteTilUseCase
 ) : ViewModel() {
 
     // UI 상태 (StateFlow로 관리)
@@ -98,6 +100,18 @@ class HomeViewModel @Inject constructor(
             is HomeAction.OnRefresh -> {
                 loadLogs()
             }
+            is HomeAction.OnDeleteClick -> {
+                deleteLog(action.logId)
+            }
+        }
+    }
+
+    /**
+     * 로그 삭제
+     */
+    private fun deleteLog(id: Long) {
+        viewModelScope.launch {
+            deleteTilUseCase(id)
         }
     }
 }
