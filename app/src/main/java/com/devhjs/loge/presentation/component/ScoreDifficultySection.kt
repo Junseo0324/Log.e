@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.devhjs.loge.domain.model.ChartPoint
 import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 import com.patrykandpatrick.vico.compose.axis.axisLabelComponent
@@ -37,50 +38,69 @@ import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.chart.line.LineChart
 import com.patrykandpatrick.vico.core.component.shape.DashedShape
 import com.patrykandpatrick.vico.core.component.shape.LineComponent
+import com.patrykandpatrick.vico.core.component.shape.ShapeComponent
 import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import com.patrykandpatrick.vico.core.entry.entryOf
 
 @Composable
-fun ScoreDifficultySection() {
-    // 데이터 설정 (2개의 시리즈: 점수, 난이도)
-    // 점수
-    val scoreEntries = listOf(
-        entryOf(0, 70), entryOf(1, 80), entryOf(2, 65), entryOf(3, 90), entryOf(4, 75)
-    )
-    // 난이도
-    val difficultyEntries = listOf(
-        entryOf(0, 40), entryOf(1, 50), entryOf(2, 45), entryOf(3, 60), entryOf(4, 55)
-    )
+fun ScoreDifficultySection(
+    emotionScoreList: List<ChartPoint>,
+    difficultyChartPoints: List<ChartPoint>
+) {
+    // 두 데이터 모두 없으면 빈 상태 표시
+    if (emotionScoreList.isEmpty() && difficultyChartPoints.isEmpty()) {
+        EmptyChartSection(title = "점수 & 난이도")
+        return
+    }
 
+    // 점수 데이터
+    val scoreEntries = emotionScoreList.mapIndexed { index, point ->
+        entryOf(index, point.y)
+    }
+
+    // 난이도 데이터 (1~5 → ×20 정규화하여 0~100 스케일로 변환)
+    val difficultyEntries = difficultyChartPoints.mapIndexed { index, point ->
+        entryOf(index, point.y * 20f)
+    }
+
+    // 두 시리즈를 하나의 모델로 합침
     val model = entryModelOf(scoreEntries, difficultyEntries)
 
-    val xLabels = listOf("2/1", "2/2", "2/3", "2/4", "2/5")
+    val xLabels = emotionScoreList.map { "${it.x.toInt()}일" }
 
     val scoreColor = AppColors.primary
-    val difficultyColor = AppColors.purple
+    val difficultyColor = AppColors.red
 
-    // 차트 라인 설정
+    // 차트 라인 설정 - 점수 + 난이도 두 개의 라인
     val lines = listOf(
         LineChart.LineSpec(
             lineColor = scoreColor.toArgb(),
             lineThicknessDp = 3f,
-            point = null,
+            point = ShapeComponent(
+                shape = Shapes.pillShape,
+                color = scoreColor.toArgb(),
+            ),
+            pointSizeDp = 6f,
             lineBackgroundShader = Brush.verticalGradient(
                 colors = listOf(
-                    scoreColor.copy(alpha = 0.4f),
-                    scoreColor.copy(alpha = 0.1f)
+                    scoreColor.copy(alpha = 0.3f),
+                    scoreColor.copy(alpha = 0.0f)
                 )
             ).toDynamicShader()
         ),
         LineChart.LineSpec(
             lineColor = difficultyColor.toArgb(),
             lineThicknessDp = 3f,
-            point = null,
+            point = ShapeComponent(
+                shape = Shapes.pillShape,
+                color = difficultyColor.toArgb(),
+            ),
+            pointSizeDp = 6f,
             lineBackgroundShader = Brush.verticalGradient(
                 colors = listOf(
-                    difficultyColor.copy(alpha = 0.4f),
-                    difficultyColor.copy(alpha = 0.1f)
+                    difficultyColor.copy(alpha = 0.3f),
+                    difficultyColor.copy(alpha = 0.0f)
                 )
             ).toDynamicShader()
         )
@@ -146,33 +166,34 @@ fun ScoreDifficultySection() {
             
             Spacer(modifier = Modifier.height(12.dp))
 
+            // 범례: 점수 + 난이도
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // 점수 범례
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
                             .size(12.dp)
                             .background(scoreColor, RoundedCornerShape(4.dp))
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = "점수",
                         style = AppTextStyles.Pretendard.Label.copy(color = AppColors.subTextColor, fontSize = 12.sp)
                     )
                 }
-                
                 Spacer(modifier = Modifier.width(24.dp))
-
+                // 난이도 범례
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
                             .size(12.dp)
                             .background(difficultyColor, RoundedCornerShape(4.dp))
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = "난이도",
                         style = AppTextStyles.Pretendard.Label.copy(color = AppColors.subTextColor, fontSize = 12.sp)
@@ -186,5 +207,20 @@ fun ScoreDifficultySection() {
 @Preview
 @Composable
 private fun ScoreDifficultySectionPreview() {
-    ScoreDifficultySection()
+    ScoreDifficultySection(
+        emotionScoreList = listOf(
+            ChartPoint(1f, 70f),
+            ChartPoint(2f, 80f),
+            ChartPoint(3f, 65f),
+            ChartPoint(4f, 90f),
+            ChartPoint(5f, 75f)
+        ),
+        difficultyChartPoints = listOf(
+            ChartPoint(1f, 3f),
+            ChartPoint(2f, 4f),
+            ChartPoint(3f, 2f),
+            ChartPoint(4f, 5f),
+            ChartPoint(5f, 3f)
+        )
+    )
 }
