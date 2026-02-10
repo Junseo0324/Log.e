@@ -29,7 +29,7 @@ fun StatScreen(
     ) {
         item {
             ContributionGraphSection(
-                learnedDates = stat?.learnedDates ?: emptyList(),
+                yearlyLearnedDates = state.yearlyLearnedDates,
                 totalLogs = stat?.totalTil ?: 0,
                 selectedMonth = state.selectedMonth
             )
