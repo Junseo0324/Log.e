@@ -32,12 +32,32 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.devhjs.loge.domain.model.EmotionType
 import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
+import com.devhjs.loge.presentation.util.color
 import kotlin.math.atan2
 
 @Composable
-fun MoodDistributionSection() {
+fun MoodDistributionSection(
+    emotionDistribution: Map<EmotionType, Int>,
+    totalLogs: Int
+) {
+    // 데이터가 없으면 빈 상태 표시
+    if (emotionDistribution.isEmpty() || totalLogs == 0) {
+        EmptyChartSection(title = "감정 분포")
+        return
+    }
+
+    // 감정 분포를 파이 차트 슬라이스로 변환
+    val slices = emotionDistribution.map { (emotion, count) ->
+        Triple(
+            count.toFloat() / totalLogs,
+            emotion.color,
+            emotion.label
+        )
+    }.sortedByDescending { it.first }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -61,18 +81,11 @@ fun MoodDistributionSection() {
                 contentAlignment = Alignment.Center
             ) {
                 var selectedIndex by remember { mutableIntStateOf(-1) }
-                
-                val slices = listOf(
-                    Triple(0.4f, AppColors.blue, "성장"),
-                    Triple(0.3f, Color(0xFF8B5CF6), "혼란"),
-                    Triple(0.2f, AppColors.amber, "고군분투"),
-                    Triple(0.1f, AppColors.red, "자부심")
-                )
 
                 Canvas(
                     modifier = Modifier
                         .size(180.dp)
-                        .pointerInput(Unit) {
+                        .pointerInput(slices) {
                             detectTapGestures { offset ->
                                 val center = Offset(size.width / 2f, size.height / 2f)
                                 val x = offset.x - center.x
@@ -109,7 +122,8 @@ fun MoodDistributionSection() {
                     var startAngle = -90f
                     
                     slices.forEachIndexed { index, (fraction, color, _) ->
-                        val sweepAngle = fraction * 360f
+                        // 360°일 때 arcTo가 점으로 축소되는 것을 방지
+                        val sweepAngle = (fraction * 360f).coerceAtMost(359.9f)
                         val isSelected = index == selectedIndex
                         val currentWidth = if (isSelected) selectedStrokeWidth else defaultStrokeWidth
                         
@@ -165,7 +179,7 @@ fun MoodDistributionSection() {
                         )
                     } else {
                         Text(
-                            text = "총 5개",
+                            text = "총 ${totalLogs}개",
                             style = AppTextStyles.Pretendard.Header4.copy(color = AppColors.white)
                         )
                         Text(
@@ -178,20 +192,27 @@ fun MoodDistributionSection() {
             
             Spacer(modifier = Modifier.height(24.dp))
             
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-               MoodLegendItem(color = AppColors.blue, label = "성장 (2)")
-               MoodLegendItem(color = AppColors.amber, label = "고군분투 (1)")
+            // 범례 표시 (2열로 배치)
+            val legendItems = emotionDistribution.map { (emotion, count) ->
+                Triple(emotion.color, emotion.label, count)
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                MoodLegendItem(color = AppColors.purple, label = "혼란 (2)")
-                MoodLegendItem(color = AppColors.red, label = "자부심 (1)")
+            val rows = legendItems.chunked(2)
+            rows.forEachIndexed { index, row ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    row.forEach { (color, label, count) ->
+                        MoodLegendItem(color = color, label = "$label ($count)")
+                    }
+                    // 홀수 개일 때 빈 공간 확보
+                    if (row.size == 1) {
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                }
+                if (index < rows.lastIndex) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
             }
         }
     }
@@ -200,5 +221,14 @@ fun MoodDistributionSection() {
 @Preview
 @Composable
 private fun MoodDistributionSectionPreview() {
-    MoodDistributionSection()
+    MoodDistributionSection(
+        emotionDistribution = mapOf(
+            EmotionType.FULFILLMENT to 3,
+            EmotionType.SATISFACTION to 2,
+            EmotionType.NORMAL to 1,
+            EmotionType.DIFFICULTY to 1,
+            EmotionType.FRUSTRATION to 1
+        ),
+        totalLogs = 8
+    )
 }
