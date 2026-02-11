@@ -10,4 +10,5 @@ sealed class MainRoute(val route: String) {
     data object Write : MainRoute("write?logId={logId}") {
         fun createRoute(logId: Long? = null) = if (logId != null) "write?logId=$logId" else "write"
     }
+    data object Licenses : MainRoute("licenses")
 }

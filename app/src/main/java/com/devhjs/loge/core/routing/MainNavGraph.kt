@@ -3,12 +3,13 @@ package com.devhjs.loge.core.routing
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.devhjs.loge.presentation.detail.DetailScreenRoot
 import com.devhjs.loge.presentation.home.HomeScreenRoot
+import com.devhjs.loge.presentation.license.LicensesScreen
 import com.devhjs.loge.presentation.setting.SettingScreenRoot
 import com.devhjs.loge.presentation.stat.StatScreenRoot
 import com.devhjs.loge.presentation.write.WriteScreenRoot
@@ -41,7 +42,18 @@ fun MainNavGraph(
             )
         }
         composable(MainRoute.Stat.route) { StatScreenRoot() }
-        composable(MainRoute.Setting.route) { SettingScreenRoot() }
+        composable(MainRoute.Setting.route) { 
+            SettingScreenRoot(
+                onNavigateToLicenses = {
+                    navController.navigate(MainRoute.Licenses.route)
+                }
+            )
+        }
+        composable(MainRoute.Licenses.route) {
+            LicensesScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
         composable(
             route = MainRoute.Detail.route,
             arguments = listOf(
