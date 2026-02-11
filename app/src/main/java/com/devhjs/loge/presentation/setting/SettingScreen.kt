@@ -89,7 +89,7 @@ fun SettingScreen(
                                 .clip(CircleShape)
                                 .background(
                                     brush = Brush.linearGradient(
-                                        colors = listOf(Color(0xFF00BC7D), Color(0xFF00B8DB))
+                                        colors = listOf(AppColors.primary, AppColors.gradient2)
                                     )
                                 ),
                             contentAlignment = Alignment.Center
