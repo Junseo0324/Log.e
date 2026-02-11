@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.aboutLibraries)
 }
 
 android {
@@ -128,4 +129,5 @@ dependencies {
     // LeakCanary
     debugImplementation(libs.leakcanary.android)
     coreLibraryDesugaring(libs.android.desugarJdkLibs)
+    implementation(libs.aboutlibraries.compose)
 }
