@@ -6,9 +6,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devhjs.loge.presentation.component.AiAnalysisPlaceholder
@@ -31,13 +37,21 @@ fun WriteScreen(
     ) {
         Spacer(modifier = Modifier.height(24.dp))
 
+        // Focus Requester 설정
+        val learnedFocusRequester = remember { FocusRequester() }
+        val difficultFocusRequester = remember { FocusRequester() }
+
         // Title 입력
         WriteInputSection(
             label = "// 제목",
             placeholder = "오늘 무엇을 배웠나요?",
             value = state.title,
             onValueChange = { onAction(WriteAction.OnTitleChange(it)) },
-            minHeight = 44.dp
+            minHeight = 44.dp,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(
+                onNext = { learnedFocusRequester.requestFocus() }
+            )
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -45,11 +59,16 @@ fun WriteScreen(
         // Learned
         WriteInputSection(
             label = "// 학습 내용",
-            placeholder = "const learnings = [\n  'React hooks 사용법 학습',\n  'async/await 패턴 이해',\n  'CSS flexbox 레이아웃 마스터'\n];",
+            placeholder = "오늘 배운 점을 입력하세요",
             value = state.learnings,
             onValueChange = { onAction(WriteAction.OnLearningsChange(it)) },
             minHeight = 120.dp,
-            singleLine = false
+            singleLine = false,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(
+                onNext = { difficultFocusRequester.requestFocus() }
+            ),
+            textFieldModifier = Modifier.focusRequester(learnedFocusRequester)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -57,11 +76,13 @@ fun WriteScreen(
         // Difficult
         WriteInputSection(
             label = "// 어려웠던 점",
-            placeholder = "오늘의 어려웠던 점을 입력",
+            placeholder = "오늘의 어려웠던 점을 입력하세요",
             value = state.difficulties,
             onValueChange = { onAction(WriteAction.OnDifficultiesChange(it)) },
             minHeight = 100.dp,
-            singleLine = false
+            singleLine = false,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            textFieldModifier = Modifier.focusRequester(difficultFocusRequester)
         )
 
         Spacer(modifier = Modifier.height(24.dp))

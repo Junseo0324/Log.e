@@ -25,6 +25,10 @@ import androidx.compose.ui.unit.dp
 import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.graphics.SolidColor
+
 @Composable
 fun WriteInputSection(
     label: String,
@@ -32,7 +36,10 @@ fun WriteInputSection(
     value: String,
     onValueChange: (String) -> Unit,
     minHeight: Dp,
-    singleLine: Boolean = true
+    singleLine: Boolean = true,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    textFieldModifier: Modifier = Modifier
 ) {
     var isFocused by remember { mutableStateOf(false) }
 
@@ -61,7 +68,10 @@ fun WriteInputSection(
                 onValueChange = onValueChange,
                 textStyle = AppTextStyles.Pretendard.Body.copy(color = AppColors.titleTextColor),
                 maxLines = if (singleLine) 1 else Int.MAX_VALUE,
-                modifier = Modifier
+                cursorBrush = SolidColor(AppColors.white),
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
+                modifier = textFieldModifier
                     .fillMaxWidth()
                     .onFocusChanged { focusState ->
                         isFocused = focusState.isFocused
