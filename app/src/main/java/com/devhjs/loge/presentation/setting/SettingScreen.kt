@@ -46,6 +46,7 @@ fun SettingScreen(
     isAutoAnalysisEnabled: Boolean = true,
     onExportClick: () -> Unit = {},
     onDeleteAllClick: () -> Unit = {},
+    onLicensesClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -233,7 +234,7 @@ fun SettingScreen(
                         iconRes = R.drawable.ic_license,
                         title = "오픈소스 라이센스",
                         subtitle = null,
-                        onClick = { /* TODO */ },
+                        onClick = onLicensesClick,
                         containerColor = AppColors.cardInner
                     )
                     Spacer(modifier = Modifier.height(12.dp))

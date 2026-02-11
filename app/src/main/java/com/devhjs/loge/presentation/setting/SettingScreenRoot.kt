@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun SettingScreenRoot(
+    onNavigateToLicenses: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isNotificationEnabled by remember { mutableStateOf(true) }
@@ -25,6 +26,7 @@ fun SettingScreenRoot(
         onDeleteAllClick = { 
             // TODO: 전체 삭제 로직 구현 및 다이얼로그 표시
         },
+        onLicensesClick = onNavigateToLicenses,
         modifier = modifier
     )
 }
