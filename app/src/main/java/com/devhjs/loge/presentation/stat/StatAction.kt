@@ -7,4 +7,5 @@ package com.devhjs.loge.presentation.stat
 sealed interface StatAction {
     data object OnPreviousMonthClick : StatAction
     data object OnNextMonthClick : StatAction
+    data object OnAiAnalyzeClick : StatAction
 }

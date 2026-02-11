@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devhjs.loge.presentation.component.ContributionGraphSection
+import com.devhjs.loge.presentation.component.MonthlyReviewSection
 import com.devhjs.loge.presentation.component.MoodDistributionSection
 import com.devhjs.loge.presentation.component.MoodFrequencySection
 import com.devhjs.loge.presentation.component.MoodTrendSection
@@ -18,6 +19,7 @@ import com.devhjs.loge.presentation.component.StatSummarySection
 @Composable
 fun StatScreen(
     state: StatState,
+    onAction: (StatAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val stat = state.stat
@@ -64,11 +66,21 @@ fun StatScreen(
                 difficultyChartPoints = state.difficultyChartPoints
             )
         }
+        item {
+            MonthlyReviewSection(
+                isLoading = state.isAiLoading,
+                aiReport = state.aiReport,
+                onAnalyzeClick = { onAction(StatAction.OnAiAnalyzeClick) }
+            )
+        }
     }
 }
 
 @Preview
 @Composable
 fun StatScreenPreview() {
-    StatScreen(state = StatState())
+    StatScreen(
+        state = StatState(),
+        onAction = {}
+    )
 }

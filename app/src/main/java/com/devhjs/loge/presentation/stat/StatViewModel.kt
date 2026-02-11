@@ -2,7 +2,9 @@ package com.devhjs.loge.presentation.stat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devhjs.loge.core.util.Result
 import com.devhjs.loge.domain.usecase.GetEmotionDistributionUseCase
+import com.devhjs.loge.domain.usecase.GetMonthlyReviewUseCase
 import com.devhjs.loge.domain.usecase.GetMonthlyStatUseCase
 import com.devhjs.loge.domain.usecase.GetYearlyLearnedDatesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +26,8 @@ import javax.inject.Inject
 class StatViewModel @Inject constructor(
     private val getMonthlyStatUseCase: GetMonthlyStatUseCase,
     private val getEmotionDistributionUseCase: GetEmotionDistributionUseCase,
-    private val getYearlyLearnedDatesUseCase: GetYearlyLearnedDatesUseCase
+    private val getYearlyLearnedDatesUseCase: GetYearlyLearnedDatesUseCase,
+    private val getMonthlyReviewUseCase: GetMonthlyReviewUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(StatState())
@@ -59,6 +62,27 @@ class StatViewModel @Inject constructor(
                     .plusMonths(1).format(formatter)
                 _state.update { it.copy(selectedMonth = nextMonth) }
                 loadStats()
+            }
+            is StatAction.OnAiAnalyzeClick -> {
+                analyzeMonthlyLog()
+            }
+        }
+    }
+
+    private fun analyzeMonthlyLog() {
+        viewModelScope.launch {
+            _state.update { it.copy(isAiLoading = true) }
+            val result = getMonthlyReviewUseCase(_state.value.selectedMonth)
+            
+            _state.update { it.copy(isAiLoading = false) }
+            
+            when (result) {
+                is Result.Success -> {
+                    _state.update { it.copy(aiReport = result.data) }
+                }
+                is Result.Error -> {
+                    _event.emit(StatEvent.ShowError(result.error.message ?: "AI 분석에 실패했습니다."))
+                }
             }
         }
     }

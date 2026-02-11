@@ -95,6 +95,7 @@ fun StatScreenRoot(
     ) { paddingValues ->
         StatScreen(
             state = state,
+            onAction = viewModel::onAction,
             modifier = Modifier.padding(paddingValues)
         )
     }
