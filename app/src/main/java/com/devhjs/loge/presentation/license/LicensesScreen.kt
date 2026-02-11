@@ -12,7 +12,6 @@ import com.devhjs.loge.R
 import com.devhjs.loge.presentation.component.CustomAppBar
 import com.devhjs.loge.presentation.designsystem.AppColors
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
-import com.mikepenz.aboutlibraries.ui.compose.m3.LibraryDefaults
 
 @Composable
 fun LicensesScreen(
@@ -36,12 +35,6 @@ fun LicensesScreen(
         ) {
             LibrariesContainer(
                 modifier = Modifier.fillMaxSize(),
-                colors = LibraryDefaults.libraryColors(
-                    backgroundColor = AppColors.background,
-                    contentColor = AppColors.contentTextColor,
-                    badgeBackgroundColor = AppColors.cardInner,
-                    badgeContentColor = AppColors.primary,
-                )
             )
         }
     }

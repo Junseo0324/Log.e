@@ -23,7 +23,7 @@ mockk = "1.13.12"
 leakcanary = "2.14"
 desugar_jdk_libs = "2.1.4"
 material3 = "1.4.0"
-aboutLibraries = "11.2.3"
+aboutLibraries = "14.0.0-b02"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
