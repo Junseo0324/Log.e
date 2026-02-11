@@ -1,6 +1,5 @@
 package com.devhjs.loge.data.repository
 
-import com.devhjs.loge.BuildConfig
 import com.devhjs.loge.data.dto.ApiMessage
 import com.devhjs.loge.data.dto.OpenAiRequest
 import com.devhjs.loge.core.util.Result
