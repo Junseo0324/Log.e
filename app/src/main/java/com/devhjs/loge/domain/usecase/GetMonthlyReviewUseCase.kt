@@ -5,7 +5,9 @@ import com.devhjs.loge.core.util.Result
 import com.devhjs.loge.domain.model.AiReport
 import com.devhjs.loge.domain.repository.AiRepository
 import com.devhjs.loge.domain.repository.TilRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 
 import javax.inject.Inject
 
@@ -13,14 +15,14 @@ class GetMonthlyReviewUseCase @Inject constructor(
     private val aiRepository: AiRepository,
     private val tilRepository: TilRepository
 ) {
-    suspend operator fun invoke(month: String): Result<AiReport, Exception> {
-        return try {
+    suspend operator fun invoke(month: String): Result<AiReport, Exception> = withContext(Dispatchers.IO) {
+        try {
             val (start, end) = DateUtils.getMonthStartEndTimestamps(month)
 
             val tils = tilRepository.getAllTil(start, end).first()
 
             if (tils.isEmpty()) {
-                return Result.Success(
+                return@withContext Result.Success(
                     AiReport(
                         date = System.currentTimeMillis(),
                         emotion = "분석 불가",

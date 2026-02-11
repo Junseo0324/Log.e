@@ -4,7 +4,9 @@ import com.devhjs.loge.core.util.DateUtils
 import com.devhjs.loge.domain.model.ChartPoint
 import com.devhjs.loge.domain.model.TilAnalysis
 import com.devhjs.loge.domain.repository.TilRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import java.time.Instant
 import java.time.ZoneId
@@ -40,11 +42,10 @@ class GetEmotionDistributionUseCase @Inject constructor(
                         .dayOfMonth
                     ChartPoint(x = day.toFloat(), y = til.difficultyLevel.toFloat())
                 }
-
             TilAnalysis(
                 emotionDistribution = emotionDistribution,
                 difficultyChartPoints = difficultyChartPoints
             )
-        }
+        }.flowOn(Dispatchers.Default)
     }
 }

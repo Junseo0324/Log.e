@@ -1,11 +1,13 @@
 package com.devhjs.loge.data.repository
 
+import com.devhjs.loge.core.util.Result
 import com.devhjs.loge.data.dto.ApiMessage
 import com.devhjs.loge.data.dto.OpenAiRequest
-import com.devhjs.loge.core.util.Result
 import com.devhjs.loge.data.remote.OpenAiService
 import com.devhjs.loge.domain.model.AiReport
 import com.devhjs.loge.domain.repository.AiRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
@@ -94,8 +96,8 @@ class AiRepositoryImpl @Inject constructor(
     private suspend fun getAiResponse(
         systemRole: String,
         prompt: String
-    ): Result<AiReport, Exception> {
-        return try {
+    ): Result<AiReport, Exception> = withContext(Dispatchers.IO) {
+        try {
             val request = OpenAiRequest(
                 messages = listOf(
                     ApiMessage(role = "system", content = systemRole),

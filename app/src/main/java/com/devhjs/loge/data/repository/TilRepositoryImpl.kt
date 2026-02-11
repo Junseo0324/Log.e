@@ -10,6 +10,7 @@ import com.devhjs.loge.domain.model.Til
 import com.devhjs.loge.domain.repository.TilRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
 import com.devhjs.loge.core.util.DateUtils
@@ -23,11 +24,11 @@ class TilRepositoryImpl @Inject constructor(
     override fun getAllTil(start: Long, end: Long): Flow<List<Til>> {
         return tilDao.getTilsBetween(start, end).flowMap { entities: List<TilEntity> ->
             entities.map { entity -> entity.toDomain() }
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
     override fun getTil(id: Long): Flow<Til> {
-        return tilDao.getTilById(id).mapNotNull { it.firstOrNull()?.toDomain() }
+        return tilDao.getTilById(id).mapNotNull { it.firstOrNull()?.toDomain() }.flowOn(Dispatchers.IO)
     }
 
     override suspend fun saveTil(til: Til) {
@@ -98,6 +99,6 @@ class TilRepositoryImpl @Inject constructor(
                 learnedDates = learnedDates,
                 aiReport = null
             )
-        }
+        }.flowOn(Dispatchers.IO)
     }
 }
