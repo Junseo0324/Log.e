@@ -25,18 +25,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.component.InfoItem
 import com.devhjs.loge.presentation.component.LogETopBar
 import com.devhjs.loge.presentation.component.SectionHeader
 import com.devhjs.loge.presentation.component.SettingActionItem
 import com.devhjs.loge.presentation.component.SettingSectionContainer
 import com.devhjs.loge.presentation.component.SettingToggleItem
 import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
 fun SettingScreen(
@@ -59,9 +58,8 @@ fun SettingScreen(
             bottomContent = {
                 Text(
                     text = "// 앱 환경설정 및 데이터 관리",
-                    color = AppColors.labelTextColor,
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    style = AppTextStyles.JetBrain.Label.copy(color = AppColors.labelTextColor, fontSize = 12.sp),
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
             }
         )
@@ -75,60 +73,63 @@ fun SettingScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Profile
+
             SettingSectionContainer {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
+                Column(modifier = Modifier.padding(16.dp)) {
+                    SectionHeader(iconRes = R.drawable.ic_profile, title = "프로필")
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Row(
                         modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(
-                                brush = Brush.linearGradient(
-                                    colors = listOf(AppColors.gradient1, AppColors.gradient2)
-                                )
-                            ),
-                        contentAlignment = Alignment.Center
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    brush = Brush.linearGradient(
+                                        colors = listOf(Color(0xFF00BC7D), Color(0xFF00B8DB))
+                                    )
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_normal),
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column {
+                            Text(
+                                text = "Developer",
+                                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.titleTextColor, fontSize = 16.sp),
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "github.com/username",
+                                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.contentTextColor, fontSize = 12.sp),
+                            )
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_normal),
+                            painter = painterResource(id = R.drawable.ic_forward),
                             contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.size(24.dp)
+                            tint = AppColors.labelTextColor,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column {
-                        Text(
-                            text = "Developer",
-                            color = AppColors.titleTextColor,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                        Text(
-                            text = "dev@log-e.com",
-                            color = AppColors.labelTextColor,
-                            fontSize = 12.sp
-                        )
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_forward),
-                        contentDescription = null,
-                        tint = AppColors.labelTextColor,
-                        modifier = Modifier.size(20.dp)
-                    )
                 }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            SectionHeader(iconRes = R.drawable.setting_outlined, title = "앱 설정")
             SettingSectionContainer {
                 Column(modifier = Modifier.padding(16.dp)) {
+                    SectionHeader(iconRes = R.drawable.setting_outlined, title = "앱 설정")
+                    Spacer(modifier = Modifier.height(12.dp))
                     SettingToggleItem(
                         iconRes = R.drawable.ic_time,
                         title = "알림",
@@ -146,27 +147,19 @@ fun SettingScreen(
                         enabled = false,
                         isReadOnly = true
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    SettingToggleItem(
-                        iconRes = R.drawable.ic_ai,
-                        title = "자동 AI 분석",
-                        subtitle = "로그 저장 시 자동 분석",
-                        checked = isAutoAnalysisEnabled,
-                        onCheckedChange = onAutoAnalysisToggle,
-                        checkedColor = Color(0xFF404040)
-                    )
                 }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            SectionHeader(iconRes = R.drawable.ic_save, title = "데이터 관리")
             SettingSectionContainer {
                 Column(modifier = Modifier.padding(16.dp)) {
+                    SectionHeader(iconRes = R.drawable.ic_database, title = "데이터 관리")
+                    Spacer(modifier = Modifier.height(12.dp))
                     SettingActionItem(
                         iconRes = R.drawable.ic_save,
-                        title = "데이터 내보내기",
-                        subtitle = "JSON 형식으로 저장",
+                        title = "CSV 형태로 저장하기",
+                        subtitle = "모든 TIL 데이터를 내보내기",
                         onClick = onExportClick
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -182,35 +175,86 @@ fun SettingScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            SectionHeader(iconRes = R.drawable.ic_detail, title = "앱 정보")
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Column(
-                modifier = Modifier.background(AppColors.cardBackground, RoundedCornerShape(10.dp)).padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-
-            ) {
-                InfoItem(label = "버전", value = "v1.0.0")
-                InfoItem(label = "빌드 날짜", value = "2024.02.08")
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(AppColors.background, RoundedCornerShape(10.dp))
-                        .padding(12.dp)
-                ) {
-                    Column {
+            SettingSectionContainer {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    SectionHeader(iconRes = R.drawable.ic_info, title = "정보 및 지원")
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(AppColors.cardInner, RoundedCornerShape(10.dp))
+                            .padding(horizontal = 12.dp, vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
-                            text = "// Log.e - 개발자를 위한 TIL 기록 앱",
-                            color = AppColors.primary,
-                            fontSize = 12.sp
+                            text = "버전",
+                            style = AppTextStyles.JetBrain.Label.copy(color = AppColors.subTextColor, fontSize = 14.sp),
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "// 매일의 배움을 기록하고 AI로 성장을 분석하세요",
-                            color = AppColors.labelTextColor,
-                            fontSize = 12.sp
+                            text = "v1.0.0",
+                            style = AppTextStyles.JetBrain.Label.copy(color = AppColors.contentTextColor, fontSize = 14.sp),
                         )
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // 최근 업데이트 날짜
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(AppColors.cardInner, RoundedCornerShape(10.dp))
+                            .padding(horizontal = 12.dp, vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "최근 업데이트 날짜",
+                            style = AppTextStyles.JetBrain.Label.copy(color = AppColors.subTextColor, fontSize = 14.sp),
+                        )
+                        Text(
+                            text = "2024.02.08",
+                            style = AppTextStyles.JetBrain.Label.copy(color = AppColors.contentTextColor, fontSize = 14.sp),
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // 피드백 보내기
+                    SettingActionItem(
+                        iconRes = R.drawable.ic_chat,
+                        title = "피드백 보내기",
+                        subtitle = null,
+                        onClick = { /* TODO */ },
+                        containerColor = AppColors.cardInner
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // 오픈소스 라이센스
+                    SettingActionItem(
+                        iconRes = R.drawable.ic_license,
+                        title = "오픈소스 라이센스",
+                        subtitle = null,
+                        onClick = { /* TODO */ },
+                        containerColor = AppColors.cardInner
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(AppColors.cardInner, RoundedCornerShape(10.dp))
+                            .padding(12.dp)
+                    ) {
+                        Column {
+                            Text(
+                                text = "// Log.e - 개발자를 위한 TIL 기록 앱",
+                                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.primary, fontSize = 14.sp),
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "// 매일의 배움을 기록하고 AI로 성장을 분석하세요",
+                                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.labelTextColor, fontSize = 12.sp),
+                            )
+                        }
                     }
                 }
             }
@@ -220,16 +264,13 @@ fun SettingScreen(
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 Text(
                     text = "Made with 💚 for developers",
-                    color = AppColors.labelTextColor,
-                    fontSize = 12.sp
+                    style = AppTextStyles.JetBrain.Label.copy(color = AppColors.subTextColor, fontSize = 14.sp),
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
-
-
 
 
 @Preview

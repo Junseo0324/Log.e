@@ -71,7 +71,7 @@ fun LogETopBar(
                     // 타이틀
                     Text(
                         text = title,
-                        style = titleStyle.copy(color = AppColors.white)
+                        style = AppTextStyles.JetBrain.Header1.copy(color = AppColors.white,),
                     )
                 }
 

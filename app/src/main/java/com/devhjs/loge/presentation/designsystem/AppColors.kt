@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 object AppColors {
     val background = Color(0xFF1E1E1E)
     val cardBackground = Color(0xFF0D0D0D)
+    val cardInner = Color(0x80252525)
     val iconPrimary = Color(0xFF00D492)
     val primary = Color(0xFF00BC7D)
     val red = Color(0xFFFF6467)

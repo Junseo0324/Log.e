@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
 import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
 fun SettingToggleItem(
@@ -51,13 +52,11 @@ fun SettingToggleItem(
             Column {
                 Text(
                     text = title,
-                    color = AppColors.titleTextColor,
-                    fontSize = 14.sp
+                    style = AppTextStyles.JetBrain.Label.copy(color = AppColors.titleTextColor, fontSize = 14.sp),
                 )
                 Text(
                     text = subtitle,
-                    color = AppColors.labelTextColor,
-                    fontSize = 12.sp
+                    style = AppTextStyles.JetBrain.Label.copy(color = AppColors.labelTextColor, fontSize = 14.sp),
                 )
             }
         }

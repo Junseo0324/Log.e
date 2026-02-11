@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
 import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
@@ -29,7 +30,7 @@ fun SectionHeader(iconRes: Int, title: String) {
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = title,
-            style = AppTextStyles.Pretendard.Header5.copy(color = AppColors.subTextColor),
+            style = AppTextStyles.JetBrain.Label.copy(color = AppColors.subTextColor, fontSize = 14.sp),
         )
     }
     Spacer(modifier = Modifier.height(16.dp))
