@@ -1,0 +1,109 @@
+package com.devhjs.loge.domain.usecase
+
+import com.devhjs.loge.core.util.Result
+import com.devhjs.loge.domain.model.AiReport
+import com.devhjs.loge.domain.model.EmotionType
+import com.devhjs.loge.domain.model.Til
+import com.devhjs.loge.domain.repository.AiRepository
+import com.devhjs.loge.domain.repository.TilRepository
+import io.mockk.coEvery
+import io.mockk.mockk
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Test
+
+class GetMonthlyReviewUseCaseTest {
+
+    private lateinit var aiRepository: AiRepository
+    private lateinit var tilRepository: TilRepository
+    private lateinit var getMonthlyReviewUseCase: GetMonthlyReviewUseCase
+
+    @Before
+    fun setUp() {
+        aiRepository = mockk()
+        tilRepository = mockk()
+        getMonthlyReviewUseCase = GetMonthlyReviewUseCase(aiRepository, tilRepository)
+    }
+
+    @Test
+    fun `데이터가 없을 때 분석 불가 메시지를 반환해야 한다`() = runBlocking {
+        // Given
+        val month = "2024-02"
+        coEvery { tilRepository.getAllTil(any(), any()) } returns flowOf(emptyList())
+
+        // When
+        val result = getMonthlyReviewUseCase(month)
+
+        // Then
+        assertTrue(result is Result.Success)
+        val data = (result as Result.Success).data
+        assertEquals("분석 불가", data.emotion)
+        assertEquals("이번 달에 작성된 회고가 없어 분석할 수 없습니다. 조금 더 꾸준히 기록해 보세요!", data.comment)
+    }
+
+    @Test
+    fun `데이터가 있을 때 AI 분석 결과를 반환해야 한다`() = runBlocking {
+        // Given
+        val month = "2024-02"
+        val tils = listOf(
+            Til(
+                id = 1,
+                createdAt = 1706750000000,
+                title = "Title 1",
+                learned = "Learned 1",
+                difficult = "Difficult 1",
+                emotionScore = 80,
+                emotion = EmotionType.FULFILLMENT,
+                difficultyLevel = 1,
+                updatedAt = 1706750000000
+            ),
+            Til(
+                id = 2,
+                createdAt = 1706850000000,
+                title = "Title 2",
+                learned = "Learned 2",
+                difficult = "Difficult 2",
+                emotionScore = 60,
+                emotion = EmotionType.SATISFACTION,
+                difficultyLevel = 2,
+                updatedAt = 1706850000000
+            )
+        )
+        val expectedReport = AiReport(
+            date = System.currentTimeMillis(),
+            emotion = "성취감",
+            emotionScore = 70,
+            difficultyLevel = "보통",
+            comment = "Good job!"
+        )
+
+        coEvery { tilRepository.getAllTil(any(), any()) } returns flowOf(tils)
+        coEvery { aiRepository.getAiFeedback(any(), any(), any(), any()) } returns Result.Success(expectedReport)
+
+        // When
+        val result = getMonthlyReviewUseCase(month)
+
+        // Then
+        assertTrue(result is Result.Success)
+        assertEquals(expectedReport, (result as Result.Success).data)
+    }
+
+    @Test
+    fun `repository Error 발생 시 에러 결과를 반환해야 한다`() = runBlocking {
+        // Given
+        val month = "2024-02"
+        val exception = RuntimeException("DB Error")
+        
+        coEvery { tilRepository.getAllTil(any(), any()) } throws exception
+
+        // When
+        val result = getMonthlyReviewUseCase(month)
+
+        // Then
+        assertTrue(result is Result.Error)
+        assertEquals(exception, (result as Result.Error).error)
+    }
+}
