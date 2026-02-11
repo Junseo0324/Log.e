@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -33,6 +34,7 @@ fun WriteScreen(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
+            .imePadding()
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.height(24.dp))
@@ -58,6 +60,7 @@ fun WriteScreen(
 
         // Learned
         WriteInputSection(
+            modifier = Modifier.focusRequester(learnedFocusRequester),
             label = "// 학습 내용",
             placeholder = "오늘 배운 점을 입력하세요",
             value = state.learnings,
@@ -68,13 +71,13 @@ fun WriteScreen(
             keyboardActions = KeyboardActions(
                 onNext = { difficultFocusRequester.requestFocus() }
             ),
-            textFieldModifier = Modifier.focusRequester(learnedFocusRequester)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         // Difficult
         WriteInputSection(
+            modifier = Modifier.focusRequester(difficultFocusRequester),
             label = "// 어려웠던 점",
             placeholder = "오늘의 어려웠던 점을 입력하세요",
             value = state.difficulties,
@@ -82,7 +85,6 @@ fun WriteScreen(
             minHeight = 100.dp,
             singleLine = false,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            textFieldModifier = Modifier.focusRequester(difficultFocusRequester)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
