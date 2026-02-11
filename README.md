@@ -52,10 +52,3 @@ com.devhjs.loge
 │   └── setting      # 설정 화면
 └── di               # Hilt Modules
 ```
-
-## 🤝 기여 (Contribution)
-이슈 리포트와 풀 리퀘스트(Pull Request)는 언제나 환영합니다!
-버그를 발견하거나 새로운 기능을 제안하고 싶다면 Issue를 등록해주세요.
-
-## 📄 라이선스 (License)
-This project is licensed under the [MIT License](LICENSE).
