@@ -69,7 +69,7 @@ fun MoodDistributionSection(
         Column {
             Text(
                 text = "감정 분포",
-                style = AppTextStyles.Pretendard.Header5.copy(color = AppColors.subTextColor)
+                style = AppTextStyles.Pretendard.Header3.copy(color = AppColors.subTextColor),
             )
             Spacer(modifier = Modifier.height(24.dp))
             
@@ -193,17 +193,23 @@ fun MoodDistributionSection(
             Spacer(modifier = Modifier.height(24.dp))
             
             // 범례 표시 (2열로 배치)
-            val legendItems = emotionDistribution.map { (emotion, count) ->
-                Triple(emotion.color, emotion.label, count)
-            }
+            val legendItems = emotionDistribution.toList()
+                .sortedByDescending { it.second }
+                .map { (emotion, count) ->
+                    Triple(emotion.color, emotion.label, count)
+                }
             val rows = legendItems.chunked(2)
             rows.forEachIndexed { index, row ->
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     row.forEach { (color, label, count) ->
-                        MoodLegendItem(color = color, label = "$label ($count)")
+                        Box(
+                            modifier = Modifier.weight(1f),
+                        ) {
+                            MoodLegendItem(color = color, label = "$label ($count)")
+                        }
                     }
                     // 홀수 개일 때 빈 공간 확보
                     if (row.size == 1) {
