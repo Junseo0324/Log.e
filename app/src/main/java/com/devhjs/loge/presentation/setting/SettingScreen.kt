@@ -1,6 +1,7 @@
 package com.devhjs.loge.presentation.setting
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.component.LogETopBar
 import com.devhjs.loge.presentation.component.SectionHeader
 import com.devhjs.loge.presentation.component.SettingActionItem
 import com.devhjs.loge.presentation.component.SettingSectionContainer
@@ -39,32 +39,15 @@ import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
 fun SettingScreen(
-    modifier: Modifier = Modifier,
-    onNotificationToggle: (Boolean) -> Unit = {},
-    isNotificationEnabled: Boolean = true,
-    onAutoAnalysisToggle: (Boolean) -> Unit = {},
-    isAutoAnalysisEnabled: Boolean = true,
-    onExportClick: () -> Unit = {},
-    onDeleteAllClick: () -> Unit = {},
-    onLicensesClick: () -> Unit = {},
+    state: SettingState,
+    onAction: (SettingAction) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(AppColors.background)
     ) {
-        LogETopBar(
-            title = "설정",
-            titleIcon = R.drawable.setting_outlined,
-            bottomContent = {
-                Text(
-                    text = "// 앱 환경설정 및 데이터 관리",
-                    style = AppTextStyles.JetBrain.Label.copy(color = AppColors.labelTextColor, fontSize = 12.sp),
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-            }
-        )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -74,9 +57,12 @@ fun SettingScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Profile
-
             SettingSectionContainer {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(
+                    modifier = Modifier
+                        .clickable { onAction(SettingAction.OnProfileClick) }
+                        .padding(16.dp)
+                ) {
                     SectionHeader(iconRes = R.drawable.ic_profile, title = "프로필")
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(
@@ -105,12 +91,12 @@ fun SettingScreen(
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
                             Text(
-                                text = "Developer",
+                                text = state.user.name,
                                 style = AppTextStyles.JetBrain.Label.copy(color = AppColors.titleTextColor, fontSize = 16.sp),
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "github.com/username",
+                                text = "github.com/${state.user.githubId}",
                                 style = AppTextStyles.JetBrain.Label.copy(color = AppColors.contentTextColor, fontSize = 12.sp),
                             )
                         }
@@ -135,18 +121,16 @@ fun SettingScreen(
                         iconRes = R.drawable.ic_time,
                         title = "알림",
                         subtitle = "학습 리마인더 받기",
-                        checked = isNotificationEnabled,
-                        onCheckedChange = onNotificationToggle
+                        checked = state.user.isNotificationEnabled,
+                        onCheckedChange = { onAction(SettingAction.OnNotificationToggle(it)) }
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                     SettingToggleItem(
-                        iconRes = R.drawable.ic_stat_outlined,
-                        title = "다크 모드",
+                        iconRes = R.drawable.ic_dart,
+                        title = "모드 설정",
                         subtitle = "현재는 다크 모드만 지원",
-                        checked = true,
-                        onCheckedChange = {},
-                        enabled = false,
-                        isReadOnly = true
+                        checked = state.user.isDarkModeEnabled,
+                        onCheckedChange = { onAction(SettingAction.OnNotificationToggle(it)) }
                     )
                 }
             }
@@ -161,7 +145,7 @@ fun SettingScreen(
                         iconRes = R.drawable.ic_save,
                         title = "CSV 형태로 저장하기",
                         subtitle = "모든 TIL 데이터를 내보내기",
-                        onClick = onExportClick
+                        onClick = { onAction(SettingAction.OnExportClick) }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     SettingActionItem(
@@ -169,7 +153,7 @@ fun SettingScreen(
                         title = "모든 데이터 삭제",
                         subtitle = "복구할 수 없습니다",
                         titleColor = AppColors.red,
-                        onClick = onDeleteAllClick
+                        onClick = { onAction(SettingAction.OnDeleteAllClick) }
                     )
                 }
             }
@@ -193,7 +177,7 @@ fun SettingScreen(
                             style = AppTextStyles.JetBrain.Label.copy(color = AppColors.subTextColor, fontSize = 14.sp),
                         )
                         Text(
-                            text = "v1.0.0",
+                            text = state.appVersion,
                             style = AppTextStyles.JetBrain.Label.copy(color = AppColors.contentTextColor, fontSize = 14.sp),
                         )
                     }
@@ -234,7 +218,7 @@ fun SettingScreen(
                         iconRes = R.drawable.ic_license,
                         title = "오픈소스 라이센스",
                         subtitle = null,
-                        onClick = onLicensesClick,
+                        onClick = { onAction(SettingAction.OnLicensesClick) },
                         containerColor = AppColors.cardInner
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -248,12 +232,12 @@ fun SettingScreen(
                         Column {
                             Text(
                                 text = "// Log.e - 개발자를 위한 TIL 기록 앱",
-                                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.primary, fontSize = 14.sp),
+                                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.primary, fontSize = 13.sp),
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = "// 매일의 배움을 기록하고 AI로 성장을 분석하세요",
-                                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.labelTextColor, fontSize = 12.sp),
+                                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.labelTextColor, fontSize = 10.sp),
                             )
                         }
                     }
@@ -268,14 +252,16 @@ fun SettingScreen(
                     style = AppTextStyles.JetBrain.Label.copy(color = AppColors.subTextColor, fontSize = 14.sp),
                 )
             }
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
 
-
 @Preview
 @Composable
 fun SettingScreenPreview() {
-    SettingScreen()
+    SettingScreen(
+        state = SettingState(),
+        onAction = {}
+    )
 }
