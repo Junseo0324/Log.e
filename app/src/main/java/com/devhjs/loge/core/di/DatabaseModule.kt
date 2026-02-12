@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.devhjs.loge.data.local.LogEDatabase
 import com.devhjs.loge.data.local.dao.TilDao
+import com.devhjs.loge.data.local.dao.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,12 +25,21 @@ object DatabaseModule {
             context,
             LogEDatabase::class.java,
             "loge_database"
-        ).build()
+        ).fallbackToDestructiveMigration()
+        .build()
     }
+
+
 
     @Provides
     @Singleton
     fun provideTilDao(database: LogEDatabase): TilDao {
         return database.tilDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserDao(database: LogEDatabase): UserDao {
+        return database.userDao()
     }
 }

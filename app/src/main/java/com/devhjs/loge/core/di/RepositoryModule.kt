@@ -5,8 +5,10 @@ import com.devhjs.loge.data.repository.AiRepositoryImpl
 import com.devhjs.loge.data.repository.MockAiRepositoryImpl
 import com.devhjs.loge.data.repository.MockRepositoryImpl
 import com.devhjs.loge.data.repository.TilRepositoryImpl
+import com.devhjs.loge.data.repository.UserRepositoryImpl
 import com.devhjs.loge.domain.repository.AiRepository
 import com.devhjs.loge.domain.repository.TilRepository
+import com.devhjs.loge.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,5 +43,13 @@ object RepositoryModule {
         } else {
             aiRepositoryImpl
         }
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(
+        userRepositoryImpl: UserRepositoryImpl
+    ): UserRepository {
+        return userRepositoryImpl
     }
 }
