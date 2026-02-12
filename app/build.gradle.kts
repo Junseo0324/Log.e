@@ -131,4 +131,9 @@ dependencies {
     debugImplementation(libs.leakcanary.android)
     coreLibraryDesugaring(libs.android.desugarJdkLibs)
     implementation(libs.aboutlibraries.compose)
+
+    // WorkManager
+    implementation(libs.work.runtime.ktx)
+    implementation(libs.hilt.work)
+    ksp(libs.hilt.compiler.work)
 }
