@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devhjs.loge.R
+import com.devhjs.loge.presentation.component.CustomDialog
 import com.devhjs.loge.presentation.component.LogESnackbar
 import com.devhjs.loge.presentation.component.LogETopBar
 import com.devhjs.loge.presentation.designsystem.AppColors
@@ -81,6 +82,17 @@ fun SettingScreenRoot(
             state = state,
             onAction = viewModel::onAction,
             modifier = Modifier.padding(paddingValues)
+        )
+    }
+
+    if (state.showDeleteDialog) {
+        CustomDialog(
+            title = "모든 데이터 삭제",
+            description = "정말로 모든 데이터를 삭제하시겠습니까?\n삭제된 데이터는 복구할 수 없습니다.",
+            confirmText = "삭제",
+            dismissText = "취소",
+            onConfirm = { viewModel.onAction(SettingAction.OnDeleteConfirm) },
+            onDismiss = { viewModel.onAction(SettingAction.OnDeleteDismiss) }
         )
     }
 }

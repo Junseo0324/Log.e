@@ -9,5 +9,7 @@ sealed interface SettingAction {
     data object OnProfileClick : SettingAction
     data object OnExportClick : SettingAction
     data object OnDeleteAllClick : SettingAction
+    data object OnDeleteConfirm : SettingAction
+    data object OnDeleteDismiss : SettingAction
     data object OnLicensesClick : SettingAction
 }

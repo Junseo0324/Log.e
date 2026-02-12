@@ -3,6 +3,7 @@ package com.devhjs.loge.presentation.setting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devhjs.loge.core.util.Result
+import com.devhjs.loge.domain.usecase.DeleteAllUserDataUseCase
 import com.devhjs.loge.domain.usecase.GetUserUseCase
 import com.devhjs.loge.domain.usecase.SaveUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
-    private val saveUserUseCase: SaveUserUseCase
+    private val saveUserUseCase: SaveUserUseCase,
+    private val deleteAllUserDataUseCase: DeleteAllUserDataUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SettingState())
@@ -63,9 +65,24 @@ class SettingViewModel @Inject constructor(
                  }
             }
             is SettingAction.OnDeleteAllClick -> {
-                 viewModelScope.launch { 
-                     _event.emit(SettingEvent.ShowSnackbar("준비 중인 기능입니다."))
-                 }
+                 _state.update { it.copy(showDeleteDialog = true) }
+            }
+            is SettingAction.OnDeleteConfirm -> {
+                viewModelScope.launch {
+                    when (deleteAllUserDataUseCase()) {
+                        is Result.Success -> {
+                            _state.update { it.copy(showDeleteDialog = false) }
+                            _event.emit(SettingEvent.ShowSnackbar("모든 데이터가 삭제되었습니다."))
+                        }
+                        is Result.Error -> {
+                            _state.update { it.copy(showDeleteDialog = false) }
+                            _event.emit(SettingEvent.ShowSnackbar("데이터 삭제에 실패했습니다."))
+                        }
+                    }
+                }
+            }
+            is SettingAction.OnDeleteDismiss -> {
+                _state.update { it.copy(showDeleteDialog = false) }
             }
         }
     }
