@@ -43,13 +43,20 @@ fun MainNavGraph(
             )
         }
         composable(MainRoute.Stat.route) { StatScreenRoot() }
-        composable(MainRoute.Setting.route) { 
+        composable(MainRoute.Setting.route) { backStackEntry ->
+            val savedStateHandle = backStackEntry.savedStateHandle
+            val snackbarMessage = savedStateHandle.get<String>("snackbar_message")
+
             SettingScreenRoot(
                 onNavigateToLicenses = {
                     navController.navigate(MainRoute.Licenses.route)
                 },
                 onNavigateToProfileEdit = {
                     navController.navigate(MainRoute.ProfileEdit.route)
+                },
+                snackbarMessage = snackbarMessage,
+                onConsumeSnackbarMessage = {
+                    savedStateHandle.remove<String>("snackbar_message")
                 }
             )
         }
@@ -60,7 +67,13 @@ fun MainNavGraph(
         }
         composable(MainRoute.ProfileEdit.route) {
             ProfileScreenRoot(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                onSubmitSuccess = { message ->
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("snackbar_message", message)
+                    navController.popBackStack()
+                }
             )
         }
         composable(
