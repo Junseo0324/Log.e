@@ -61,6 +61,10 @@ class MockRepositoryImpl @Inject constructor() : TilRepository {
         mockData.removeAt(index = id.toInt())
     }
 
+    override suspend fun deleteAll() {
+        mockData.clear()
+    }
+
     override fun getMonthlyStats(month: String): Flow<Stat> = flow {
          val tils = mockData
          

@@ -11,5 +11,6 @@ interface TilRepository {
     suspend fun updateTil(til: Til)
     suspend fun deleteTil(til: Til)
     suspend fun deleteTil(id: Long)
+    suspend fun deleteAll()
     fun getMonthlyStats(month: String): Flow<Stat>
 }

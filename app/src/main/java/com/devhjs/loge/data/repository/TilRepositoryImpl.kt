@@ -55,6 +55,12 @@ class TilRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteAll() {
+        withContext(Dispatchers.IO) {
+            tilDao.deleteAll()
+        }
+    }
+
     override fun getMonthlyStats(month: String): Flow<Stat> {
         val (startOfMonth, endOfMonth) = DateUtils.getMonthStartEndTimestamps(month)
 

@@ -27,4 +27,10 @@ class UserRepositoryImpl @Inject constructor(
             userDao.insertUser(user.toEntity())
         }
     }
+
+    override suspend fun deleteAll() {
+        withContext(Dispatchers.IO) {
+            userDao.deleteAll()
+        }
+    }
 }
