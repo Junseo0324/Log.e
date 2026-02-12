@@ -1,5 +1,7 @@
 package com.devhjs.loge.presentation.setting
 
+import android.Manifest
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
@@ -43,6 +45,12 @@ fun SettingScreenRoot(
         }
     }
 
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        viewModel.onNotificationPermissionResult(isGranted)
+    }
+
     LaunchedEffect(snackbarMessage) {
         if (snackbarMessage != null) {
             snackbarHostState.showSnackbar(snackbarMessage)
@@ -65,6 +73,13 @@ fun SettingScreenRoot(
                 is SettingEvent.LaunchExport -> {
                     exportLauncher.launch(event.fileName)
                 }
+                is SettingEvent.RequestNotificationPermission -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        viewModel.onNotificationPermissionResult(true)
+                    }
+                }
             }
         }
     }
@@ -76,7 +91,7 @@ fun SettingScreenRoot(
                 titleIcon = R.drawable.setting_outlined,
                 bottomContent = {
                     Text(
-                        text = "// 앱 환경설정 및 데이터 관리",
+                        text = "앱 환경설정 및 데이터 관리",
                         style = AppTextStyles.JetBrain.Label.copy(color = AppColors.labelTextColor, fontSize = 12.sp),
                         modifier = Modifier.padding(bottom = 4.dp)
                     )

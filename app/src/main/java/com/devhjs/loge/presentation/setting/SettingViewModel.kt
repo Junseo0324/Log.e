@@ -6,7 +6,7 @@ import com.devhjs.loge.core.util.Result
 import com.devhjs.loge.domain.usecase.DeleteAllUserDataUseCase
 import com.devhjs.loge.domain.usecase.ExportTilUseCase
 import com.devhjs.loge.domain.usecase.GetUserUseCase
-import com.devhjs.loge.domain.usecase.SaveUserUseCase
+import com.devhjs.loge.domain.usecase.UpdateNotificationSettingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
@@ -24,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
-    private val saveUserUseCase: SaveUserUseCase,
+    private val updateNotificationSettingUseCase: UpdateNotificationSettingUseCase, // Changed
     private val deleteAllUserDataUseCase: DeleteAllUserDataUseCase,
     private val exportTilUseCase: ExportTilUseCase
 ) : ViewModel() {
@@ -55,7 +56,11 @@ class SettingViewModel @Inject constructor(
     fun onAction(action: SettingAction) {
         when (action) {
             is SettingAction.OnNotificationToggle -> {
-                updateNotificationSetting(action.enabled)
+                if (action.enabled) {
+                    viewModelScope.launch { _event.emit(SettingEvent.RequestNotificationPermission) }
+                } else {
+                    updateNotificationSetting(false)
+                }
             }
             is SettingAction.OnProfileClick -> {
                 viewModelScope.launch { _event.emit(SettingEvent.NavigateToProfile) }
@@ -66,7 +71,7 @@ class SettingViewModel @Inject constructor(
 
             is SettingAction.OnExportClick -> {
                  viewModelScope.launch { 
-                     val date = java.text.SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+                     val date = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
                      val fileName = "LogE_Backup_$date.csv"
                      _event.emit(SettingEvent.LaunchExport(fileName))
                  }
@@ -105,15 +110,40 @@ class SettingViewModel @Inject constructor(
             is SettingAction.OnDeleteDismiss -> {
                 _state.update { it.copy(showDeleteDialog = false) }
             }
+            is SettingAction.OnTimeSelected -> {
+                updateNotificationTime(action.hour, action.minute)
+            }
         }
     }
 
+    fun onNotificationPermissionResult(isGranted: Boolean) {
+        if (isGranted) {
+            updateNotificationSetting(true)
+        } else {
+            viewModelScope.launch {
+                _event.emit(SettingEvent.ShowSnackbar("알림 권한이 필요합니다."))
+            }
+            updateNotificationSetting(false)
+        }
+    }
+
+    // 알림 설정 변경
     private fun updateNotificationSetting(enabled: Boolean) {
         val currentUser = _state.value.user
         val newUser = currentUser.copy(isNotificationEnabled = enabled)
         
         viewModelScope.launch {
-            saveUserUseCase(newUser)
+            updateNotificationSettingUseCase(newUser)
+        }
+    }
+
+    // 알림 시간 업데이트
+    private fun updateNotificationTime(hour: Int, minute: Int) {
+        val currentUser = _state.value.user
+        val newUser = currentUser.copy(notificationTime = Pair(hour, minute))
+
+        viewModelScope.launch {
+            updateNotificationSettingUseCase(newUser)
         }
     }
 }
