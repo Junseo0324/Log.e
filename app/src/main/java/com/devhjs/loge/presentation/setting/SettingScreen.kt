@@ -231,7 +231,7 @@ fun SettingScreen(
                     ) {
                         Column {
                             Text(
-                                text = "// Log.e - 개발자를 위한 TIL 기록 앱",
+                                text = " Log.e - 개발자를 위한 TIL 기록 앱",
                                 style = AppTextStyles.JetBrain.Label.copy(color = AppColors.primary, fontSize = 13.sp),
                             )
                             Spacer(modifier = Modifier.height(4.dp))
