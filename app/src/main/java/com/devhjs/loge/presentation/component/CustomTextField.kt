@@ -38,7 +38,6 @@ fun CustomTextField(
     enabled: Boolean = true
 ) {
     Column(modifier = modifier) {
-        // Label with Icon
         if (leadingIconRes != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -59,7 +58,6 @@ fun CustomTextField(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        // Input Field
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
