@@ -27,6 +27,12 @@ class TilRepositoryImpl @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
+    override suspend fun getAllTils(): List<Til> {
+        return withContext(Dispatchers.IO) {
+            tilDao.getAllTils().map { it.toDomain() }
+        }
+    }
+
     override fun getTil(id: Long): Flow<Til> {
         return tilDao.getTilById(id).mapNotNull { it.firstOrNull()?.toDomain() }.flowOn(Dispatchers.IO)
     }

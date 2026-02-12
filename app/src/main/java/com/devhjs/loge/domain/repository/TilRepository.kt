@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface TilRepository {
     fun getAllTil(start: Long, end: Long): Flow<List<Til>>
+    suspend fun getAllTils(): List<Til>
     fun getTil(id: Long): Flow<Til>
     suspend fun saveTil(til: Til)
     suspend fun updateTil(til: Til)

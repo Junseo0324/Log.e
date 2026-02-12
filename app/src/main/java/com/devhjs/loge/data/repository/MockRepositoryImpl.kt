@@ -65,6 +65,10 @@ class MockRepositoryImpl @Inject constructor() : TilRepository {
         mockData.clear()
     }
 
+    override suspend fun getAllTils(): List<Til> {
+        return mockData.toList()
+    }
+
     override fun getMonthlyStats(month: String): Flow<Stat> = flow {
          val tils = mockData
          

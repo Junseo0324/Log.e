@@ -15,6 +15,9 @@ interface TilDao {
     @Query("SELECT * FROM til WHERE createdAt BETWEEN :start AND :end ORDER BY createdAt DESC")
     fun getTilsBetween(start: Long, end: Long): Flow<List<TilEntity>>
 
+    @Query("SELECT * FROM til ORDER BY createdAt DESC")
+    suspend fun getAllTils(): List<TilEntity>
+
     @Query("SELECT * FROM til WHERE id = :id")
     fun getTilById(id: Long): Flow<List<TilEntity>>
 

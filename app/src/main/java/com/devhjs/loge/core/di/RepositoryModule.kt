@@ -2,11 +2,13 @@ package com.devhjs.loge.core.di
 
 import com.devhjs.loge.BuildConfig
 import com.devhjs.loge.data.repository.AiRepositoryImpl
+import com.devhjs.loge.data.repository.FileRepositoryImpl
 import com.devhjs.loge.data.repository.MockAiRepositoryImpl
 import com.devhjs.loge.data.repository.MockRepositoryImpl
 import com.devhjs.loge.data.repository.TilRepositoryImpl
 import com.devhjs.loge.data.repository.UserRepositoryImpl
 import com.devhjs.loge.domain.repository.AiRepository
+import com.devhjs.loge.domain.repository.FileRepository
 import com.devhjs.loge.domain.repository.TilRepository
 import com.devhjs.loge.domain.repository.UserRepository
 import dagger.Module
@@ -51,5 +53,13 @@ object RepositoryModule {
         userRepositoryImpl: UserRepositoryImpl
     ): UserRepository {
         return userRepositoryImpl
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileRepository(
+        fileRepositoryImpl: FileRepositoryImpl
+    ): FileRepository {
+        return fileRepositoryImpl
     }
 }
