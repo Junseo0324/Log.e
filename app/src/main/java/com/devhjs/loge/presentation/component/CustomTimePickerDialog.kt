@@ -13,15 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -178,71 +175,10 @@ fun CustomTimePickerDialog(
                 Text(
                     text = "취소",
                     style = AppTextStyles.JetBrain.Label.copy(
-                        color = Color.White,
+                        color = AppColors.white,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun <T> TimeDropdown(
-    items: List<T>,
-    selectedItem: T,
-    onItemSelected: (T) -> Unit,
-    format: (T) -> String
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)
-            .background(AppColors.cardInner, RoundedCornerShape(8.dp))
-            .clickable { expanded = true }
-            .padding(horizontal = 16.dp),
-        contentAlignment = Alignment.CenterStart
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = format(selectedItem),
-                style = AppTextStyles.JetBrain.Label.copy(color = Color.White)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.ic_arrow_down),
-                contentDescription = null,
-                tint = AppColors.subTextColor
-            )
-        }
-
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .background(AppColors.cardInner)
-                .height(200.dp)
-        ) {
-            items.forEach { item ->
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = format(item),
-                            style = AppTextStyles.JetBrain.Label.copy(
-                                color = if (item == selectedItem) AppColors.primary else Color.White
-                            )
-                        )
-                    },
-                    onClick = {
-                        onItemSelected(item)
-                        expanded = false
-                    }
                 )
             }
         }
