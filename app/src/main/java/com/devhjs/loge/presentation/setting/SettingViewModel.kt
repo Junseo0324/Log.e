@@ -112,6 +112,13 @@ class SettingViewModel @Inject constructor(
             }
             is SettingAction.OnTimeSelected -> {
                 updateNotificationTime(action.hour, action.minute)
+                _state.update { it.copy(isTimePickerVisible = false) }
+            }
+            is SettingAction.OnTimePickerClick -> {
+                _state.update { it.copy(isTimePickerVisible = true) }
+            }
+            is SettingAction.OnTimePickerDismiss -> {
+                _state.update { it.copy(isTimePickerVisible = false) }
             }
         }
     }

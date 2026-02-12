@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
+import com.devhjs.loge.presentation.component.CustomTimePickerDialog
 import com.devhjs.loge.presentation.component.SectionHeader
 import com.devhjs.loge.presentation.component.SettingActionItem
 import com.devhjs.loge.presentation.component.SettingSectionContainer
@@ -113,10 +114,11 @@ fun SettingScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            SettingSectionContainer {
+                    SettingSectionContainer {
                 Column(modifier = Modifier.padding(16.dp)) {
                     SectionHeader(iconRes = R.drawable.setting_outlined, title = "앱 설정")
                     Spacer(modifier = Modifier.height(12.dp))
+                    
                     SettingToggleItem(
                         iconRes = R.drawable.ic_time,
                         title = "알림",
@@ -124,13 +126,31 @@ fun SettingScreen(
                         checked = state.user.isNotificationEnabled,
                         onCheckedChange = { onAction(SettingAction.OnNotificationToggle(it)) }
                     )
+                    
+                    if (state.user.isNotificationEnabled) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onAction(SettingAction.OnTimePickerClick) }
+                                .padding(start = 40.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            val time = state.user.notificationTime ?: Pair(21, 0)
+                            Text(
+                                text = "매일 %02d:%02d에 알림".format(time.first, time.second),
+                                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.primary, fontSize = 14.sp)
+                            )
+                        }
+                    }
+
                     Spacer(modifier = Modifier.height(12.dp))
                     SettingToggleItem(
                         iconRes = R.drawable.ic_dart,
                         title = "모드 설정",
                         subtitle = "현재는 다크 모드만 지원",
                         checked = state.user.isDarkModeEnabled,
-                        onCheckedChange = { onAction(SettingAction.OnNotificationToggle(it)) }
+                        onCheckedChange = { /* Dark mode toggle logic if needed */ }
                     )
                 }
             }
@@ -222,7 +242,6 @@ fun SettingScreen(
                         containerColor = AppColors.cardInner
                     )
                     Spacer(modifier = Modifier.height(12.dp))
-
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -253,6 +272,19 @@ fun SettingScreen(
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+
+        if (state.isTimePickerVisible) {
+            val time = state.user.notificationTime ?: Pair(21, 0)
+            CustomTimePickerDialog(
+                initialHour = time.first,
+                initialMinute = time.second,
+                onDismissRequest = { onAction(SettingAction.OnTimePickerDismiss) },
+                onTimeSelected = { hour, minute ->
+                    onAction(SettingAction.OnTimeSelected(hour, minute))
+                }
+            )
         }
     }
 }
