@@ -1,19 +1,23 @@
 package com.devhjs.loge.core.di
 
+import android.content.Context
 import com.devhjs.loge.BuildConfig
 import com.devhjs.loge.data.repository.AiRepositoryImpl
 import com.devhjs.loge.data.repository.FileRepositoryImpl
 import com.devhjs.loge.data.repository.MockAiRepositoryImpl
 import com.devhjs.loge.data.repository.MockRepositoryImpl
+import com.devhjs.loge.data.repository.NotificationRepositoryImpl
 import com.devhjs.loge.data.repository.TilRepositoryImpl
 import com.devhjs.loge.data.repository.UserRepositoryImpl
 import com.devhjs.loge.domain.repository.AiRepository
 import com.devhjs.loge.domain.repository.FileRepository
+import com.devhjs.loge.domain.repository.NotificationRepository
 import com.devhjs.loge.domain.repository.TilRepository
 import com.devhjs.loge.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -58,8 +62,16 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideFileRepository(
-        fileRepositoryImpl: FileRepositoryImpl
+        @ApplicationContext context: Context
     ): FileRepository {
-        return fileRepositoryImpl
+        return FileRepositoryImpl(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotificationRepository(
+        @ApplicationContext context: Context
+    ): NotificationRepository {
+        return NotificationRepositoryImpl(context)
     }
 }

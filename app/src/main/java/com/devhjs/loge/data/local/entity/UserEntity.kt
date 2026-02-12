@@ -10,5 +10,6 @@ data class UserEntity(
     val name: String,
     val githubId: String,
     val isNotificationEnabled: Boolean,
-    val isDarkModeEnabled: Boolean
+    val isDarkModeEnabled: Boolean,
+    val notificationTime: String? = "21:00"
 )
