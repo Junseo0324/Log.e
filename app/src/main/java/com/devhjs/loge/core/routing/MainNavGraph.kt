@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import com.devhjs.loge.presentation.detail.DetailScreenRoot
 import com.devhjs.loge.presentation.home.HomeScreenRoot
 import com.devhjs.loge.presentation.license.LicensesScreen
+import com.devhjs.loge.presentation.profile.ProfileScreenRoot
 import com.devhjs.loge.presentation.setting.SettingScreenRoot
 import com.devhjs.loge.presentation.stat.StatScreenRoot
 import com.devhjs.loge.presentation.write.WriteScreenRoot
@@ -46,11 +47,19 @@ fun MainNavGraph(
             SettingScreenRoot(
                 onNavigateToLicenses = {
                     navController.navigate(MainRoute.Licenses.route)
+                },
+                onNavigateToProfileEdit = {
+                    navController.navigate(MainRoute.ProfileEdit.route)
                 }
             )
         }
         composable(MainRoute.Licenses.route) {
             LicensesScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+        composable(MainRoute.ProfileEdit.route) {
+            ProfileScreenRoot(
                 onBackClick = { navController.popBackStack() }
             )
         }
