@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devhjs.loge.core.util.Result
 import com.devhjs.loge.domain.usecase.DeleteAllUserDataUseCase
+import com.devhjs.loge.domain.usecase.ExportTilUseCase
 import com.devhjs.loge.domain.usecase.GetUserUseCase
 import com.devhjs.loge.domain.usecase.SaveUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,13 +17,16 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val saveUserUseCase: SaveUserUseCase,
-    private val deleteAllUserDataUseCase: DeleteAllUserDataUseCase
+    private val deleteAllUserDataUseCase: DeleteAllUserDataUseCase,
+    private val exportTilUseCase: ExportTilUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SettingState())
@@ -59,10 +63,27 @@ class SettingViewModel @Inject constructor(
             is SettingAction.OnLicensesClick -> {
                 viewModelScope.launch { _event.emit(SettingEvent.NavigateToLicenses) }
             }
+
             is SettingAction.OnExportClick -> {
                  viewModelScope.launch { 
-                     _event.emit(SettingEvent.ShowSnackbar("준비 중인 기능입니다."))
+                     val date = java.text.SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+                     val fileName = "LogE_Backup_$date.csv"
+                     _event.emit(SettingEvent.LaunchExport(fileName))
                  }
+            }
+            is SettingAction.OnExportUriSelected -> {
+                viewModelScope.launch {
+                    _state.update { it.copy(isExporting = true) }
+                    when (val result = exportTilUseCase(action.uri)) {
+                        is Result.Success -> {
+                            _event.emit(SettingEvent.ShowSnackbar("CSV 파일이 저장되었습니다."))
+                        }
+                        is Result.Error -> {
+                            _event.emit(SettingEvent.ShowSnackbar("파일 저장에 실패했습니다: ${result.error.message}"))
+                        }
+                    }
+                    _state.update { it.copy(isExporting = false) }
+                }
             }
             is SettingAction.OnDeleteAllClick -> {
                  _state.update { it.copy(showDeleteDialog = true) }

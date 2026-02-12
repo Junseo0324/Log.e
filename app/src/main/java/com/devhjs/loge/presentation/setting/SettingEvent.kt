@@ -8,4 +8,5 @@ sealed interface SettingEvent {
     data object NavigateToProfile : SettingEvent
     data object NavigateToLicenses : SettingEvent
     data class ShowSnackbar(val message: String) : SettingEvent
+    data class LaunchExport(val fileName: String) : SettingEvent
 }

@@ -1,5 +1,7 @@
 package com.devhjs.loge.presentation.setting
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -33,6 +35,14 @@ fun SettingScreenRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    val exportLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("text/csv")
+    ) { uri ->
+        if (uri != null) {
+            viewModel.onAction(SettingAction.OnExportUriSelected(uri.toString()))
+        }
+    }
+
     LaunchedEffect(snackbarMessage) {
         if (snackbarMessage != null) {
             snackbarHostState.showSnackbar(snackbarMessage)
@@ -51,6 +61,9 @@ fun SettingScreenRoot(
                 }
                 is SettingEvent.ShowSnackbar -> {
                     snackbarHostState.showSnackbar(event.message)
+                }
+                is SettingEvent.LaunchExport -> {
+                    exportLauncher.launch(event.fileName)
                 }
             }
         }

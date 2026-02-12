@@ -10,5 +10,6 @@ data class SettingState(
     val user: User = User.DEFAULT,
     val isLoading: Boolean = false,
     val appVersion: String = "v1.0.0",
-    val showDeleteDialog: Boolean = false
+    val showDeleteDialog: Boolean = false,
+    val isExporting: Boolean = false
 )
