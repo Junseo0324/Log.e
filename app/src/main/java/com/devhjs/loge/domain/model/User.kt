@@ -5,7 +5,8 @@ data class User(
     val name: String,
     val githubId: String,
     val isNotificationEnabled: Boolean,
-    val isDarkModeEnabled: Boolean
+    val isDarkModeEnabled: Boolean,
+    val notificationTime: Pair<Int, Int>? = null
 ) {
     companion object {
         val DEFAULT = User(
@@ -13,7 +14,8 @@ data class User(
             name = "Developer",
             githubId = "username",
             isNotificationEnabled = true,
-            isDarkModeEnabled = true
+            isDarkModeEnabled = true,
+            notificationTime = Pair(21, 0)
         )
     }
 }

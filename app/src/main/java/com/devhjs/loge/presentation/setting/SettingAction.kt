@@ -13,4 +13,5 @@ sealed interface SettingAction {
     data object OnDeleteDismiss : SettingAction
     data object OnLicensesClick : SettingAction
     data class OnExportUriSelected(val uri: String) : SettingAction
+    data class OnTimeSelected(val hour: Int, val minute: Int) : SettingAction
 }
