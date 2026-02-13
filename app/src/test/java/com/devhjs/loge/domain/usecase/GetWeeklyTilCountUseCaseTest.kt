@@ -53,10 +53,7 @@ class GetWeeklyTilCountUseCaseTest {
         val result = useCase().first()
 
         // Then
-        assertEquals(2, result.totalCount)
-        assertEquals(true, result.dailyActivity[0])
-        assertEquals(false, result.dailyActivity[1])
-        assertEquals(true, result.dailyActivity[2])
-        assertEquals(false, result.dailyActivity[6])
+        // Then
+        assertEquals(2, result)
     }
 }

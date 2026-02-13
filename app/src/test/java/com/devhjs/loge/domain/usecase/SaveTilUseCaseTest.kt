@@ -12,10 +12,13 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
+import com.devhjs.loge.domain.util.WidgetUpdateManager
+
 class SaveTilUseCaseTest {
 
     private val repository: TilRepository = mockk()
-    private val useCase = SaveTilUseCase(repository)
+    private val widgetUpdateManager: WidgetUpdateManager = mockk(relaxed = true)
+    private val useCase = SaveTilUseCase(repository, widgetUpdateManager)
 
     @Test
     fun `repository_호출이_성공하면_Success를_반환해야_한다`() = runTest {
