@@ -143,8 +143,7 @@ object DateUtils {
      * 특정 날짜가 속한 주(일요일 ~ 토요일)의 시작/종료 타임스탬프 반환
      */
     fun getWeekStartEnd(date: LocalDate): Pair<Long, Long> {
-        val dayOfWeekValue = date.dayOfWeek.value // 월=1, ..., 일=7
-        val daysToSubtract = if (dayOfWeekValue == 7) 0 else dayOfWeekValue
+        val daysToSubtract = getDayIndex(date)
         
         val startOfWeek = date.minusDays(daysToSubtract.toLong())
         val endOfWeek = startOfWeek.plusDays(6)
@@ -167,5 +166,13 @@ object DateUtils {
         return Instant.ofEpochMilli(timestamp)
             .atZone(ZoneId.systemDefault())
             .toLocalDate()
+    }
+
+    /**
+     * 날짜의 요일 인덱스 반환 (일요일=0, 월요일=1, ..., 토요일=6)
+     */
+    fun getDayIndex(date: LocalDate): Int {
+        val dayOfWeekValue = date.dayOfWeek.value
+        return if (dayOfWeekValue == 7) 0 else dayOfWeekValue
     }
 }
