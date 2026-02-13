@@ -5,5 +5,4 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 
 object WeeklyTilWidgetKeys {
     val totalCount = intPreferencesKey("totalCount")
-    val dailyActivity = stringPreferencesKey("dailyActivity")
 }

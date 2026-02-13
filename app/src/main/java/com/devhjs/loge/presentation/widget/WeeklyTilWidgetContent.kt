@@ -2,6 +2,7 @@ package com.devhjs.loge.presentation.widget
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
@@ -22,18 +23,16 @@ import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
 import androidx.glance.layout.width
-import androidx.glance.layout.fillMaxHeight
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.devhjs.loge.MainActivity
 import com.devhjs.loge.R
-import com.devhjs.loge.domain.model.WeeklyStats
 
 @Composable
 fun WeeklyTilWidgetContent(
-    weeklyStats: WeeklyStats?
+    count: Int
 ) {
     Column(
         modifier = GlanceModifier
@@ -70,7 +69,7 @@ fun WeeklyTilWidgetContent(
             modifier = GlanceModifier.fillMaxWidth()
         ) {
             Text(
-                text = "${weeklyStats?.totalCount ?: 0}",
+                text = "$count",
                 style = TextStyle(
                     color = ColorProvider(Color.White),
                     fontSize = 36.sp,
@@ -98,29 +97,33 @@ fun WeeklyTilWidgetContent(
             )
         )
 
-        Spacer(modifier = GlanceModifier.fillMaxHeight())
+        Spacer(modifier = GlanceModifier.defaultWeight())
 
         Row(
             modifier = GlanceModifier.fillMaxWidth(),
             verticalAlignment = Alignment.Bottom
         ) {
-            val activity = weeklyStats?.dailyActivity ?: List(7) { false }
-            
-            activity.forEachIndexed { index, isActive ->
-                val color = if (isActive) Color(0xFF00BC7D) else Color(0xFF252525)
+            repeat(7) { index ->
+                val isActive = index < count
+                val color = if (isActive) Color(0xFF00BC7D) else Color(0xFF353535)
                 
                 Box(
                     modifier = GlanceModifier
+                        .defaultWeight()
                         .height(6.dp)
-                        .fillMaxWidth()
+                        .then(
+                            if (index < 6) GlanceModifier.padding(end = 2.dp) else GlanceModifier
+                        )
                         .cornerRadius(3.dp)
                         .background(color)
                 ) { }
-                
-                if (index < 6) {
-                    Spacer(modifier = GlanceModifier.width(4.dp))
-                }
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun WeeklyTilWidgetContentPreview() {
+    WeeklyTilWidgetContent(count = 5)
 }

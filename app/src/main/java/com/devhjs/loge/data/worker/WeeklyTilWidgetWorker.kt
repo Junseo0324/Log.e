@@ -24,7 +24,7 @@ class WeeklyTilWidgetWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         return try {
             // 주간 통계 데이터 가져오기
-            val stats = getWeeklyTilCountUseCase().first()
+            val count = getWeeklyTilCountUseCase().first()
 
             // Glance 위젯 상태 업데이트
             val manager = GlanceAppWidgetManager(context)
@@ -34,11 +34,10 @@ class WeeklyTilWidgetWorker @AssistedInject constructor(
 
             glanceIds.forEach { glanceId ->
                 updateAppWidgetState(context, glanceId) { prefs ->
-                    prefs[WeeklyTilWidgetKeys.totalCount] = stats.totalCount
-                    prefs[WeeklyTilWidgetKeys.dailyActivity] = stats.dailyActivity.joinToString(",")
+                    prefs[WeeklyTilWidgetKeys.totalCount] = count
                 }
                 WeeklyTilWidget().update(context, glanceId)
-                Timber.d("WeeklyTilWidgetWorker: Updated widget $glanceId with count ${stats.totalCount}")
+                Timber.d("WeeklyTilWidgetWorker: Updated widget $glanceId with count $count")
             }
 
             Result.success()
