@@ -154,13 +154,6 @@ object DateUtils {
         return Pair(startTimestamp, endTimestamp)
     }
 
-    /**
-     * 현재 주(일요일 ~ 토요일)의 시작/종료 타임스탬프 반환 (LocalDate.now() 사용)
-     */
-    fun getCurrentWeekStartEnd(): Pair<Long, Long> {
-        return getWeekStartEnd(LocalDate.now())
-    }
-
     /** 타임스탬프 → LocalDate 변환 */
     fun toLocalDate(timestamp: Long): LocalDate {
         return Instant.ofEpochMilli(timestamp)
