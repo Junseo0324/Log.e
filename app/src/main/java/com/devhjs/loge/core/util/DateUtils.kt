@@ -135,4 +135,37 @@ object DateUtils {
             monthLabels = monthLabels
         )
     }
+
+    /**
+     * 현재 주(일요일 ~ 토요일)의 시작/종료 타임스탬프 반환
+     */
+    /**
+     * 특정 날짜가 속한 주(일요일 ~ 토요일)의 시작/종료 타임스탬프 반환
+     */
+    fun getWeekStartEnd(date: LocalDate): Pair<Long, Long> {
+        val dayOfWeekValue = date.dayOfWeek.value // 월=1, ..., 일=7
+        val daysToSubtract = if (dayOfWeekValue == 7) 0 else dayOfWeekValue
+        
+        val startOfWeek = date.minusDays(daysToSubtract.toLong())
+        val endOfWeek = startOfWeek.plusDays(6)
+
+        val startTimestamp = startOfWeek.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val endTimestamp = endOfWeek.atTime(23, 59, 59, 999_999_999).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        return Pair(startTimestamp, endTimestamp)
+    }
+
+    /**
+     * 현재 주(일요일 ~ 토요일)의 시작/종료 타임스탬프 반환 (LocalDate.now() 사용)
+     */
+    fun getCurrentWeekStartEnd(): Pair<Long, Long> {
+        return getWeekStartEnd(LocalDate.now())
+    }
+
+    /** 타임스탬프 → LocalDate 변환 */
+    fun toLocalDate(timestamp: Long): LocalDate {
+        return Instant.ofEpochMilli(timestamp)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
+    }
 }
