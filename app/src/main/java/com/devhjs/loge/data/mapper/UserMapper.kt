@@ -1,5 +1,6 @@
 package com.devhjs.loge.data.mapper
 
+import com.devhjs.loge.data.dto.UserRemoteDto
 import com.devhjs.loge.data.local.entity.UserEntity
 import com.devhjs.loge.domain.model.User
 
@@ -26,16 +27,37 @@ fun UserEntity.toDomain(): User {
 }
 
 fun User.toEntity(): UserEntity {
-    val notificationTimeString = this.notificationTime?.let {
-        "%02d:%02d".format(it.first, it.second)
-    }
-
     return UserEntity(
         id = this.id,
         name = this.name,
         githubId = this.githubId,
         isNotificationEnabled = this.isNotificationEnabled,
         isDarkModeEnabled = this.isDarkModeEnabled,
-        notificationTime = notificationTimeString
+    )
+}
+
+fun User.toRemoteDto(userId: String): UserRemoteDto {
+    return UserRemoteDto(
+        userId = userId,
+        name = this.name,
+        githubId = this.githubId,
+        isNotificationEnabled = this.isNotificationEnabled,
+        isDarkModeEnabled = this.isDarkModeEnabled,
+        notificationHour = this.notificationTime?.first,
+        notificationMinute = this.notificationTime?.second
+    )
+}
+
+fun UserRemoteDto.toDomain(): User {
+    return User(
+        name = this.name,
+        githubId = this.githubId,
+        isNotificationEnabled = this.isNotificationEnabled,
+        isDarkModeEnabled = this.isDarkModeEnabled,
+        notificationTime = if (this.notificationHour != null && this.notificationMinute != null) {
+            Pair(this.notificationHour, this.notificationMinute)
+        } else {
+            null
+        }
     )
 }
