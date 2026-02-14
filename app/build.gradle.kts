@@ -34,6 +34,13 @@ android {
             ?: throw GradleException("OPENAI_API_KEY not found in local.properties. Please add 'OPENAI_API_KEY=your_key_here' to local.properties file.")
             
         buildConfigField("String", "OPENAI_API_KEY", "\"$openAiApiKey\"")
+
+        // Supabase Configuration
+        val supabaseUrl = localProperties.getProperty("SUPABASE_URL") ?: ""
+        val supabaseKey = localProperties.getProperty("SUPABASE_KEY") ?: ""
+        
+        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
+        buildConfigField("String", "SUPABASE_KEY", "\"$supabaseKey\"")
     }
 
     buildTypes {
@@ -64,6 +71,14 @@ android {
         }
         create("prod") {
             dimension = "env"
+        }
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/INDEX.LIST"
+            excludes += "META-INF/io.netty.versions.properties"
+            excludes += "META-INF/DEPENDENCIES"
         }
     }
 }
@@ -133,6 +148,16 @@ dependencies {
     coreLibraryDesugaring(libs.android.desugarJdkLibs)
     implementation(libs.aboutlibraries.compose)
 
+    // Supabase
+    implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.auth)
+    implementation(libs.supabase.postgrest)
+
+    // Ktor (Required for Supabase)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio) // Recommended for Android
+    
     // WorkManager
     implementation(libs.work.runtime.ktx)
     implementation(libs.hilt.work)
