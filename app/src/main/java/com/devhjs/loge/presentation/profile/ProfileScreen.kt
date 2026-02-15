@@ -73,7 +73,7 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Name Field
+            // Name
             CustomTextField(
                 value = state.user.name,
                 onValueChange = { onAction(ProfileAction.OnNameChange(it)) },
@@ -84,7 +84,7 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // GitHub Field
+            // GitHub
             CustomTextField(
                 value = state.user.githubId,
                 onValueChange = { onAction(ProfileAction.OnGithubIdChange(it)) },

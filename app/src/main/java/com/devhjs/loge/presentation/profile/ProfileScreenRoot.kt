@@ -20,8 +20,8 @@ import com.devhjs.loge.presentation.designsystem.AppColors
 
 @Composable
 fun ProfileScreenRoot(
-    onBackClick: () -> Unit,
-    onSubmitSuccess: (String) -> Unit,
+    onBackClick: () -> Unit = {},
+    onSubmitSuccess: (String) -> Unit= {},
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
