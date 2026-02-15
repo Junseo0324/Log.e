@@ -24,11 +24,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.devhjs.loge.R
 import com.devhjs.loge.presentation.component.CustomTimePickerDialog
 import com.devhjs.loge.presentation.component.SectionHeader
@@ -82,12 +83,21 @@ fun SettingScreen(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_normal),
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(24.dp)
-                            )
+                            if (state.user.avatarUrl != null) {
+                                AsyncImage(
+                                    model = state.user.avatarUrl,
+                                    contentDescription = "Profile Image",
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop
+                                )
+                            } else {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_normal),
+                                    contentDescription = null,
+                                    tint = AppColors.white,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
                         }
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
@@ -136,7 +146,7 @@ fun SettingScreen(
                                 .padding(start = 40.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            val time = state.user.notificationTime ?: Pair(21, 0)
+                            val time = state.user.notificationTime
                             Text(
                                 text = "매일 %02d:%02d에 알림".format(time.first, time.second),
                                 style = AppTextStyles.JetBrain.Label.copy(color = AppColors.primary, fontSize = 14.sp)
@@ -276,7 +286,7 @@ fun SettingScreen(
         }
 
         if (state.isTimePickerVisible) {
-            val time = state.user.notificationTime ?: Pair(21, 0)
+            val time = state.user.notificationTime
             CustomTimePickerDialog(
                 initialHour = time.first,
                 initialMinute = time.second,
