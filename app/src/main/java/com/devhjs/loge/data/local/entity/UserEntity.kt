@@ -9,7 +9,6 @@ data class UserEntity(
     val id: Long = 1L,
     val name: String,
     val githubId: String,
-    val email: String? = null,
     val avatarUrl: String? = null,
     val isNotificationEnabled: Boolean,
     val isDarkModeEnabled: Boolean,

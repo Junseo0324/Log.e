@@ -20,11 +20,10 @@ fun UserEntity.toDomain(): User {
         id = this.id,
         name = this.name,
         githubId = this.githubId,
-        email = this.email,
         avatarUrl = this.avatarUrl,
         isNotificationEnabled = this.isNotificationEnabled,
         isDarkModeEnabled = this.isDarkModeEnabled,
-        notificationTime = notificationTimePair
+        notificationTime = notificationTimePair ?: Pair(21, 0)
     )
 }
 
@@ -33,10 +32,10 @@ fun User.toEntity(): UserEntity {
         id = this.id,
         name = this.name,
         githubId = this.githubId,
-        email = this.email,
         avatarUrl = this.avatarUrl,
         isNotificationEnabled = this.isNotificationEnabled,
         isDarkModeEnabled = this.isDarkModeEnabled,
+        notificationTime = "${this.notificationTime.first}:${this.notificationTime.second.toString().padStart(2, '0')}"
     )
 }
 
@@ -45,12 +44,11 @@ fun User.toRemoteDto(userId: String): UserRemoteDto {
         userId = userId,
         name = this.name,
         githubId = this.githubId,
-        email = this.email,
         avatarUrl = this.avatarUrl,
         isNotificationEnabled = this.isNotificationEnabled,
         isDarkModeEnabled = this.isDarkModeEnabled,
-        notificationHour = this.notificationTime?.first,
-        notificationMinute = this.notificationTime?.second
+        notificationHour = this.notificationTime.first,
+        notificationMinute = this.notificationTime.second
     )
 }
 
@@ -58,14 +56,13 @@ fun UserRemoteDto.toDomain(): User {
     return User(
         name = this.name,
         githubId = this.githubId,
-        email = this.email,
         avatarUrl = this.avatarUrl,
         isNotificationEnabled = this.isNotificationEnabled,
         isDarkModeEnabled = this.isDarkModeEnabled,
         notificationTime = if (this.notificationHour != null && this.notificationMinute != null) {
             Pair(this.notificationHour, this.notificationMinute)
         } else {
-            null
+            Pair(21, 0)
         }
     )
 }
