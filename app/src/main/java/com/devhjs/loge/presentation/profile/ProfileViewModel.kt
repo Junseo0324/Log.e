@@ -4,13 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devhjs.loge.core.util.Result
 
+import com.devhjs.loge.domain.usecase.GetGithubProfileUseCase
 import com.devhjs.loge.domain.usecase.GetGithubStatusUseCase
+import com.devhjs.loge.domain.usecase.GetSessionStatusUseCase
 import com.devhjs.loge.domain.usecase.GetUserUseCase
 import com.devhjs.loge.domain.usecase.SaveUserUseCase
 import com.devhjs.loge.domain.usecase.SignInWithGithubUseCase
 import com.devhjs.loge.domain.usecase.SignOutGithubUseCase
 import com.devhjs.loge.domain.usecase.SyncTilsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +30,9 @@ class ProfileViewModel @Inject constructor(
     private val signInWithGithubUseCase: SignInWithGithubUseCase,
     private val signOutGithubUseCase: SignOutGithubUseCase,
     private val getGithubStatusUseCase: GetGithubStatusUseCase,
-    private val syncTilsUseCase: SyncTilsUseCase
+    private val syncTilsUseCase: SyncTilsUseCase,
+    private val getSessionStatusUseCase: GetSessionStatusUseCase,
+    private val getGithubProfileUseCase: GetGithubProfileUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileState())
@@ -38,7 +43,23 @@ class ProfileViewModel @Inject constructor(
 
     init {
         loadUser()
-        loadGithubStatus()
+        observeSessionStatus()
+    }
+
+    private fun observeSessionStatus() {
+        viewModelScope.launch {
+            getSessionStatusUseCase().collect { isLoggedIn ->
+                // 로그인 상태 변경 감지
+                loadGithubStatus()
+                
+                if (isLoggedIn) {
+                    // 약간의 딜레이를 주어 세션 정보가 완전히 로드되도록 함
+                    delay(500)
+                    applyGithubProfileAndSave()
+                    syncLocalTilsToRemote()
+                }
+            }
+        }
     }
 
     private fun loadUser() {
@@ -82,11 +103,6 @@ class ProfileViewModel @Inject constructor(
                     it.copy(user = it.user.copy(name = action.name)) 
                 }
             }
-            is ProfileAction.OnGithubIdChange -> {
-                _state.update { 
-                    it.copy(user = it.user.copy(githubId = action.githubId)) 
-                }
-            }
             is ProfileAction.OnSaveClick -> {
                 saveUser()
             }
@@ -106,24 +122,49 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = signInWithGithubUseCase()) {
                 is Result.Success -> {
-                    // 로그인 성공 후 상태 갱신
-                    loadGithubStatus()
-                    // 로컬 User 데이터를 Supabase에 동기화
-                    syncLocalUserToRemote()
-                    // 로컬 TIL 데이터를 Supabase에 일괄 동기화
-                    syncLocalTilsToRemote()
-                    _event.emit(ProfileEvent.ShowSnackbar("GitHub 연동 성공!"))
+                     _event.emit(ProfileEvent.ShowSnackbar("GitHub 로그인 페이지를 엽니다."))
                 }
                 is Result.Error -> {
-                    _event.emit(ProfileEvent.ShowSnackbar("GitHub 연동에 실패했습니다: ${result.error.message}"))
+                    _event.emit(ProfileEvent.ShowSnackbar("GitHub 연동 시작 실패: ${result.error.message}"))
                 }
             }
         }
     }
 
+    private suspend fun applyGithubProfileAndSave() {
+        val profileResult = getGithubProfileUseCase()
+        
+        if (profileResult is Result.Success) {
+            val profile = profileResult.data
+            val githubName = profile.name
+            val githubAvatarUrl = profile.avatarUrl
+            val githubId = profile.id
+
+            val displayName = githubName ?: githubId ?: _state.value.user.name
+
+            val updatedUser = _state.value.user.copy(
+                name = displayName,
+                avatarUrl = githubAvatarUrl,
+                githubId = githubId ?: _state.value.user.githubId
+            )
+
+            // State 업데이트
+            _state.update { it.copy(user = updatedUser) }
+
+            when (saveUserUseCase(updatedUser)) {
+                is Result.Success -> { }
+                is Result.Error -> {
+                    _event.emit(ProfileEvent.ShowSnackbar("프로필 동기화에 실패했습니다."))
+                }
+            }
+        } else if (profileResult is Result.Error) {
+             _event.emit(ProfileEvent.ShowSnackbar("GitHub 프로필 정보를 가져오는데 실패했습니다."))
+        }
+    }
+
     private fun disconnectGithub() {
         viewModelScope.launch {
-            when (val result = signOutGithubUseCase()) {
+            when (signOutGithubUseCase()) {
                 is Result.Success -> {
                     _state.update {
                         it.copy(
@@ -141,20 +182,9 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    // GitHub 로그인 성공 후 로컬 User 데이터를 Supabase에 동기화
-    private suspend fun syncLocalUserToRemote() {
-        val currentUser = _state.value.user
-        when (val result = saveUserUseCase(currentUser)) {
-            is Result.Success -> { }
-            is Result.Error -> {
-                _event.emit(ProfileEvent.ShowSnackbar("프로필 동기화에 실패했습니다."))
-            }
-        }
-    }
-
     // GitHub 로그인 성공 후 로컬 TIL 데이터를 Supabase에 일괄 동기화
     private suspend fun syncLocalTilsToRemote() {
-        when (val result = syncTilsUseCase()) {
+        when (syncTilsUseCase()) {
             is Result.Success -> { }
             is Result.Error -> {
                 _event.emit(ProfileEvent.ShowSnackbar("TIL 동기화에 실패했습니다."))
