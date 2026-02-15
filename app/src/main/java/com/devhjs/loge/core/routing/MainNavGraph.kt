@@ -16,6 +16,9 @@ import com.devhjs.loge.presentation.setting.SettingScreenRoot
 import com.devhjs.loge.presentation.stat.StatScreenRoot
 import com.devhjs.loge.presentation.write.WriteScreenRoot
 
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+
 @Composable
 fun MainNavGraph(
     navController: NavHostController,
@@ -28,7 +31,7 @@ fun MainNavGraph(
     ) {
         composable(MainRoute.Home.route) { backStackEntry ->
             val savedStateHandle = backStackEntry.savedStateHandle
-            val snackbarMessage = savedStateHandle.get<String>("snackbar_message")
+            val snackbarMessage by savedStateHandle.getStateFlow<String?>("snackbar_message", null).collectAsStateWithLifecycle()
 
             HomeScreenRoot(
                 onNavigateToDetail = { logId ->
@@ -46,7 +49,7 @@ fun MainNavGraph(
         composable(MainRoute.Stat.route) { StatScreenRoot() }
         composable(MainRoute.Setting.route) { backStackEntry ->
             val savedStateHandle = backStackEntry.savedStateHandle
-            val snackbarMessage = savedStateHandle.get<String>("snackbar_message")
+            val snackbarMessage by savedStateHandle.getStateFlow<String?>("snackbar_message", null).collectAsStateWithLifecycle()
 
             SettingScreenRoot(
                 onNavigateToLicenses = {
