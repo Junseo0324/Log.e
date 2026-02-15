@@ -5,7 +5,6 @@ package com.devhjs.loge.presentation.profile
  */
 sealed interface ProfileAction {
     data class OnNameChange(val name: String) : ProfileAction
-    data class OnGithubIdChange(val githubId: String) : ProfileAction
     data object OnSaveClick : ProfileAction
     data object OnBackClick : ProfileAction
     data object OnGithubLoginClick : ProfileAction
