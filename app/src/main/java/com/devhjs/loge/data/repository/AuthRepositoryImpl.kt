@@ -29,4 +29,20 @@ class AuthRepositoryImpl @Inject constructor(
     override fun getCurrentUserUid(): String? {
         return supabaseClient.auth.currentUserOrNull()?.id
     }
+
+    // GitHub 프로필 정보: Supabase Auth 세션의 userMetadata에서 읽어옴
+    override fun getGithubName(): String? {
+        return supabaseClient.auth.currentUserOrNull()
+            ?.userMetadata?.get("full_name")?.toString()
+    }
+
+    override fun getGithubAvatarUrl(): String? {
+        return supabaseClient.auth.currentUserOrNull()
+            ?.userMetadata?.get("avatar_url")?.toString()
+    }
+
+    override fun getGithubId(): String? {
+        return supabaseClient.auth.currentUserOrNull()
+            ?.userMetadata?.get("user_name")?.toString()
+    }
 }
