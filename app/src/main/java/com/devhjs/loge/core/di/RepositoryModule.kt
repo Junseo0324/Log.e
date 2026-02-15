@@ -4,6 +4,7 @@ import android.content.Context
 import com.devhjs.loge.BuildConfig
 import com.devhjs.loge.data.repository.AiRepositoryImpl
 import com.devhjs.loge.data.repository.AuthRepositoryImpl
+import com.devhjs.loge.data.repository.FeedbackRepositoryImpl
 import com.devhjs.loge.data.repository.FileRepositoryImpl
 import com.devhjs.loge.data.repository.MockAiRepositoryImpl
 import com.devhjs.loge.data.repository.MockRepositoryImpl
@@ -12,6 +13,7 @@ import com.devhjs.loge.data.repository.TilRepositoryImpl
 import com.devhjs.loge.data.repository.UserRepositoryImpl
 import com.devhjs.loge.domain.repository.AiRepository
 import com.devhjs.loge.domain.repository.AuthRepository
+import com.devhjs.loge.domain.repository.FeedbackRepository
 import com.devhjs.loge.domain.repository.FileRepository
 import com.devhjs.loge.domain.repository.NotificationRepository
 import com.devhjs.loge.domain.repository.TilRepository
@@ -83,5 +85,13 @@ object RepositoryModule {
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository {
         return authRepositoryImpl
+    }
+
+    @Provides
+    @Singleton
+    fun provideFeedbackRepository(
+        feedbackRepositoryImpl: FeedbackRepositoryImpl
+    ): FeedbackRepository {
+        return feedbackRepositoryImpl
     }
 }
