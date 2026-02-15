@@ -7,5 +7,8 @@ import com.devhjs.loge.domain.model.User
  */
 data class ProfileState(
     val user: User = User.DEFAULT,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val isGithubConnected: Boolean = false,
+    val githubUsername: String? = null,
+    val githubAvatarUrl: String? = null
 )

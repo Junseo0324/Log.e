@@ -8,4 +8,6 @@ sealed interface ProfileAction {
     data class OnGithubIdChange(val githubId: String) : ProfileAction
     data object OnSaveClick : ProfileAction
     data object OnBackClick : ProfileAction
+    data object OnGithubLoginClick : ProfileAction
+    data object OnGithubDisconnectClick : ProfileAction
 }
