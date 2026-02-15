@@ -16,4 +16,5 @@ sealed interface SettingAction {
     data class OnTimeSelected(val hour: Int, val minute: Int) : SettingAction
     data object OnTimePickerClick : SettingAction
     data object OnTimePickerDismiss : SettingAction
+    data object OnFeedbackClick : SettingAction
 }

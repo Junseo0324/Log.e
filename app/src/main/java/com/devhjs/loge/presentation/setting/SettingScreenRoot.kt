@@ -29,6 +29,7 @@ import com.devhjs.loge.presentation.designsystem.AppTextStyles
 fun SettingScreenRoot(
     onNavigateToLicenses: () -> Unit,
     onNavigateToProfileEdit: () -> Unit,
+    onNavigateToFeedback: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SettingViewModel = hiltViewModel(),
     snackbarMessage: String? = null,
@@ -79,6 +80,9 @@ fun SettingScreenRoot(
                     } else {
                         viewModel.onNotificationPermissionResult(true)
                     }
+                }
+                is SettingEvent.NavigateToFeedback -> {
+                    onNavigateToFeedback()
                 }
             }
         }

@@ -228,7 +228,7 @@ fun SettingScreen(
                         iconRes = R.drawable.ic_chat,
                         title = "피드백 보내기",
                         subtitle = null,
-                        onClick = { /* TODO */ },
+                        onClick = { onAction(SettingAction.OnFeedbackClick) },
                         containerColor = AppColors.cardInner
                     )
                     Spacer(modifier = Modifier.height(12.dp))

@@ -120,6 +120,9 @@ class SettingViewModel @Inject constructor(
             is SettingAction.OnTimePickerDismiss -> {
                 _state.update { it.copy(isTimePickerVisible = false) }
             }
+            is SettingAction.OnFeedbackClick -> {
+                viewModelScope.launch { _event.emit(SettingEvent.NavigateToFeedback) }
+            }
         }
     }
 

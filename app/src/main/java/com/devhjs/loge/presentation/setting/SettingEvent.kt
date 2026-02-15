@@ -10,4 +10,5 @@ sealed interface SettingEvent {
     data class ShowSnackbar(val message: String) : SettingEvent
     data class LaunchExport(val fileName: String) : SettingEvent
     data object RequestNotificationPermission : SettingEvent
+    data object NavigateToFeedback : SettingEvent
 }
