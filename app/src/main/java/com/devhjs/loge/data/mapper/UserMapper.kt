@@ -20,6 +20,8 @@ fun UserEntity.toDomain(): User {
         id = this.id,
         name = this.name,
         githubId = this.githubId,
+        email = this.email,
+        avatarUrl = this.avatarUrl,
         isNotificationEnabled = this.isNotificationEnabled,
         isDarkModeEnabled = this.isDarkModeEnabled,
         notificationTime = notificationTimePair
@@ -31,6 +33,8 @@ fun User.toEntity(): UserEntity {
         id = this.id,
         name = this.name,
         githubId = this.githubId,
+        email = this.email,
+        avatarUrl = this.avatarUrl,
         isNotificationEnabled = this.isNotificationEnabled,
         isDarkModeEnabled = this.isDarkModeEnabled,
     )
@@ -41,6 +45,8 @@ fun User.toRemoteDto(userId: String): UserRemoteDto {
         userId = userId,
         name = this.name,
         githubId = this.githubId,
+        email = this.email,
+        avatarUrl = this.avatarUrl,
         isNotificationEnabled = this.isNotificationEnabled,
         isDarkModeEnabled = this.isDarkModeEnabled,
         notificationHour = this.notificationTime?.first,
@@ -52,6 +58,8 @@ fun UserRemoteDto.toDomain(): User {
     return User(
         name = this.name,
         githubId = this.githubId,
+        email = this.email,
+        avatarUrl = this.avatarUrl,
         isNotificationEnabled = this.isNotificationEnabled,
         isDarkModeEnabled = this.isDarkModeEnabled,
         notificationTime = if (this.notificationHour != null && this.notificationMinute != null) {

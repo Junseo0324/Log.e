@@ -8,7 +8,7 @@ import com.devhjs.loge.data.local.entity.TilEntity
 import com.devhjs.loge.data.local.entity.UserEntity
 
 
-@Database(entities = [TilEntity::class, UserEntity::class], version = 3, exportSchema = false)
+@Database(entities = [TilEntity::class, UserEntity::class], version = 4, exportSchema = false)
 abstract class LogEDatabase : RoomDatabase() {
     abstract fun tilDao(): TilDao
     abstract fun userDao(): UserDao
