@@ -3,11 +3,13 @@ package com.devhjs.loge.presentation.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devhjs.loge.core.util.Result
+
 import com.devhjs.loge.domain.usecase.GetGithubStatusUseCase
 import com.devhjs.loge.domain.usecase.GetUserUseCase
 import com.devhjs.loge.domain.usecase.SaveUserUseCase
 import com.devhjs.loge.domain.usecase.SignInWithGithubUseCase
 import com.devhjs.loge.domain.usecase.SignOutGithubUseCase
+import com.devhjs.loge.domain.usecase.SyncTilsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +26,8 @@ class ProfileViewModel @Inject constructor(
     private val saveUserUseCase: SaveUserUseCase,
     private val signInWithGithubUseCase: SignInWithGithubUseCase,
     private val signOutGithubUseCase: SignOutGithubUseCase,
-    private val getGithubStatusUseCase: GetGithubStatusUseCase
+    private val getGithubStatusUseCase: GetGithubStatusUseCase,
+    private val syncTilsUseCase: SyncTilsUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileState())
@@ -107,6 +110,8 @@ class ProfileViewModel @Inject constructor(
                     loadGithubStatus()
                     // 로컬 User 데이터를 Supabase에 동기화
                     syncLocalUserToRemote()
+                    // 로컬 TIL 데이터를 Supabase에 일괄 동기화
+                    syncLocalTilsToRemote()
                     _event.emit(ProfileEvent.ShowSnackbar("GitHub 연동 성공!"))
                 }
                 is Result.Error -> {
@@ -143,6 +148,16 @@ class ProfileViewModel @Inject constructor(
             is Result.Success -> { }
             is Result.Error -> {
                 _event.emit(ProfileEvent.ShowSnackbar("프로필 동기화에 실패했습니다."))
+            }
+        }
+    }
+
+    // GitHub 로그인 성공 후 로컬 TIL 데이터를 Supabase에 일괄 동기화
+    private suspend fun syncLocalTilsToRemote() {
+        when (val result = syncTilsUseCase()) {
+            is Result.Success -> { }
+            is Result.Error -> {
+                _event.emit(ProfileEvent.ShowSnackbar("TIL 동기화에 실패했습니다."))
             }
         }
     }

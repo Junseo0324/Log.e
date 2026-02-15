@@ -4,10 +4,14 @@ import com.devhjs.loge.data.local.dao.TilDao
 import com.devhjs.loge.data.local.entity.TilEntity
 import com.devhjs.loge.data.mapper.toDomain
 import com.devhjs.loge.data.mapper.toEntity
+import com.devhjs.loge.data.mapper.toRemoteDto
 import com.devhjs.loge.domain.model.ChartPoint
 import com.devhjs.loge.domain.model.Stat
 import com.devhjs.loge.domain.model.Til
+import com.devhjs.loge.domain.repository.AuthRepository
 import com.devhjs.loge.domain.repository.TilRepository
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -18,7 +22,9 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.map as flowMap
 
 class TilRepositoryImpl @Inject constructor(
-    private val tilDao: TilDao
+    private val tilDao: TilDao,
+    private val supabaseClient: SupabaseClient,
+    private val authRepository: AuthRepository
 ) : TilRepository {
 
     override fun getAllTil(start: Long, end: Long): Flow<List<Til>> {
@@ -39,31 +45,62 @@ class TilRepositoryImpl @Inject constructor(
 
     override suspend fun saveTil(til: Til) {
         withContext(Dispatchers.IO) {
+            // 로컬 DB에 저장
             tilDao.insertTil(til.toEntity())
+
+            // 로그인 상태라면 원격 DB에도 동기화
+            syncToRemoteIfLoggedIn(til)
         }
     }
 
     override suspend fun updateTil(til: Til) {
         withContext(Dispatchers.IO) {
+            // 로컬 DB 업데이트
             tilDao.updateTil(til.toEntity())
+
+            // 로그인 상태라면 원격 DB에도 동기화
+            syncToRemoteIfLoggedIn(til)
         }
     }
 
     override suspend fun deleteTil(til: Til) {
         withContext(Dispatchers.IO) {
+            // 로컬 DB에서 삭제
             tilDao.deleteTil(til.toEntity())
+
+            // 로그인 상태라면 원격 DB에서도 삭제
+            deleteFromRemoteIfLoggedIn(til.id)
         }
     }
 
     override suspend fun deleteTil(id: Long) {
         withContext(Dispatchers.IO) {
+            // 로컬 DB에서 삭제
             tilDao.deleteTilById(id)
+
+            // 로그인 상태라면 원격 DB에서도 삭제
+            deleteFromRemoteIfLoggedIn(id)
         }
     }
 
     override suspend fun deleteAll() {
         withContext(Dispatchers.IO) {
+            // 로컬 DB 전체 삭제
             tilDao.deleteAll()
+
+            // 로그인 상태라면 원격 데이터도 전체 삭제
+            if (authRepository.isUserLoggedIn()) {
+                val userId = authRepository.getCurrentUserUid()
+                if (userId != null) {
+                    try {
+                        supabaseClient.from("tils").delete {
+                            filter { eq("user_id", userId) }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
         }
     }
 
@@ -113,4 +150,61 @@ class TilRepositoryImpl @Inject constructor(
             )
         }.flowOn(Dispatchers.IO)
     }
+
+    /**
+     * 로그인 후 기존 로컬 TIL 전체를 원격에 일괄 업로드
+     */
+    override suspend fun syncAllTilsToRemote() {
+        withContext(Dispatchers.IO) {
+            if (!authRepository.isUserLoggedIn()) return@withContext
+
+            val userId = authRepository.getCurrentUserUid() ?: return@withContext
+            val allTils = tilDao.getAllTils().map { it.toDomain() }
+
+            if (allTils.isEmpty()) return@withContext
+
+            val dtos = allTils.map { it.toRemoteDto(userId) }
+            // upsert로 중복 방지 (user_id + local_id 유니크 제약)
+            supabaseClient.from("tils").upsert(dtos)
+        }
+    }
+
+    /**
+     * 로그인 상태일 때 단일 TIL을 원격에 동기화
+     */
+    private suspend fun syncToRemoteIfLoggedIn(til: Til) {
+        if (authRepository.isUserLoggedIn()) {
+            val userId = authRepository.getCurrentUserUid()
+            if (userId != null) {
+                try {
+                    supabaseClient.from("tils").upsert(til.toRemoteDto(userId))
+                } catch (e: Exception) {
+                    // 원격 동기화 실패 시 로컬 데이터는 유지
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    /**
+     * 로그인 상태일 때 원격에서 TIL 삭제
+     */
+    private suspend fun deleteFromRemoteIfLoggedIn(localId: Long) {
+        if (authRepository.isUserLoggedIn()) {
+            val userId = authRepository.getCurrentUserUid()
+            if (userId != null) {
+                try {
+                    supabaseClient.from("tils").delete {
+                        filter {
+                            eq("user_id", userId)
+                            eq("local_id", localId)
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
 }
+
