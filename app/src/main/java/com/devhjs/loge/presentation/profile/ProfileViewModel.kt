@@ -3,9 +3,11 @@ package com.devhjs.loge.presentation.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devhjs.loge.core.util.Result
-import com.devhjs.loge.domain.model.User
+import com.devhjs.loge.domain.usecase.GetGithubStatusUseCase
 import com.devhjs.loge.domain.usecase.GetUserUseCase
 import com.devhjs.loge.domain.usecase.SaveUserUseCase
+import com.devhjs.loge.domain.usecase.SignInWithGithubUseCase
+import com.devhjs.loge.domain.usecase.SignOutGithubUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +21,10 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
-    private val saveUserUseCase: SaveUserUseCase
+    private val saveUserUseCase: SaveUserUseCase,
+    private val signInWithGithubUseCase: SignInWithGithubUseCase,
+    private val signOutGithubUseCase: SignOutGithubUseCase,
+    private val getGithubStatusUseCase: GetGithubStatusUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileState())
@@ -30,6 +35,7 @@ class ProfileViewModel @Inject constructor(
 
     init {
         loadUser()
+        loadGithubStatus()
     }
 
     private fun loadUser() {
@@ -54,6 +60,18 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    // GitHub 연결 상태를 확인해 State 반영
+    private fun loadGithubStatus() {
+        val status = getGithubStatusUseCase()
+        _state.update {
+            it.copy(
+                isGithubConnected = status.isConnected,
+                githubUsername = status.username,
+                githubAvatarUrl = status.avatarUrl
+            )
+        }
+    }
+
     fun onAction(action: ProfileAction) {
         when (action) {
             is ProfileAction.OnNameChange -> {
@@ -71,6 +89,47 @@ class ProfileViewModel @Inject constructor(
             }
             is ProfileAction.OnBackClick -> {
                 viewModelScope.launch { _event.emit(ProfileEvent.NavigateBack) }
+            }
+            is ProfileAction.OnGithubLoginClick -> {
+                signInWithGithub()
+            }
+            is ProfileAction.OnGithubDisconnectClick -> {
+                disconnectGithub()
+            }
+        }
+    }
+
+    private fun signInWithGithub() {
+        viewModelScope.launch {
+            when (val result = signInWithGithubUseCase()) {
+                is Result.Success -> {
+                    // 로그인 성공 후 상태 갱신
+                    loadGithubStatus()
+                    _event.emit(ProfileEvent.ShowSnackbar("GitHub 연동 성공!"))
+                }
+                is Result.Error -> {
+                    _event.emit(ProfileEvent.ShowSnackbar("GitHub 연동에 실패했습니다: ${result.error.message}"))
+                }
+            }
+        }
+    }
+
+    private fun disconnectGithub() {
+        viewModelScope.launch {
+            when (val result = signOutGithubUseCase()) {
+                is Result.Success -> {
+                    _state.update {
+                        it.copy(
+                            isGithubConnected = false,
+                            githubUsername = null,
+                            githubAvatarUrl = null
+                        )
+                    }
+                    _event.emit(ProfileEvent.ShowSnackbar("GitHub 연결이 해제되었습니다."))
+                }
+                is Result.Error -> {
+                    _event.emit(ProfileEvent.ShowSnackbar("연결 해제에 실패했습니다."))
+                }
             }
         }
     }
