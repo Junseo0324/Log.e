@@ -6,9 +6,21 @@ import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.Github
 import javax.inject.Inject
 
+import io.github.jan.supabase.auth.status.SessionStatus
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonPrimitive
+
 class AuthRepositoryImpl @Inject constructor(
     private val supabaseClient: SupabaseClient
 ) : AuthRepository {
+
+    override fun getSessionStatus(): Flow<Boolean> {
+        return supabaseClient.auth.sessionStatus.map { status ->
+            status is SessionStatus.Authenticated
+        }
+    }
 
     override suspend fun signInWithGithub() {
         supabaseClient.auth.signInWith(Github)
@@ -33,16 +45,18 @@ class AuthRepositoryImpl @Inject constructor(
     // GitHub 프로필 정보: Supabase Auth 세션의 userMetadata에서 읽어옴
     override fun getGithubName(): String? {
         return supabaseClient.auth.currentUserOrNull()
-            ?.userMetadata?.get("full_name")?.toString()
+            ?.userMetadata?.get("full_name")?.jsonPrimitive?.contentOrNull
     }
+
+
 
     override fun getGithubAvatarUrl(): String? {
         return supabaseClient.auth.currentUserOrNull()
-            ?.userMetadata?.get("avatar_url")?.toString()
+            ?.userMetadata?.get("avatar_url")?.jsonPrimitive?.contentOrNull
     }
 
     override fun getGithubId(): String? {
         return supabaseClient.auth.currentUserOrNull()
-            ?.userMetadata?.get("user_name")?.toString()
+            ?.userMetadata?.get("user_name")?.jsonPrimitive?.contentOrNull
     }
 }
