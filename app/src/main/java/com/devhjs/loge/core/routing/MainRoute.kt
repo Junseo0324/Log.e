@@ -12,4 +12,5 @@ sealed class MainRoute(val route: String) {
     }
     data object Licenses : MainRoute("licenses")
     data object ProfileEdit : MainRoute("profile_edit")
+    data object Feedback : MainRoute("feedback")
 }

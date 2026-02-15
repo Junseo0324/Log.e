@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.devhjs.loge.presentation.detail.DetailScreenRoot
+import com.devhjs.loge.presentation.feedback.FeedbackScreenRoot
 import com.devhjs.loge.presentation.home.HomeScreenRoot
 import com.devhjs.loge.presentation.license.LicensesScreen
 import com.devhjs.loge.presentation.profile.ProfileScreenRoot
@@ -53,6 +54,9 @@ fun MainNavGraph(
                 },
                 onNavigateToProfileEdit = {
                     navController.navigate(MainRoute.ProfileEdit.route)
+                },
+                onNavigateToFeedback = {
+                    navController.navigate(MainRoute.Feedback.route)
                 },
                 snackbarMessage = snackbarMessage,
                 onConsumeSnackbarMessage = {
@@ -100,6 +104,17 @@ fun MainNavGraph(
         ) {
             WriteScreenRoot(
                 onBackClick = { navController.navigateUp() },
+                onSubmitSuccess = { message ->
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("snackbar_message", message)
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(MainRoute.Feedback.route) {
+            FeedbackScreenRoot(
+                onBackClick = { navController.popBackStack() },
                 onSubmitSuccess = { message ->
                     navController.previousBackStackEntry
                         ?.savedStateHandle
