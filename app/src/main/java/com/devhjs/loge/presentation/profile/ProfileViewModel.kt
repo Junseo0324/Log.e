@@ -105,6 +105,8 @@ class ProfileViewModel @Inject constructor(
                 is Result.Success -> {
                     // 로그인 성공 후 상태 갱신
                     loadGithubStatus()
+                    // 로컬 User 데이터를 Supabase에 동기화
+                    syncLocalUserToRemote()
                     _event.emit(ProfileEvent.ShowSnackbar("GitHub 연동 성공!"))
                 }
                 is Result.Error -> {
@@ -130,6 +132,17 @@ class ProfileViewModel @Inject constructor(
                 is Result.Error -> {
                     _event.emit(ProfileEvent.ShowSnackbar("연결 해제에 실패했습니다."))
                 }
+            }
+        }
+    }
+
+    // GitHub 로그인 성공 후 로컬 User 데이터를 Supabase에 동기화
+    private suspend fun syncLocalUserToRemote() {
+        val currentUser = _state.value.user
+        when (val result = saveUserUseCase(currentUser)) {
+            is Result.Success -> { }
+            is Result.Error -> {
+                _event.emit(ProfileEvent.ShowSnackbar("프로필 동기화에 실패했습니다."))
             }
         }
     }
