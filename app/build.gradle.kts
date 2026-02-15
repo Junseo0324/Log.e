@@ -157,6 +157,9 @@ dependencies {
     implementation(libs.ktor.client.android)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio) // Recommended for Android
+
+    // Coil (Image Loading)
+    implementation(libs.coil.compose)
     
     // WorkManager
     implementation(libs.work.runtime.ktx)
