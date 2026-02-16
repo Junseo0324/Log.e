@@ -68,7 +68,7 @@ fun QuickStatsWidgetContent(
 
         Spacer(modifier = GlanceModifier.defaultWeight())
 
-        // 하단 4개 지표 컬럼 (전체, 이번달, 평균난이도, 달성률)
+        // 하단 4개 지표 컬럼
         Row(
             modifier = GlanceModifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -91,7 +91,7 @@ fun QuickStatsWidgetContent(
             )
             // 평균 난이도
             StatColumn(
-                iconRes = R.drawable.ic_difficulty,
+                iconRes = R.drawable.ic_widget_difficulty,
                 iconBgColor = Color(0x1AAD46FF),
                 value = String.format("%.1f", avgDifficulty),
                 label = "평균난이도",
