@@ -25,6 +25,13 @@ object DateUtils {
             .format(DateTimeFormatter.ISO_DATE)
     }
 
+    /** 타임스탬프 → 연도-월 문자열 ("yyyy-MM") */
+    fun formatToYearMonth(timestamp: Long): String {
+        return Instant.ofEpochMilli(timestamp)
+            .atZone(ZoneId.systemDefault())
+            .format(DateTimeFormatter.ofPattern("yyyy-MM", java.util.Locale.KOREA))
+    }
+
     /** 타임스탬프에서 해당 월의 일(day) 값 추출 (1~31) */
     fun getDayOfMonth(timestamp: Long): Int {
         return Instant.ofEpochMilli(timestamp)
