@@ -8,11 +8,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.devhjs.loge.domain.usecase.SyncOnReconnectUseCase
 import com.devhjs.loge.presentation.designsystem.LogETheme
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.handleDeeplinks
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -20,6 +25,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var supabaseClient: SupabaseClient
+
+    @Inject
+    lateinit var syncOnReconnectUseCase: SyncOnReconnectUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +39,13 @@ class MainActivity : ComponentActivity() {
 
         // GitHub OAuth 리다이렉트 처리
         supabaseClient.handleDeeplinks(intent)
+
+        // 네트워크 복구 시 Supabase 자동 동기화 (포그라운드에서만 동작)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                syncOnReconnectUseCase().collect {}
+            }
+        }
 
         setContent {
             LogETheme {
@@ -45,3 +60,4 @@ class MainActivity : ComponentActivity() {
         supabaseClient.handleDeeplinks(intent)
     }
 }
+

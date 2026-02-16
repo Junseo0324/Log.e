@@ -233,7 +233,6 @@ fun SettingScreen(
                     }
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // 피드백 보내기 (추후 Supabase 연동 예정)
                     SettingActionItem(
                         iconRes = R.drawable.ic_chat,
                         title = "피드백 보내기",

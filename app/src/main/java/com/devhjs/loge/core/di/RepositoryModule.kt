@@ -2,6 +2,7 @@ package com.devhjs.loge.core.di
 
 import android.content.Context
 import com.devhjs.loge.BuildConfig
+import com.devhjs.loge.data.network.DefaultConnectivityManager
 import com.devhjs.loge.data.repository.AiRepositoryImpl
 import com.devhjs.loge.data.repository.AuthRepositoryImpl
 import com.devhjs.loge.data.repository.FeedbackRepositoryImpl
@@ -11,6 +12,7 @@ import com.devhjs.loge.data.repository.MockRepositoryImpl
 import com.devhjs.loge.data.repository.NotificationRepositoryImpl
 import com.devhjs.loge.data.repository.TilRepositoryImpl
 import com.devhjs.loge.data.repository.UserRepositoryImpl
+import com.devhjs.loge.domain.network.ConnectivityManager
 import com.devhjs.loge.domain.repository.AiRepository
 import com.devhjs.loge.domain.repository.AuthRepository
 import com.devhjs.loge.domain.repository.FeedbackRepository
@@ -93,5 +95,13 @@ object RepositoryModule {
         feedbackRepositoryImpl: FeedbackRepositoryImpl
     ): FeedbackRepository {
         return feedbackRepositoryImpl
+    }
+
+    @Provides
+    @Singleton
+    fun provideConnectivityManager(
+        impl: DefaultConnectivityManager
+    ): ConnectivityManager {
+        return impl
     }
 }
