@@ -31,4 +31,7 @@ object AppColors {
     // 그라데이션
     val gradient1 = Color(0xFF009966)
     val gradient2 = Color(0xFF0092B8)
+
+    val gradient3 = Color(0xFFFF4081)
+    val gradient4 = Color(0xFF00E676)
 }
