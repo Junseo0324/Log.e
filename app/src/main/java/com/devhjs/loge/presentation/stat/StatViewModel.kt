@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.YearMonth
@@ -93,21 +94,29 @@ class StatViewModel @Inject constructor(
     private fun loadStats() {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
+            _state.update { 
+                it.copy(
+                    isLoading = true,
+                    aiReport = null
+                ) 
+            }
 
             val monthString = _state.value.selectedMonth
 
-            // 두 UseCase의 Flow를 combine하여 동시에 수집
             combine(
                 getMonthlyStatUseCase(monthString),
-                getEmotionDistributionUseCase(monthString)
-            ) { stat, tilAnalysis ->
+                getEmotionDistributionUseCase(monthString),
+                flow {
+                    emit(getMonthlyReviewUseCase(monthString, forceFetchFromAi = false))
+                }
+            ) { stat, tilAnalysis, reviewResult ->
                 _state.update {
                     it.copy(
                         isLoading = false,
                         stat = stat,
                         emotionDistribution = tilAnalysis.emotionDistribution,
-                        difficultyChartPoints = tilAnalysis.difficultyChartPoints
+                        difficultyChartPoints = tilAnalysis.difficultyChartPoints,
+                        aiReport = (reviewResult as? Result.Success)?.data
                     )
                 }
             }.catch { e ->

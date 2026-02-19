@@ -17,15 +17,20 @@ class GetMonthlyReviewUseCase @Inject constructor(
     private val tilRepository: TilRepository,
     private val authRepository: AuthRepository
 ) {
-    suspend operator fun invoke(month: String): Result<AiReport, Exception> = withContext(Dispatchers.IO) {
+    suspend operator fun invoke(
+        month: String,
+        forceFetchFromAi: Boolean = true
+    ): Result<AiReport?, Exception> = withContext(Dispatchers.IO) {
         try {
-            // 1. 저장된 회고가 있는지 먼저 확인
             val savedReviewResult = aiRepository.getSavedMonthlyReview(month)
             if (savedReviewResult is Result.Success && savedReviewResult.data != null) {
                 return@withContext Result.Success(savedReviewResult.data)
             }
 
-            // 2. 저장된 회고가 없으면 기존 분석 로직 수행
+            if (!forceFetchFromAi) {
+                return@withContext Result.Success(null)
+            }
+
             val (start, end) = DateUtils.getMonthStartEndTimestamps(month)
             val tils = tilRepository.getAllTil(start, end).first()
 
@@ -45,10 +50,10 @@ class GetMonthlyReviewUseCase @Inject constructor(
             val scores = tils.map { it.emotionScore }
             val difficulties = tils.map { it.difficultyLevel }
 
-            // 3. AI 분석 요청
+            // AI 분석 요청
             val aiResult = aiRepository.getAiFeedback(month, emotions, scores, difficulties)
 
-            // 4. 분석 성공 시 저장
+            // 분석 성공 시 저장
             if (aiResult is Result.Success) {
                 val userId = authRepository.getCurrentUserUid()
                 if (userId != null) {

@@ -44,8 +44,9 @@ class GetMonthlyReviewUseCaseTest {
         // Then
         assertTrue(result is Result.Success)
         val data = (result as Result.Success).data
-        assertEquals("분석 불가", data.emotion)
-        assertEquals("이번 달에 작성된 회고가 없어 분석할 수 없습니다. 조금 더 꾸준히 기록해 보세요!", data.comment)
+        assertTrue(data != null)
+        assertEquals("분석 불가", data?.emotion)
+        assertEquals("이번 달에 작성된 회고가 없어 분석할 수 없습니다. 조금 더 꾸준히 기록해 보세요!", data?.comment)
     }
 
     @Test
@@ -119,8 +120,20 @@ class GetMonthlyReviewUseCaseTest {
         // Then
         assertTrue(result is Result.Success)
         assertEquals(savedReport, (result as Result.Success).data)
-        
-        // AI 분석 호출 안됨 검증 (relaxed mock이라 호출 여부 확인은 verify로 가능하지만 여기선 생략)
+    }
+
+    @Test
+    fun `forceFetchFromAi가 false이고 저장된 데이터가 없으면 null을 반환해야 한다`() = runBlocking {
+        // Given
+        val month = "2024-02"
+        coEvery { aiRepository.getSavedMonthlyReview(any()) } returns Result.Success(null)
+
+        // When
+        val result = getMonthlyReviewUseCase(month, forceFetchFromAi = false)
+
+        // Then
+        assertTrue(result is Result.Success)
+        assertEquals(null, (result as Result.Success).data)
     }
 
     @Test
