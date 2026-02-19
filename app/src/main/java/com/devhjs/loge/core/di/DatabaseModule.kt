@@ -3,6 +3,7 @@ package com.devhjs.loge.core.di
 import android.content.Context
 import androidx.room.Room
 import com.devhjs.loge.data.local.LogEDatabase
+import com.devhjs.loge.data.local.dao.MonthlyReviewDao
 import com.devhjs.loge.data.local.dao.TilDao
 import com.devhjs.loge.data.local.dao.UserDao
 import dagger.Module
@@ -46,7 +47,7 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideMonthlyReviewDao(database: LogEDatabase): com.devhjs.loge.data.local.dao.MonthlyReviewDao {
+    fun provideMonthlyReviewDao(database: LogEDatabase): MonthlyReviewDao {
         return database.monthlyReviewDao()
     }
 }

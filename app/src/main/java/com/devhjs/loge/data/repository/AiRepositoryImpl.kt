@@ -153,8 +153,6 @@ class AiRepositoryImpl @Inject constructor(
                 }
             }
 
-            // TODO: 필요 시 Remote DB 조회 로직 추가 가능 (현재는 로컬 우선)
-            
             Result.Success(null)
         } catch (e: Exception) {
             Timber.e(e, "Failed to get saved monthly review")
