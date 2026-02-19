@@ -1,5 +1,8 @@
 package com.devhjs.loge.presentation.component
 
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -38,10 +42,10 @@ import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.chart.line.LineChart
 import com.patrykandpatrick.vico.core.component.shape.DashedShape
 import com.patrykandpatrick.vico.core.component.shape.LineComponent
-import com.patrykandpatrick.vico.core.component.shape.ShapeComponent
 import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import com.patrykandpatrick.vico.core.entry.entryOf
+import com.patrykandpatrick.vico.core.marker.MarkerLabelFormatter
 
 @Composable
 fun ScoreDifficultySection(
@@ -77,11 +81,7 @@ fun ScoreDifficultySection(
         LineChart.LineSpec(
             lineColor = scoreColor.toArgb(),
             lineThicknessDp = 3f,
-            point = ShapeComponent(
-                shape = Shapes.pillShape,
-                color = scoreColor.toArgb(),
-            ),
-            pointSizeDp = 6f,
+            point = null,
             lineBackgroundShader = Brush.verticalGradient(
                 colors = listOf(
                     scoreColor.copy(alpha = 0.3f),
@@ -92,11 +92,7 @@ fun ScoreDifficultySection(
         LineChart.LineSpec(
             lineColor = difficultyColor.toArgb(),
             lineThicknessDp = 3f,
-            point = ShapeComponent(
-                shape = Shapes.pillShape,
-                color = difficultyColor.toArgb(),
-            ),
-            pointSizeDp = 6f,
+            point = null,
             lineBackgroundShader = Brush.verticalGradient(
                 colors = listOf(
                     difficultyColor.copy(alpha = 0.3f),
@@ -149,6 +145,40 @@ fun ScoreDifficultySection(
                 Chart(
                     chart = lineChart(lines = lines),
                     model = model,
+                    marker = rememberMarker(
+                        labelFormatter = remember {
+                            MarkerLabelFormatter { markedEntries, _ ->
+                                val x = markedEntries.firstOrNull()?.entry?.x?.toInt() ?: 0
+                                val xLabel = xLabels.getOrNull(x) ?: ""
+                                val builder = SpannableStringBuilder()
+                                builder.append("$xLabel\n")
+
+                                markedEntries.forEachIndexed { index, model ->
+                                    val y = model.entry.y.toInt()
+                                    val color = model.color
+
+                                    val text = if (color == scoreColor.toArgb()) {
+                                        "score : $y"
+                                    } else {
+                                        "difficulty : ${y / 20}"
+                                    }
+
+                                    val start = builder.length
+                                    builder.append(text)
+                                    builder.setSpan(
+                                        ForegroundColorSpan(color),
+                                        start,
+                                        builder.length,
+                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    if (index < markedEntries.size - 1) {
+                                        builder.append("\n")
+                                    }
+                                }
+                                builder
+                            }
+                        }
+                    ),
                     startAxis = rememberStartAxis(
                         valueFormatter = verticalAxisValueFormatter,
                         guideline = guideline,
@@ -166,13 +196,11 @@ fun ScoreDifficultySection(
             
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 범례: 점수 + 난이도
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // 점수 범례
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
@@ -186,7 +214,6 @@ fun ScoreDifficultySection(
                     )
                 }
                 Spacer(modifier = Modifier.width(24.dp))
-                // 난이도 범례
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier

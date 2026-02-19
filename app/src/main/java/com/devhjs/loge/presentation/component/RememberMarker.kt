@@ -19,9 +19,18 @@ import com.patrykandpatrick.vico.core.component.shape.LineComponent
 import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.context.MeasureContext
 import com.patrykandpatrick.vico.core.marker.Marker
+import com.patrykandpatrick.vico.core.marker.MarkerLabelFormatter
+
+
+private val DefaultMarkerLabelFormatter = MarkerLabelFormatter { markedEntries, _ ->
+    val y = markedEntries.firstOrNull()?.entry?.y?.toInt() ?: 0
+    "score : $y"
+}
 
 @Composable
-internal fun rememberMarker(): Marker {
+internal fun rememberMarker(
+    labelFormatter: MarkerLabelFormatter = DefaultMarkerLabelFormatter
+): Marker {
     val labelBackground = shapeComponent(
         shape = Shapes.roundedCornerShape(allPercent = 25),
         color = AppColors.background,
@@ -31,7 +40,7 @@ internal fun rememberMarker(): Marker {
 
     val label = textComponent(
         background = labelBackground,
-        lineCount = 1,
+        lineCount = 5,
         padding = dimensionsOf(start = 12.dp, top = 8.dp, end = 12.dp, bottom = 8.dp),
         typeface = Typeface.MONOSPACE,
         color = AppColors.white,
@@ -63,7 +72,7 @@ internal fun rememberMarker(): Marker {
         )
     )
 
-    return remember(label, indicator, guideline) {
+    return remember(label, indicator, guideline, labelFormatter) {
         object : MarkerComponent(label, indicator, guideline) {
             init {
                 indicatorSizeDp = 12f
@@ -72,14 +81,11 @@ internal fun rememberMarker(): Marker {
                         color = Color.White.toArgb()
                     }
                     with(indicatorInner) {
-                         color = AppColors.iconPrimary.toArgb()
+                        // Apply the color from the chart entry (which comes from LineSpec)
+                        color = entryColor
                     }
                 }
-                labelFormatter = { markedEntries, _ ->
-                    val entry = markedEntries.firstOrNull()?.entry
-                    val y = entry?.y?.toInt() ?: 0
-                    "score : $y"
-                }
+                this.labelFormatter = labelFormatter
             }
             override fun getInsets(
                 context: MeasureContext,
