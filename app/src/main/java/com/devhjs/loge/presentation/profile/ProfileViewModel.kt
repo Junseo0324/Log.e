@@ -13,6 +13,7 @@ import com.devhjs.loge.domain.usecase.SignInWithGithubUseCase
 import com.devhjs.loge.domain.usecase.SignOutGithubUseCase
 import com.devhjs.loge.domain.usecase.SyncTilsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -184,9 +185,13 @@ class ProfileViewModel @Inject constructor(
 
     // GitHub 로그인 성공 후 로컬 TIL 데이터를 Supabase에 일괄 동기화
     private suspend fun syncLocalTilsToRemote() {
-        when (syncTilsUseCase()) {
-            is Result.Success -> { }
+        Timber.d("syncLocalTilsToRemote 호출됨")
+        when (val result = syncTilsUseCase()) {
+            is Result.Success -> {
+                Timber.d("syncLocalTilsToRemote 성공")
+            }
             is Result.Error -> {
+                Timber.e(result.error, "syncLocalTilsToRemote 실패")
                 _event.emit(ProfileEvent.ShowSnackbar("TIL 동기화에 실패했습니다."))
             }
         }

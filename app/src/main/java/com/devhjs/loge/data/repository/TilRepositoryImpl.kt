@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
 import com.devhjs.loge.core.util.DateUtils
+import timber.log.Timber
 import javax.inject.Inject
 import kotlinx.coroutines.flow.map as flowMap
 
@@ -154,18 +155,34 @@ class TilRepositoryImpl @Inject constructor(
     /**
      * 로그인 후 기존 로컬 TIL 전체를 원격에 일괄 업로드
      */
+    /**
+     * 로그인 후 기존 로컬 TIL 전체를 원격에 일괄 업로드
+     */
     override suspend fun syncAllTilsToRemote() {
         withContext(Dispatchers.IO) {
             if (!authRepository.isUserLoggedIn()) return@withContext
 
             val userId = authRepository.getCurrentUserUid() ?: return@withContext
+            Timber.d("syncAllTilsToRemote 시작: userId=$userId")
+            
             val allTils = tilDao.getAllTils().map { it.toDomain() }
 
-            if (allTils.isEmpty()) return@withContext
+            if (allTils.isEmpty()) {
+                Timber.d("동기화할 로컬 TIL 데이터가 없습니다.")
+                return@withContext
+            }
 
             val dtos = allTils.map { it.toRemoteDto(userId) }
             // upsert로 중복 방지 (user_id + local_id 유니크 제약)
-            supabaseClient.from("tils").upsert(dtos)
+            try {
+                supabaseClient.from("tils").upsert(dtos) {
+                    onConflict = "user_id, local_id"
+                }
+                Timber.d("syncAllTilsToRemote 성공: ${dtos.size}개 동기화 완료")
+            } catch (e: Exception) {
+                Timber.e(e, "syncAllTilsToRemote 실패")
+                throw e
+            }
         }
     }
 
@@ -177,11 +194,17 @@ class TilRepositoryImpl @Inject constructor(
             val userId = authRepository.getCurrentUserUid()
             if (userId != null) {
                 try {
-                    supabaseClient.from("tils").upsert(til.toRemoteDto(userId))
+                    Timber.d("syncToRemoteIfLoggedIn 시도: tilId=${til.id}, title=${til.title}")
+                    supabaseClient.from("tils").upsert(til.toRemoteDto(userId)) {
+                        onConflict = "user_id, local_id"
+                    }
+                    Timber.d("syncToRemoteIfLoggedIn 성공")
                 } catch (e: Exception) {
                     // 원격 동기화 실패 시 로컬 데이터는 유지
-                    e.printStackTrace()
+                    Timber.e(e, "syncToRemoteIfLoggedIn 실패: tilId=${til.id}")
                 }
+            } else {
+                Timber.w("syncToRemoteIfLoggedIn 실패: UserId가 null입니다.")
             }
         }
     }
@@ -194,14 +217,16 @@ class TilRepositoryImpl @Inject constructor(
             val userId = authRepository.getCurrentUserUid()
             if (userId != null) {
                 try {
+                    Timber.d("deleteFromRemoteIfLoggedIn 시도: localId=$localId")
                     supabaseClient.from("tils").delete {
                         filter {
                             eq("user_id", userId)
                             eq("local_id", localId)
                         }
                     }
+                    Timber.d("deleteFromRemoteIfLoggedIn 성공")
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Timber.e(e, "deleteFromRemoteIfLoggedIn 실패: localId=$localId")
                 }
             }
         }
