@@ -81,7 +81,6 @@ internal fun rememberMarker(
                         color = Color.White.toArgb()
                     }
                     with(indicatorInner) {
-                        // Apply the color from the chart entry (which comes from LineSpec)
                         color = entryColor
                     }
                 }
@@ -92,9 +91,7 @@ internal fun rememberMarker(
                 outInsets: Insets,
                 horizontalDimensions: HorizontalDimensions,
             ) {
-                with(context) {
-                    outInsets.top = label.getHeight(context)
-                }
+                outInsets.top = label.getHeight(context)
             }
         }
     }
