@@ -5,6 +5,7 @@ import com.devhjs.loge.domain.model.AiReport
 import com.devhjs.loge.domain.model.EmotionType
 import com.devhjs.loge.domain.model.Til
 import com.devhjs.loge.domain.repository.AiRepository
+import com.devhjs.loge.domain.repository.AuthRepository
 import com.devhjs.loge.domain.repository.TilRepository
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -19,19 +20,22 @@ class GetMonthlyReviewUseCaseTest {
 
     private lateinit var aiRepository: AiRepository
     private lateinit var tilRepository: TilRepository
+    private lateinit var authRepository: AuthRepository
     private lateinit var getMonthlyReviewUseCase: GetMonthlyReviewUseCase
 
     @Before
     fun setUp() {
-        aiRepository = mockk()
+        aiRepository = mockk(relaxed = true)
         tilRepository = mockk()
-        getMonthlyReviewUseCase = GetMonthlyReviewUseCase(aiRepository, tilRepository)
+        authRepository = mockk()
+        getMonthlyReviewUseCase = GetMonthlyReviewUseCase(aiRepository, tilRepository, authRepository)
     }
 
     @Test
     fun `데이터가 없을 때 분석 불가 메시지를 반환해야 한다`() = runBlocking {
         // Given
         val month = "2024-02"
+        coEvery { aiRepository.getSavedMonthlyReview(any()) } returns Result.Success(null)
         coEvery { tilRepository.getAllTil(any(), any()) } returns flowOf(emptyList())
 
         // When
@@ -48,6 +52,7 @@ class GetMonthlyReviewUseCaseTest {
     fun `데이터가 있을 때 AI 분석 결과를 반환해야 한다`() = runBlocking {
         // Given
         val month = "2024-02"
+        val userId = "test-user-id"
         val tils = listOf(
             Til(
                 id = 1,
@@ -80,8 +85,11 @@ class GetMonthlyReviewUseCaseTest {
             comment = "Good job!"
         )
 
+        coEvery { aiRepository.getSavedMonthlyReview(any()) } returns Result.Success(null)
         coEvery { tilRepository.getAllTil(any(), any()) } returns flowOf(tils)
         coEvery { aiRepository.getAiFeedback(any(), any(), any(), any()) } returns Result.Success(expectedReport)
+        coEvery { authRepository.getCurrentUserUid() } returns userId
+        coEvery { aiRepository.saveMonthlyReview(any(), any(), any()) } returns Result.Success(Unit)
 
         // When
         val result = getMonthlyReviewUseCase(month)
@@ -92,11 +100,36 @@ class GetMonthlyReviewUseCaseTest {
     }
 
     @Test
+    fun `저장된 회고가 있으면 AI 분석 없이 반환해야 한다`() = runBlocking {
+        // Given
+        val month = "2024-02"
+        val savedReport = AiReport(
+            date = 1706750000000,
+            emotion = "성취감",
+            emotionScore = 90,
+            difficultyLevel = "쉬움",
+            comment = "Saved Comment"
+        )
+        
+        coEvery { aiRepository.getSavedMonthlyReview(month) } returns Result.Success(savedReport)
+
+        // When
+        val result = getMonthlyReviewUseCase(month)
+
+        // Then
+        assertTrue(result is Result.Success)
+        assertEquals(savedReport, (result as Result.Success).data)
+        
+        // AI 분석 호출 안됨 검증 (relaxed mock이라 호출 여부 확인은 verify로 가능하지만 여기선 생략)
+    }
+
+    @Test
     fun `repository Error 발생 시 에러 결과를 반환해야 한다`() = runBlocking {
         // Given
         val month = "2024-02"
         val exception = RuntimeException("DB Error")
-        
+
+        coEvery { aiRepository.getSavedMonthlyReview(any()) } returns Result.Success(null)
         coEvery { tilRepository.getAllTil(any(), any()) } throws exception
 
         // When

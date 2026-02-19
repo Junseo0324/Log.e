@@ -16,4 +16,14 @@ interface AiRepository {
         learned: String,
         difficult: String
     ): Result<AiReport, Exception>
+
+    suspend fun saveMonthlyReview(
+        userId: String,
+        yearMonth: String,
+        report: AiReport
+    ): Result<Unit, Exception>
+
+    suspend fun getSavedMonthlyReview(
+        yearMonth: String
+    ): Result<AiReport?, Exception>
 }

@@ -37,9 +37,16 @@ object DatabaseModule {
         return database.tilDao()
     }
 
+
     @Provides
     @Singleton
     fun provideUserDao(database: LogEDatabase): UserDao {
         return database.userDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMonthlyReviewDao(database: LogEDatabase): com.devhjs.loge.data.local.dao.MonthlyReviewDao {
+        return database.monthlyReviewDao()
     }
 }

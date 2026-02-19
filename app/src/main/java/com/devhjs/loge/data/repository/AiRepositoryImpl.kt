@@ -3,18 +3,28 @@ package com.devhjs.loge.data.repository
 import com.devhjs.loge.core.util.Result
 import com.devhjs.loge.data.dto.ApiMessage
 import com.devhjs.loge.data.dto.OpenAiRequest
+import com.devhjs.loge.data.local.dao.MonthlyReviewDao
+import com.devhjs.loge.data.local.entity.MonthlyReviewEntity
 import com.devhjs.loge.data.remote.OpenAiService
+import com.devhjs.loge.data.remote.dto.toRemoteDto
 import com.devhjs.loge.domain.model.AiReport
 import com.devhjs.loge.domain.repository.AiRepository
+import com.devhjs.loge.domain.repository.AuthRepository
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import timber.log.Timber
 import javax.inject.Inject
 
 class AiRepositoryImpl @Inject constructor(
     private val openAiService: OpenAiService,
-    private val json: Json
+    private val json: Json,
+    private val monthlyReviewDao: MonthlyReviewDao,
+    private val supabaseClient: SupabaseClient,
+    private val authRepository: AuthRepository
 ) : AiRepository {
 
     override suspend fun getAiFeedback(
@@ -91,6 +101,65 @@ class AiRepositoryImpl @Inject constructor(
             systemRole = "당신은 개발자의 감정과 성장을 분석하는 전문가입니다. 오직 JSON 형식으로만 응답하세요.",
             prompt = prompt
         )
+    }
+
+    override suspend fun saveMonthlyReview(
+        userId: String,
+        yearMonth: String,
+        report: AiReport
+    ): Result<Unit, Exception> = withContext(Dispatchers.IO) {
+        try {
+            // 1. Local DB 저장
+            val entity = MonthlyReviewEntity(
+                userId = userId,
+                yearMonth = yearMonth,
+                emotion = report.emotion,
+                emotionScore = report.emotionScore,
+                difficultyLevel = report.difficultyLevel,
+                comment = report.comment,
+                createdAt = report.date
+            )
+            monthlyReviewDao.insertMonthlyReview(entity)
+            Timber.d("Local MonthlyReview Saved: $yearMonth")
+
+            // 2. Remote DB 동기화 (로그인 상태인 경우)
+            if (authRepository.isUserLoggedIn()) {
+                val currentUserId = authRepository.getCurrentUserUid()
+                if (currentUserId == userId) {
+                    val dto = entity.toRemoteDto() // DTO 변환
+                    supabaseClient.from("monthly_reviews").upsert(dto) {
+                        onConflict = "user_id, year_month"
+                    }
+                    Timber.d("Remote MonthlyReview Saved: $yearMonth")
+                }
+            }
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to save monthly review")
+            Result.Error(e)
+        }
+    }
+
+    override suspend fun getSavedMonthlyReview(yearMonth: String): Result<AiReport?, Exception> = withContext(Dispatchers.IO) {
+        try {
+            // Local DB 조회
+            val userId = authRepository.getCurrentUserUid()
+            if (userId != null) {
+                // 로그인된 경우 해당 유저의 데이터 조회
+                val entity = monthlyReviewDao.getMonthlyReviewSync(userId, yearMonth)
+                if (entity != null) {
+                    Timber.d("Found local monthly review for $yearMonth")
+                    return@withContext Result.Success(entity.toDomain())
+                }
+            }
+
+            // TODO: 필요 시 Remote DB 조회 로직 추가 가능 (현재는 로컬 우선)
+            
+            Result.Success(null)
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to get saved monthly review")
+            Result.Error(e)
+        }
     }
 
     private suspend fun getAiResponse(

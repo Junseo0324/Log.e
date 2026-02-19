@@ -20,7 +20,8 @@ class SaveUserUseCaseTest {
             name = "Test User",
             githubId = "testuser",
             isNotificationEnabled = true,
-            isDarkModeEnabled = false
+            isDarkModeEnabled = false,
+            notificationTime = Pair(21, 0)
         )
         coEvery { repository.saveUser(user) } returns Unit
 
