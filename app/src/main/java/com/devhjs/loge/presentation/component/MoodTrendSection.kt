@@ -100,6 +100,7 @@ fun MoodTrendSection(
                         )
                     )
                 ),
+                marker = rememberMarker(),
                 model = model,
                 startAxis = rememberStartAxis(
                     valueFormatter = verticalAxisValueFormatter,
