@@ -114,7 +114,7 @@ fun MonthlyReviewSection(
                     modifier = Modifier.weight(1f),
                     icon = R.drawable.ic_difficulty,
                     iconColor = AppColors.purple,
-                    title = "평균 난이도",
+                    title = "난이도",
                     mainValue = "$difficultyScore",
                     subValue = "/5",
                     content = {
