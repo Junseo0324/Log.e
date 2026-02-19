@@ -1,5 +1,6 @@
 package com.devhjs.loge.domain.usecase
 
+import com.devhjs.loge.core.util.Result
 import com.devhjs.loge.domain.model.EmotionType
 import com.devhjs.loge.domain.model.Til
 import com.devhjs.loge.domain.repository.TilRepository
@@ -45,9 +46,11 @@ class GetYearlyLearnedDatesUseCaseTest {
         val result = getYearlyLearnedDatesUseCase(year).first()
 
         // Then
-        assertEquals(2, result.size)
-        assertEquals("2023-01-01", result[0])
-        assertEquals("2023-12-31", result[1])
+        assert(result is Result.Success)
+        val data = (result as Result.Success).data
+        assertEquals(2, data.size)
+        assertEquals("2023-01-01", data[0])
+        assertEquals("2023-12-31", data[1])
     }
     
     @Test
@@ -60,7 +63,9 @@ class GetYearlyLearnedDatesUseCaseTest {
         val result = getYearlyLearnedDatesUseCase(year).first()
 
         // Then
-        assertEquals(0, result.size)
+        assert(result is Result.Success)
+        val data = (result as Result.Success).data
+        assertEquals(0, data.size)
     }
 
     private fun createTil(

@@ -3,9 +3,8 @@ package com.devhjs.loge.presentation.stat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devhjs.loge.core.util.Result
-import com.devhjs.loge.domain.usecase.GetEmotionDistributionUseCase
+import com.devhjs.loge.domain.usecase.GetMonthlyDashboardUseCase
 import com.devhjs.loge.domain.usecase.GetMonthlyReviewUseCase
-import com.devhjs.loge.domain.usecase.GetMonthlyStatUseCase
 import com.devhjs.loge.domain.usecase.GetYearlyLearnedDatesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -14,9 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.YearMonth
@@ -25,8 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StatViewModel @Inject constructor(
-    private val getMonthlyStatUseCase: GetMonthlyStatUseCase,
-    private val getEmotionDistributionUseCase: GetEmotionDistributionUseCase,
+    private val getMonthlyDashboardUseCase: GetMonthlyDashboardUseCase,
     private val getYearlyLearnedDatesUseCase: GetYearlyLearnedDatesUseCase,
     private val getMonthlyReviewUseCase: GetMonthlyReviewUseCase
 ) : ViewModel() {
@@ -103,26 +98,27 @@ class StatViewModel @Inject constructor(
 
             val monthString = _state.value.selectedMonth
 
-            combine(
-                getMonthlyStatUseCase(monthString),
-                getEmotionDistributionUseCase(monthString),
-                flow {
-                    emit(getMonthlyReviewUseCase(monthString, forceFetchFromAi = false))
+            getMonthlyDashboardUseCase(monthString)
+                .collect { result ->
+                    when (result) {
+                        is Result.Success -> {
+                            val dashboardData = result.data
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    stat = dashboardData.stat,
+                                    emotionDistribution = dashboardData.emotionDistribution,
+                                    difficultyChartPoints = dashboardData.difficultyChartPoints,
+                                    aiReport = dashboardData.aiReport
+                                )
+                            }
+                        }
+                        is Result.Error -> {
+                            _state.update { it.copy(isLoading = false) }
+                            _event.emit(StatEvent.ShowError(result.error.message ?: "통계 데이터를 불러오는데 실패했습니다."))
+                        }
+                    }
                 }
-            ) { stat, tilAnalysis, reviewResult ->
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        stat = stat,
-                        emotionDistribution = tilAnalysis.emotionDistribution,
-                        difficultyChartPoints = tilAnalysis.difficultyChartPoints,
-                        aiReport = (reviewResult as? Result.Success)?.data
-                    )
-                }
-            }.catch { e ->
-                _state.update { it.copy(isLoading = false) }
-                _event.emit(StatEvent.ShowError(e.message ?: "통계 데이터를 불러오는데 실패했습니다."))
-            }.collect {}
         }
 
         // 연간 학습 날짜 로드 (연도가 바뀔 때만 재로딩)
@@ -132,9 +128,10 @@ class StatViewModel @Inject constructor(
             yearlyJob?.cancel()
             yearlyJob = viewModelScope.launch {
                 getYearlyLearnedDatesUseCase(year)
-                    .catch { /* 연간 데이터 실패 시 무시 */ }
-                    .collect { dates ->
-                        _state.update { it.copy(yearlyLearnedDates = dates) }
+                    .collect { result ->
+                        if (result is Result.Success) {
+                            _state.update { it.copy(yearlyLearnedDates = result.data) }
+                        }
                     }
             }
         }
