@@ -3,17 +3,15 @@ package com.devhjs.loge.presentation.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devhjs.loge.core.util.Result
-
-import com.devhjs.loge.domain.usecase.GetGithubProfileUseCase
 import com.devhjs.loge.domain.usecase.GetGithubStatusUseCase
 import com.devhjs.loge.domain.usecase.GetSessionStatusUseCase
 import com.devhjs.loge.domain.usecase.GetUserUseCase
 import com.devhjs.loge.domain.usecase.SaveUserUseCase
 import com.devhjs.loge.domain.usecase.SignInWithGithubUseCase
 import com.devhjs.loge.domain.usecase.SignOutGithubUseCase
+import com.devhjs.loge.domain.usecase.SyncGithubProfileUseCase
 import com.devhjs.loge.domain.usecase.SyncTilsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import timber.log.Timber
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +20,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,7 +32,7 @@ class ProfileViewModel @Inject constructor(
     private val getGithubStatusUseCase: GetGithubStatusUseCase,
     private val syncTilsUseCase: SyncTilsUseCase,
     private val getSessionStatusUseCase: GetSessionStatusUseCase,
-    private val getGithubProfileUseCase: GetGithubProfileUseCase
+    private val syncGithubProfileUseCase: SyncGithubProfileUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileState())
@@ -133,33 +132,13 @@ class ProfileViewModel @Inject constructor(
     }
 
     private suspend fun applyGithubProfileAndSave() {
-        val profileResult = getGithubProfileUseCase()
-        
-        if (profileResult is Result.Success) {
-            val profile = profileResult.data
-            val githubName = profile.name
-            val githubAvatarUrl = profile.avatarUrl
-            val githubId = profile.id
-
-            val displayName = githubName ?: githubId ?: _state.value.user.name
-
-            val updatedUser = _state.value.user.copy(
-                name = displayName,
-                avatarUrl = githubAvatarUrl,
-                githubId = githubId ?: _state.value.user.githubId
-            )
-
-            // State 업데이트
-            _state.update { it.copy(user = updatedUser) }
-
-            when (saveUserUseCase(updatedUser)) {
-                is Result.Success -> { }
-                is Result.Error -> {
-                    _event.emit(ProfileEvent.ShowSnackbar("프로필 동기화에 실패했습니다."))
-                }
+        when (val result = syncGithubProfileUseCase()) {
+            is Result.Success -> { 
+                // 성공 시 자동으로 User Flow가 업데이트되어 UI에 반영될 것임
             }
-        } else if (profileResult is Result.Error) {
-             _event.emit(ProfileEvent.ShowSnackbar("GitHub 프로필 정보를 가져오는데 실패했습니다."))
+            is Result.Error -> {
+                 _event.emit(ProfileEvent.ShowSnackbar("GitHub 프로필 동기화 실패: ${result.error.message ?: "알 수 없는 오류"}"))
+            }
         }
     }
 
