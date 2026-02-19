@@ -22,17 +22,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 fun MainNavGraph(
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onShowSnackbar: (String) -> Unit
 ) {
     NavHost(
         navController = navController,
         startDestination = MainRoute.Home.route,
         modifier = modifier
     ) {
-        composable(MainRoute.Home.route) { backStackEntry ->
-            val savedStateHandle = backStackEntry.savedStateHandle
-            val snackbarMessage by savedStateHandle.getStateFlow<String?>("snackbar_message", null).collectAsStateWithLifecycle()
-
+        composable(MainRoute.Home.route) {
             HomeScreenRoot(
                 onNavigateToDetail = { logId ->
                     navController.navigate(MainRoute.Detail.createRoute(logId))
@@ -40,17 +38,11 @@ fun MainNavGraph(
                 onNavigateToWrite = {
                     navController.navigate(MainRoute.Write.route)
                 },
-                snackbarMessage = snackbarMessage,
-                onConsumeSnackbarMessage = {
-                    savedStateHandle.remove<String>("snackbar_message")
-                }
+                onShowSnackbar = onShowSnackbar
             )
         }
         composable(MainRoute.Stat.route) { StatScreenRoot() }
-        composable(MainRoute.Setting.route) { backStackEntry ->
-            val savedStateHandle = backStackEntry.savedStateHandle
-            val snackbarMessage by savedStateHandle.getStateFlow<String?>("snackbar_message", null).collectAsStateWithLifecycle()
-
+        composable(MainRoute.Setting.route) {
             SettingScreenRoot(
                 onNavigateToLicenses = {
                     navController.navigate(MainRoute.Licenses.route)
@@ -61,10 +53,7 @@ fun MainNavGraph(
                 onNavigateToFeedback = {
                     navController.navigate(MainRoute.Feedback.route)
                 },
-                snackbarMessage = snackbarMessage,
-                onConsumeSnackbarMessage = {
-                    savedStateHandle.remove<String>("snackbar_message")
-                }
+                onShowSnackbar = onShowSnackbar
             )
         }
         composable(MainRoute.Licenses.route) {
@@ -76,9 +65,7 @@ fun MainNavGraph(
             ProfileScreenRoot(
                 onBackClick = { navController.popBackStack() },
                 onSubmitSuccess = { message ->
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("snackbar_message", message)
+                    onShowSnackbar(message)
                     navController.popBackStack()
                 }
             )
@@ -108,9 +95,7 @@ fun MainNavGraph(
             WriteScreenRoot(
                 onBackClick = { navController.navigateUp() },
                 onSubmitSuccess = { message ->
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("snackbar_message", message)
+                    onShowSnackbar(message)
                     navController.popBackStack()
                 }
             )
@@ -119,9 +104,7 @@ fun MainNavGraph(
             FeedbackScreenRoot(
                 onBackClick = { navController.popBackStack() },
                 onSubmitSuccess = { message ->
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("snackbar_message", message)
+                    onShowSnackbar(message)
                     navController.popBackStack()
                 }
             )

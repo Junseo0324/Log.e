@@ -6,13 +6,10 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,23 +17,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devhjs.loge.R
 import com.devhjs.loge.presentation.component.CustomDialog
-import com.devhjs.loge.presentation.component.LogESnackbar
 import com.devhjs.loge.presentation.component.LogETopBar
 import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
 fun SettingScreenRoot(
+    modifier: Modifier = Modifier,
+    viewModel: SettingViewModel = hiltViewModel(),
     onNavigateToLicenses: () -> Unit,
     onNavigateToProfileEdit: () -> Unit,
     onNavigateToFeedback: () -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: SettingViewModel = hiltViewModel(),
-    snackbarMessage: String? = null,
-    onConsumeSnackbarMessage: () -> Unit = {}
+    onShowSnackbar: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
 
     val exportLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("text/csv")
@@ -52,12 +46,7 @@ fun SettingScreenRoot(
         viewModel.onNotificationPermissionResult(isGranted)
     }
 
-    LaunchedEffect(snackbarMessage) {
-        if (snackbarMessage != null) {
-            snackbarHostState.showSnackbar(snackbarMessage)
-            onConsumeSnackbarMessage()
-        }
-    }
+
 
     LaunchedEffect(viewModel.event) {
         viewModel.event.collect { event ->
@@ -69,7 +58,7 @@ fun SettingScreenRoot(
                     onNavigateToLicenses()
                 }
                 is SettingEvent.ShowSnackbar -> {
-                    snackbarHostState.showSnackbar(event.message)
+                    onShowSnackbar(event.message)
                 }
                 is SettingEvent.LaunchExport -> {
                     exportLauncher.launch(event.fileName)
@@ -101,11 +90,6 @@ fun SettingScreenRoot(
                     )
                 }
             )
-        },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState) { data ->
-                LogESnackbar(data = data)
-            }
         },
         containerColor = AppColors.background,
         modifier = modifier
