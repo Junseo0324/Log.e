@@ -95,7 +95,9 @@ fun StatScreen(
 @Composable
 fun StatScreenPreview() {
     StatScreen(
-        state = StatState(),
+        state = StatState(
+            isLoading = false
+        ),
         onAction = {}
     )
 }

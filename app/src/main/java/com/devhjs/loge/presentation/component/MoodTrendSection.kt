@@ -96,12 +96,7 @@ fun MoodTrendSection(
                             lineColor = AppColors.iconPrimary.toArgb(),
                             lineThicknessDp = 3f,
                             lineBackgroundShader = null,
-                            point = ShapeComponent(
-                                shape = Shapes.pillShape,
-                                color = AppColors.iconPrimary.toArgb(),
-                                strokeWidthDp = 0f,
-                            ),
-                            pointSizeDp = 10f,
+                            point = null,
                         )
                     )
                 ),
