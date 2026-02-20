@@ -62,6 +62,7 @@ class WriteViewModel @Inject constructor(
                         title = log.title,
                         learnings = log.learned,
                         difficulties = log.difficult,
+                        tomorrowPlan = log.tomorrowPlan,
                         aiFeedbackComment = log.aiFeedBack,
                         isLoading = false
                     )
@@ -87,6 +88,7 @@ class WriteViewModel @Inject constructor(
                         title = todayLog.title,
                         learnings = todayLog.learned,
                         difficulties = todayLog.difficult,
+                        tomorrowPlan = todayLog.tomorrowPlan,
                         aiFeedbackComment = todayLog.aiFeedBack,
                         isLoading = false
                     )
@@ -107,6 +109,9 @@ class WriteViewModel @Inject constructor(
             }
             is WriteAction.OnDifficultiesChange -> {
                 _state.update { it.copy(difficulties = action.difficulties) }
+            }
+            is WriteAction.OnTomorrowPlanChange -> {
+                _state.update { it.copy(tomorrowPlan = action.tomorrowPlan) }
             }
             is WriteAction.OnSaveClick -> {
                 saveLog()
@@ -202,7 +207,8 @@ class WriteViewModel @Inject constructor(
                 emotion = currentState.emotion,
                 difficultyLevel = currentState.difficultyLevel,
                 updatedAt = System.currentTimeMillis(),
-                aiFeedBack = currentState.aiFeedbackComment
+                aiFeedBack = currentState.aiFeedbackComment,
+                tomorrowPlan = currentState.tomorrowPlan
             )
 
             val result = if (currentState.isEditMode) {

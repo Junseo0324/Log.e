@@ -42,6 +42,7 @@ fun WriteScreen(
         // Focus Requester 설정
         val learnedFocusRequester = remember { FocusRequester() }
         val difficultFocusRequester = remember { FocusRequester() }
+        val tomorrowPlanFocusRequester = remember { FocusRequester() }
 
         // Title 입력
         WriteInputSection(
@@ -82,6 +83,23 @@ fun WriteScreen(
             placeholder = "오늘의 어려웠던 점을 입력하세요",
             value = state.difficulties,
             onValueChange = { onAction(WriteAction.OnDifficultiesChange(it)) },
+            minHeight = 100.dp,
+            singleLine = false,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(
+                onNext = { tomorrowPlanFocusRequester.requestFocus() }
+            ),
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Tomorrow Plan
+        WriteInputSection(
+            modifier = Modifier.focusRequester(tomorrowPlanFocusRequester),
+            label = "// 내일 할 일",
+            placeholder = "내일은 어떤 학습이나 활동을 계획하고 있나요?",
+            value = state.tomorrowPlan,
+            onValueChange = { onAction(WriteAction.OnTomorrowPlanChange(it)) },
             minHeight = 100.dp,
             singleLine = false,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),

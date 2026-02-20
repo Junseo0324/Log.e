@@ -8,6 +8,7 @@ sealed interface WriteAction {
     data class OnTitleChange(val title: String) : WriteAction
     data class OnLearningsChange(val learnings: String) : WriteAction
     data class OnDifficultiesChange(val difficulties: String) : WriteAction
+    data class OnTomorrowPlanChange(val tomorrowPlan: String) : WriteAction
     data object OnSaveClick : WriteAction
     data object OnBackClick : WriteAction
     data object OnAiAnalyzeClick : WriteAction

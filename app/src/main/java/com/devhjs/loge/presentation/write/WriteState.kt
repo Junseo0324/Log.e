@@ -19,5 +19,6 @@ data class WriteState(
     val emotion: EmotionType = EmotionType.NORMAL,
     val difficultyLevel: Int = 0,
     val aiFeedbackComment: String? = null,
+    val tomorrowPlan: String = "",
     val errorMessage: String? = null
 )
