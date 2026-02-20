@@ -60,7 +60,7 @@ fun StatScreen(
             }
             item {
                 MoodTrendSection(
-                    emotionScoreList = stat?.emotionScoreList ?: emptyList()
+                    emotionScoreList = stat?.emotionScoreList ?: emptyList(),
                 )
             }
             item {

@@ -15,7 +15,7 @@ val EmotionType.color: Color
         EmotionType.FULFILLMENT -> AppColors.primary
         EmotionType.SATISFACTION -> AppColors.blue
         EmotionType.NORMAL -> AppColors.amber
-        EmotionType.DIFFICULTY -> AppColors.orange
+        EmotionType.DIFFICULTY -> AppColors.purple
         EmotionType.FRUSTRATION -> AppColors.red
     }
 
