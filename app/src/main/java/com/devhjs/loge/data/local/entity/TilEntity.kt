@@ -15,5 +15,6 @@ data class TilEntity(
     val emotion: String,
     val difficultyLevel: Int,
     val updatedAt: Long,
-    val aiFeedBack: String? = null
+    val aiFeedBack: String? = null,
+    val tomorrowPlan: String = ""
 )

@@ -16,7 +16,8 @@ fun TilEntity.toDomain(): Til {
         emotion = EmotionType.fromString(emotion),
         difficultyLevel = difficultyLevel,
         updatedAt = updatedAt,
-        aiFeedBack = aiFeedBack
+        aiFeedBack = aiFeedBack,
+        tomorrowPlan = tomorrowPlan
     )
 }
 
@@ -31,7 +32,8 @@ fun Til.toEntity(): TilEntity {
         emotion = emotion.label,
         difficultyLevel = difficultyLevel,
         updatedAt = updatedAt,
-        aiFeedBack = aiFeedBack
+        aiFeedBack = aiFeedBack,
+        tomorrowPlan = tomorrowPlan
     )
 }
 
@@ -51,6 +53,7 @@ fun Til.toRemoteDto(userId: String): TilRemoteDto {
         emotion = emotion.label,
         difficultyLevel = difficultyLevel,
         updatedAt = updatedAt,
-        aiFeedback = aiFeedBack
+        aiFeedback = aiFeedBack,
+        tomorrowPlan = tomorrowPlan
     )
 }

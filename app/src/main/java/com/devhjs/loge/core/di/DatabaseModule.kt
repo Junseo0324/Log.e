@@ -2,6 +2,8 @@ package com.devhjs.loge.core.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.devhjs.loge.data.local.LogEDatabase
 import com.devhjs.loge.data.local.dao.MonthlyReviewDao
 import com.devhjs.loge.data.local.dao.TilDao
@@ -22,11 +24,19 @@ object DatabaseModule {
     fun provideLogEDatabase(
         @ApplicationContext context: Context
     ): LogEDatabase {
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE til ADD COLUMN tomorrowPlan TEXT NOT NULL DEFAULT ''")
+            }
+        }
+
         return Room.databaseBuilder(
             context,
             LogEDatabase::class.java,
             "loge_database"
-        ).fallbackToDestructiveMigration()
+        )
+        .addMigrations(MIGRATION_6_7)
+        .fallbackToDestructiveMigration()
         .build()
     }
 

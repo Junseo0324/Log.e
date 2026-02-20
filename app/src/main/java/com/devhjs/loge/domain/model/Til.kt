@@ -10,5 +10,6 @@ data class Til(
     val emotion: EmotionType,
     val difficultyLevel: Int,
     val updatedAt: Long,
-    val aiFeedBack: String? = null
+    val aiFeedBack: String? = null,
+    val tomorrowPlan: String = ""
 )

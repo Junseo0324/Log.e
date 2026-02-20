@@ -26,5 +26,7 @@ data class TilRemoteDto(
     @SerialName("updated_at")
     val updatedAt: Long,
     @SerialName("ai_feedback")
-    val aiFeedback: String? = null
+    val aiFeedback: String? = null,
+    @SerialName("tomorrow_plan")
+    val tomorrowPlan: String = ""
 )
