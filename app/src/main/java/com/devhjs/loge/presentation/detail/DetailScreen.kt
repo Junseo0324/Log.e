@@ -165,6 +165,18 @@ fun DetailScreen(
             titleColor = AppColors.orange
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // 내일 할 일 카드
+        if (log.tomorrowPlan.isNotBlank()) {
+            ContentCard(
+                title = "내일 할 일",
+                content = log.tomorrowPlan,
+                titleColor = AppColors.primary
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
         log.aiFeedBack?.let { feedback ->
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -233,6 +245,7 @@ private fun DetailScreenPreview() {
         emotion = EmotionType.FULFILLMENT,
         difficultyLevel = 2,
         updatedAt = System.currentTimeMillis(),
+        tomorrowPlan = "다음에는 CSS Grid에 대해서도 정리해보기로 했다.",
         aiFeedBack = "Flexbox는 레이아웃의 기본이에요! 잘하고 계세요!"
     )
     DetailScreen(
