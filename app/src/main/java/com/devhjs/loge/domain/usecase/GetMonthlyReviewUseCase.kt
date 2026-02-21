@@ -19,12 +19,16 @@ class GetMonthlyReviewUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         month: String,
-        forceFetchFromAi: Boolean = true
+        forceFetchFromAi: Boolean = true,
+        forceRefresh: Boolean = false // true시 캐시 무시하고 AI 재호출 (광고 시청 후 재분석)
     ): Result<AiReport?, Exception> = withContext(Dispatchers.IO) {
         try {
-            val savedReviewResult = aiRepository.getSavedMonthlyReview(month)
-            if (savedReviewResult is Result.Success && savedReviewResult.data != null) {
-                return@withContext Result.Success(savedReviewResult.data)
+            // forceRefresh가 false일 때만 저장된 분석 결과 반환 (캐시 우선)
+            if (!forceRefresh) {
+                val savedReviewResult = aiRepository.getSavedMonthlyReview(month)
+                if (savedReviewResult is Result.Success && savedReviewResult.data != null) {
+                    return@withContext Result.Success(savedReviewResult.data)
+                }
             }
 
             if (!forceFetchFromAi) {
