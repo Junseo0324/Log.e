@@ -1,5 +1,6 @@
 package com.devhjs.loge.presentation.write
 
+import android.app.Activity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
@@ -10,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -17,6 +19,7 @@ import com.devhjs.loge.R
 import com.devhjs.loge.presentation.component.CustomAppBar
 import com.devhjs.loge.presentation.component.CustomButton
 import com.devhjs.loge.presentation.component.LogESnackbar
+import com.devhjs.loge.presentation.component.RewardAdManager
 import com.devhjs.loge.presentation.designsystem.AppColors
 
 @Composable
@@ -28,6 +31,15 @@ fun WriteScreenRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
+
+    val rewardAdManager = remember {
+        (context as? Activity)?.let { RewardAdManager(it) }
+    }
+
+    LaunchedEffect(Unit) {
+        rewardAdManager?.loadAd()
+    }
 
     LaunchedEffect(viewModel.event) {
         viewModel.event.collect { writeEvent ->
@@ -36,6 +48,16 @@ fun WriteScreenRoot(
                 is WriteEvent.SubmitSuccess -> onSubmitSuccess(writeEvent.message)
                 is WriteEvent.ShowError -> {
                     snackbarHostState.showSnackbar(writeEvent.message)
+                }
+                is WriteEvent.ShowRewardAdDialog -> {
+                    if (rewardAdManager != null) {
+                        rewardAdManager.showAd(
+                            onRewarded = { viewModel.onAction(WriteAction.OnAiAnalyzeAfterAd) },
+                            onFailed = {}
+                        )
+                    } else {
+                        snackbarHostState.showSnackbar("오늘은 이미 AI 분석을 사용했어요.")
+                    }
                 }
             }
         }

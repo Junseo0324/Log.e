@@ -11,6 +11,7 @@ data class WriteState(
     val learnings: String = "",
     val difficulties: String = "",
     val isLoading: Boolean = false,
+    val isAiAnalyzing: Boolean = false,
     val showAiAnalysisResult: Boolean = false,
     val isEditMode: Boolean = false,
     val originalLogId: Long = 0,

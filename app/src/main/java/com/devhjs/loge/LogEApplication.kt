@@ -1,6 +1,7 @@
 package com.devhjs.loge
 
 import android.app.Application
+import com.google.android.gms.ads.MobileAds
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -23,7 +24,10 @@ class LogEApplication : Application(), Configuration.Provider {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+        // ADMob 초기화 (앱 시작 시 1회 호출 필수)
+        MobileAds.initialize(this)
     }
+
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()

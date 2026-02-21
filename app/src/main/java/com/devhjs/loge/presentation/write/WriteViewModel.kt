@@ -7,8 +7,10 @@ import com.devhjs.loge.core.util.Result
 import com.devhjs.loge.domain.model.EmotionType
 import com.devhjs.loge.domain.model.Til
 import com.devhjs.loge.domain.usecase.AnalyzeLogUseCase
+import com.devhjs.loge.domain.usecase.CheckDailyAnalysisAvailableUseCase
 import com.devhjs.loge.domain.usecase.GetTilUseCase
 import com.devhjs.loge.domain.usecase.GetTodayLogUseCase
+import com.devhjs.loge.domain.usecase.MarkDailyAnalysisUsedUseCase
 import com.devhjs.loge.domain.usecase.SaveTilUseCase
 import com.devhjs.loge.domain.usecase.UpdateTilUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,6 +31,8 @@ class WriteViewModel @Inject constructor(
     private val saveTilUseCase: SaveTilUseCase,
     private val updateTilUseCase: UpdateTilUseCase,
     private val analyzeLogUseCase: AnalyzeLogUseCase,
+    private val checkDailyAnalysisAvailableUseCase: CheckDailyAnalysisAvailableUseCase,
+    private val markDailyAnalysisUsedUseCase: MarkDailyAnalysisUsedUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -120,6 +124,9 @@ class WriteViewModel @Inject constructor(
                 viewModelScope.launch { _event.emit(WriteEvent.NavigateBack) }
             }
             is WriteAction.OnAiAnalyzeClick -> {
+                handleAiAnalyzeClick()
+            }
+            is WriteAction.OnAiAnalyzeAfterAd -> {
                 analyzeLog()
             }
             is WriteAction.OnConsumeError -> {
@@ -128,31 +135,52 @@ class WriteViewModel @Inject constructor(
         }
     }
 
+    /**
+     * AI 분석 버튼 클릭 처리.
+     * - 오늘 이미 분석 완료 → 광고 시청 유도 이벤트 emit
+     * - 분석 가능 → 분석 실행 + 사용 기록 저장
+     */
+    private fun handleAiAnalyzeClick() {
+        viewModelScope.launch {
+            val availResult = checkDailyAnalysisAvailableUseCase()
+            when {
+                availResult is Result.Error -> analyzeLog()
+                availResult is Result.Success && availResult.data -> {
+                    analyzeLog()
+                }
+                else -> {
+                    _event.emit(WriteEvent.ShowRewardAdDialog)
+                }
+            }
+        }
+    }
+
     private fun analyzeLog() {
         val currentState = _state.value
-        if (currentState.isLoading) return
+        if (currentState.isLoading || currentState.isAiAnalyzing) return
         if (currentState.title.isBlank() || currentState.learnings.isBlank()) {
-             viewModelScope.launch {
-                 _event.emit(WriteEvent.ShowError("제목과 학습 내용을 입력해주세요."))
-             }
-             return
+            viewModelScope.launch {
+                _event.emit(WriteEvent.ShowError("제목과 학습 내용을 입력해주세요."))
+            }
+            return
         }
 
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-            
+            _state.update { it.copy(isAiAnalyzing = true) }
+
             val result = analyzeLogUseCase(
                 title = currentState.title,
                 learned = currentState.learnings,
                 difficult = currentState.difficulties
             )
 
+            _state.update { it.copy(isAiAnalyzing = false) }
+
             when (result) {
                 is Result.Success -> {
                     val report = result.data
                     _state.update {
                         it.copy(
-                            isLoading = false,
                             showAiAnalysisResult = true,
                             emotion = EmotionType.fromString(report.emotion),
                             emotionScore = report.emotionScore,
@@ -160,14 +188,13 @@ class WriteViewModel @Inject constructor(
                             aiFeedbackComment = report.comment
                         )
                     }
+                    // 분석 성공 시 오늘 사용 기록 저장 (재설치 우회 방지)
+                    markDailyAnalysisUsedUseCase()
                 }
                 is Result.Error -> {
                     val error = result.error
-                     _state.update { 
-                        it.copy(
-                            isLoading = false,
-                            errorMessage = error.message
-                        ) 
+                    _state.update {
+                        it.copy(errorMessage = error.message)
                     }
                     _event.emit(WriteEvent.ShowError("AI 분석에 실패했습니다: ${error.message}"))
                 }
@@ -212,9 +239,9 @@ class WriteViewModel @Inject constructor(
             )
 
             val result = if (currentState.isEditMode) {
-                 updateTilUseCase(til)
+                updateTilUseCase(til)
             } else {
-                 saveTilUseCase(til)
+                saveTilUseCase(til)
             }
 
             when (result) {
