@@ -203,4 +203,42 @@ class AiRepositoryImpl @Inject constructor(
         val difficultyLevel: String,
         val comment: String
     )
+
+    @Serializable
+    private data class DailyUsageInsert(
+        val user_id: String,
+        val used_date: String
+    )
+
+    // 오늘 날짜(today: "yyyy-MM-dd")로 Supabase에 사용 기록이 있는지 조회
+    override suspend fun checkDailyAnalysisUsed(userId: String, today: String): Result<Boolean, Exception> =
+        withContext(Dispatchers.IO) {
+            try {
+                val rows = supabaseClient.from("ai_daily_usage")
+                    .select {
+                        filter {
+                            eq("user_id", userId)
+                            eq("used_date", today)
+                        }
+                    }
+                    .decodeList<Map<String, kotlinx.serialization.json.JsonElement>>()
+                Result.Success(rows.isNotEmpty())
+            } catch (e: Exception) {
+                Timber.e(e, "checkDailyAnalysisUsed 실패")
+                Result.Error(e)
+            }
+        }
+
+    // 오늘 날짜(today: "yyyy-MM-dd")로 Supabase에 사용 기록 저장
+    override suspend fun markDailyAnalysisUsed(userId: String, today: String): Result<Unit, Exception> =
+        withContext(Dispatchers.IO) {
+            try {
+                supabaseClient.from("ai_daily_usage")
+                    .insert(DailyUsageInsert(user_id = userId, used_date = today))
+                Result.Success(Unit)
+            } catch (e: Exception) {
+                Timber.e(e, "markDailyAnalysisUsed 실패")
+                Result.Error(e)
+            }
+        }
 }

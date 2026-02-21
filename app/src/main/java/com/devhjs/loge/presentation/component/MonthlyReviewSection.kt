@@ -34,6 +34,8 @@ fun MonthlyReviewSection(
     isLoading: Boolean,
     aiReport: AiReport?,
     onAnalyzeClick: () -> Unit = {},
+    canAnalyze: Boolean = true,
+    limitMsg: String? = null,
 ) {
     Column(
         modifier = modifier
@@ -54,16 +56,37 @@ fun MonthlyReviewSection(
             )
 
             if (!isLoading) {
+                // 이미 분석됨: "재생성(광고)" 표시, 미분석: "생성" 표시
+                // canAnalyze=false이면 버튼 비활성화 스타일 적용
+                val buttonText = when {
+                    aiReport != null -> if (canAnalyze) "재생성" else "재생성(광고)"
+                    else -> "생성"
+                }
+                val buttonBg = if (canAnalyze) AppColors.primary else AppColors.cardBackground
+                val buttonContent = if (canAnalyze) AppColors.white else AppColors.subTextColor
+
                 CustomButton(
-                    modifier = Modifier.width(78.dp),
-                    text = if (aiReport == null) "생성" else "재생성",
+                    modifier = Modifier.width(if (aiReport != null && !canAnalyze) 100.dp else 78.dp),
+                    text = buttonText,
                     icon = R.drawable.ic_ai,
-                    backgroundColor = AppColors.primary,
-                    contentColor = AppColors.white,
+                    backgroundColor = buttonBg,
+                    contentColor = buttonContent,
                     onClick = onAnalyzeClick,
-                    contentDescription = if (aiReport == null) "Generate" else "Regenerate"
+                    contentDescription = buttonText
                 )
             }
+        }
+
+        // 제한 안내 메시지 (데이터 부족 또는 이미 이번 달 분석 완료)
+        if (limitMsg != null && !isLoading) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = limitMsg,
+                style = AppTextStyles.Pretendard.Label.copy(
+                    color = AppColors.subTextColor,
+                    fontSize = 12.sp
+                )
+            )
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -187,6 +210,6 @@ private fun MonthlyReviewSectionResultPreview() {
 private fun MonthlyReviewSectionInitialPreview() {
     MonthlyReviewSection(
         isLoading = false,
-        aiReport = null
+        aiReport = null,
     )
 }

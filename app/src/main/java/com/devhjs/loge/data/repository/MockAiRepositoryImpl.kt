@@ -53,4 +53,13 @@ class MockAiRepositoryImpl @Inject constructor() : AiRepository {
     override suspend fun getSavedMonthlyReview(yearMonth: String): Result<AiReport?, Exception> {
         return Result.Success(null)
     }
+
+    // 개발/테스트용 Mock: 항상 분석 가능한 것으로 반환
+    override suspend fun checkDailyAnalysisUsed(userId: String, today: String): Result<Boolean, Exception> {
+        return Result.Success(false)
+    }
+
+    override suspend fun markDailyAnalysisUsed(userId: String, today: String): Result<Unit, Exception> {
+        return Result.Success(Unit)
+    }
 }
