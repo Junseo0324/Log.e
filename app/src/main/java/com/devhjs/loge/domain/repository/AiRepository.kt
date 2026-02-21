@@ -24,6 +24,7 @@ interface AiRepository {
     ): Result<Unit, Exception>
 
     suspend fun getSavedMonthlyReview(
+        userId: String,
         yearMonth: String
     ): Result<AiReport?, Exception>
 

@@ -50,7 +50,7 @@ class MockAiRepositoryImpl @Inject constructor() : AiRepository {
         return Result.Success(Unit)
     }
 
-    override suspend fun getSavedMonthlyReview(yearMonth: String): Result<AiReport?, Exception> {
+    override suspend fun getSavedMonthlyReview(userId: String, yearMonth: String): Result<AiReport?, Exception> {
         return Result.Success(null)
     }
 

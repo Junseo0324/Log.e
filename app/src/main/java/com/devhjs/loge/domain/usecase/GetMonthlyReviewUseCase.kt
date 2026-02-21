@@ -25,9 +25,12 @@ class GetMonthlyReviewUseCase @Inject constructor(
         try {
             // forceRefresh가 false일 때만 저장된 분석 결과 반환 (캐시 우선)
             if (!forceRefresh) {
-                val savedReviewResult = aiRepository.getSavedMonthlyReview(month)
-                if (savedReviewResult is Result.Success && savedReviewResult.data != null) {
-                    return@withContext Result.Success(savedReviewResult.data)
+                val userId = authRepository.getCurrentUserUid()
+                if (userId != null) {
+                    val savedReviewResult = aiRepository.getSavedMonthlyReview(userId, month)
+                    if (savedReviewResult is Result.Success && savedReviewResult.data != null) {
+                        return@withContext Result.Success(savedReviewResult.data)
+                    }
                 }
             }
 
@@ -57,7 +60,7 @@ class GetMonthlyReviewUseCase @Inject constructor(
             // AI 분석 요청
             val aiResult = aiRepository.getAiFeedback(month, emotions, scores, difficulties)
 
-            // 분석 성공 시 저장
+            // 분석 성공 시 저장 — userId 취득은 UseCase가 담당
             if (aiResult is Result.Success) {
                 val userId = authRepository.getCurrentUserUid()
                 if (userId != null) {
