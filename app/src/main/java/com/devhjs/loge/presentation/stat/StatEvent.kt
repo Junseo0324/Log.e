@@ -6,4 +6,5 @@ package com.devhjs.loge.presentation.stat
  */
 sealed interface StatEvent {
     data class ShowError(val message: String) : StatEvent
+    data object ShowMonthlyRewardAd : StatEvent // 월간 재분석을 위한 리워드 광고 요청
 }

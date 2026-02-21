@@ -84,7 +84,9 @@ fun StatScreen(
                 MonthlyReviewSection(
                     isLoading = state.isAiLoading,
                     aiReport = state.aiReport,
-                    onAnalyzeClick = { onAction(StatAction.OnAiAnalyzeClick) }
+                    onAnalyzeClick = { onAction(StatAction.OnAiAnalyzeClick) },
+                    canAnalyze = state.canMonthlyAnalyze || state.aiReport != null,
+                    limitMsg = state.monthlyLimitMsg
                 )
             }
         }

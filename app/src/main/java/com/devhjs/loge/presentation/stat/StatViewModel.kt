@@ -60,21 +60,69 @@ class StatViewModel @Inject constructor(
                 loadStats()
             }
             is StatAction.OnAiAnalyzeClick -> {
-                analyzeMonthlyLog()
+                // 첫 분석 시도: 가용성 체크 후 처리
+                handleAiAnalyzeClick(forceRefresh = false)
+            }
+            is StatAction.OnAiReAnalyzeAfterAd -> {
+                // 광고 시청 완료 후 재분석: 캐시 무시하고 강제 재호출
+                analyzeMonthlyLog(forceRefresh = true)
             }
         }
     }
 
-    private fun analyzeMonthlyLog() {
+    /**
+     * AI 분석 버튼 클릭 처리.
+     * - 데이터 10개 미만: 분석 불가 안내
+     * - 이미 분석됨: 광고 시청 유도 이벤트 emit
+     * - 모두 충족: 분석 실행
+     */
+    private fun handleAiAnalyzeClick(forceRefresh: Boolean) {
+        viewModelScope.launch {
+            val count = _state.value.totalLogCount
+
+            // 조건 1: 최소 10개 데이터 필요
+            if (count < 10) {
+                _state.update {
+                    it.copy(monthlyLimitMsg = "AI 분석은 최소 10개 이상의 기록이 필요해요. (현재 ${count}개)")
+                }
+                return@launch
+            }
+
+            // 조건 2: 이미 이번 달 분석 완료 → 광고 시청 유도
+            if (_state.value.isMonthlyAnalyzed) {
+                _event.emit(StatEvent.ShowMonthlyRewardAd)
+                return@launch
+            }
+
+            // 조건 모두 통과 → 분석 실행
+            analyzeMonthlyLog(forceRefresh = forceRefresh)
+        }
+    }
+
+    /**
+     * 월간 AI 분석 실행.
+     * forceRefresh = true 시 기존 저장 결과를 무시하고 AI 재호출 (광고 시청 후 재분석)
+     */
+    private fun analyzeMonthlyLog(forceRefresh: Boolean = false) {
         viewModelScope.launch {
             _state.update { it.copy(isAiLoading = true) }
-            val result = getMonthlyReviewUseCase(_state.value.selectedMonth)
-            
+            val result = getMonthlyReviewUseCase(
+                month = _state.value.selectedMonth,
+                forceRefresh = forceRefresh
+            )
+
             _state.update { it.copy(isAiLoading = false) }
-            
+
             when (result) {
                 is Result.Success -> {
-                    _state.update { it.copy(aiReport = result.data) }
+                    _state.update {
+                        it.copy(
+                            aiReport = result.data,
+                            isMonthlyAnalyzed = true,
+                            canMonthlyAnalyze = false,
+                            monthlyLimitMsg = null
+                        )
+                    }
                 }
                 is Result.Error -> {
                     _event.emit(StatEvent.ShowError(result.error.message ?: "AI 분석에 실패했습니다."))
@@ -89,11 +137,15 @@ class StatViewModel @Inject constructor(
     private fun loadStats() {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
-            _state.update { 
+            _state.update {
                 it.copy(
                     isLoading = true,
-                    aiReport = null
-                ) 
+                    aiReport = null,
+                    isMonthlyAnalyzed = false,
+                    canMonthlyAnalyze = false,
+                    monthlyLimitMsg = null,
+                    totalLogCount = 0
+                )
             }
 
             val monthString = _state.value.selectedMonth
@@ -103,13 +155,28 @@ class StatViewModel @Inject constructor(
                     when (result) {
                         is Result.Success -> {
                             val dashboardData = result.data
+                            val count = dashboardData.stat?.totalTil ?: 0
+                            val isAnalyzed = dashboardData.aiReport != null
+
+                            // 가용성 판단: 10개 이상 && 아직 미분석
+                            val canAnalyze = count >= 10 && !isAnalyzed
+                            val limitMsg = when {
+                                count < 10 -> "AI 분석은 최소 10개 이상의 기록이 필요해요. (현재 ${count}개)"
+                                isAnalyzed -> "이미 이번 달 분석을 완료했어요. 광고를 시청하면 재분석할 수 있어요."
+                                else -> null
+                            }
+
                             _state.update {
                                 it.copy(
                                     isLoading = false,
                                     stat = dashboardData.stat,
                                     emotionDistribution = dashboardData.emotionDistribution,
                                     difficultyChartPoints = dashboardData.difficultyChartPoints,
-                                    aiReport = dashboardData.aiReport
+                                    aiReport = dashboardData.aiReport,
+                                    totalLogCount = count,
+                                    isMonthlyAnalyzed = isAnalyzed,
+                                    canMonthlyAnalyze = canAnalyze,
+                                    monthlyLimitMsg = limitMsg
                                 )
                             }
                         }
