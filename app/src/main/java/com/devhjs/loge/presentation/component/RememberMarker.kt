@@ -135,7 +135,7 @@ internal fun rememberMarker(
                     textX = x,
                     textY = entryY - labelBounds.height() - (8f * density),
                     verticalPosition = VerticalPosition.Bottom,
-                    maxTextWidth = minOf(bounds.right - x, x - bounds.left).toInt() * 2,
+                    maxTextWidth = bounds.width().toInt(),
                 )
             }
 
