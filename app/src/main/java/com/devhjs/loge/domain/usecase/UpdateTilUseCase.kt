@@ -13,7 +13,7 @@ class UpdateTilUseCase @Inject constructor(
     suspend operator fun invoke(til: Til): Result<Unit, Throwable> {
         return try {
             repository.updateTil(til)
-            widgetUpdateManager.updateWeeklyWidget()
+            widgetUpdateManager.updateAllWidgets()
             Result.Success(Unit)
         } catch (e: Exception) {
             Result.Error(e)

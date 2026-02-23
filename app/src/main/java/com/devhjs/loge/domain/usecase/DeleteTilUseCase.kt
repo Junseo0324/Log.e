@@ -16,7 +16,7 @@ class DeleteTilUseCase @Inject constructor(
         return try {
             repository.deleteTil(id)
             Timber.d("DeleteTilUseCase: Successfully deleted log $id")
-            widgetUpdateManager.updateWeeklyWidget()
+            widgetUpdateManager.updateAllWidgets()
             Result.Success(Unit)
         } catch (e: Exception) {
             Timber.e(e, "DeleteTilUseCase: Failed to delete log $id")
