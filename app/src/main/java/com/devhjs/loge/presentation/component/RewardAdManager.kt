@@ -32,7 +32,7 @@ class RewardAdManager(private val activity: Activity) {
         val adRequest = AdRequest.Builder().build()
 
         RewardedAd.load(
-            activity,
+            activity.applicationContext,
             adUnitId,
             adRequest,
             object : RewardedAdLoadCallback() {
