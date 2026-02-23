@@ -41,6 +41,7 @@ import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.chart.line.LineChart
+import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
 import com.patrykandpatrick.vico.core.component.shape.DashedShape
 import com.patrykandpatrick.vico.core.component.shape.LineComponent
 import com.patrykandpatrick.vico.core.component.shape.Shapes
@@ -151,7 +152,13 @@ fun ScoreDifficultySection(
                 .fillMaxWidth()
                 .weight(1f)) {
                 Chart(
-                    chart = lineChart(lines = lines),
+                    chart = lineChart(
+                        lines = lines,
+                        axisValuesOverrider = AxisValuesOverrider.fixed(
+                            minY = 0f, maxY = 100f,
+                            minX = -1f, maxX = emotionScoreList.size - 1.5f
+                        )
+                    ),
                     model = model,
                     marker = rememberMarker(
                         labelFormatter = remember {
@@ -197,7 +204,8 @@ fun ScoreDifficultySection(
                         valueFormatter = horizontalAxisValueFormatter,
                         itemPlacer = AxisItemPlacer.Horizontal.default(
                             spacing = labelSpacing,
-                            addExtremeLabelPadding = true
+                            addExtremeLabelPadding = true,
+                            shiftExtremeTicks = true
                         ),
                         guideline = null,
                         label = axisLabelComponent(color = AppColors.subTextColor)

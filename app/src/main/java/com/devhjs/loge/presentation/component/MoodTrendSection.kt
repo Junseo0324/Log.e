@@ -107,7 +107,10 @@ fun MoodTrendSection(
                             point = null,
                         )
                     ),
-                    axisValuesOverrider = AxisValuesOverrider.fixed(minY = 0f, maxY = 100f)
+                    axisValuesOverrider = AxisValuesOverrider.fixed(
+                        minY = 0f, maxY = 100f,
+                        minX = -0.5f, maxX = emotionScoreList.size - 0.5f
+                    )
                 ),
                 marker = rememberMarker(),
                 model = model,
@@ -121,7 +124,8 @@ fun MoodTrendSection(
                     valueFormatter = horizontalAxisValueFormatter,
                     itemPlacer = AxisItemPlacer.Horizontal.default(
                         spacing = labelSpacing,
-                        addExtremeLabelPadding = true
+                        addExtremeLabelPadding = true,
+                        shiftExtremeTicks = true
                     ),
                     guideline = null,
                     label = axisLabelComponent(color = AppColors.subTextColor)
