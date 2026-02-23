@@ -109,7 +109,7 @@ fun WriteScreen(
 
         // AI 분석 버튼
         AiAnalyzeButton(
-            isLoading = state.isLoading,
+            isLoading = state.isAiAnalyzing,
             onClick = { onAction(WriteAction.OnAiAnalyzeClick) }
         )
 

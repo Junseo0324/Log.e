@@ -58,6 +58,7 @@ class WriteViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isEditMode = true,
+                        showAiAnalysisResult = !log.aiFeedBack.isNullOrBlank(),
                         originalLogId = log.id,
                         createdAt = log.createdAt,
                         emotionScore = log.emotionScore,
@@ -84,6 +85,7 @@ class WriteViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isEditMode = true,
+                        showAiAnalysisResult = !todayLog.aiFeedBack.isNullOrBlank(),
                         originalLogId = todayLog.id,
                         createdAt = todayLog.createdAt,
                         emotionScore = todayLog.emotionScore,
@@ -137,26 +139,13 @@ class WriteViewModel @Inject constructor(
 
     /**
      * AI 분석 버튼 클릭 처리.
+     * - 로딩 상태(isAiAnalyzing)를 즉시 활성화하여 UI가 먼저 갱신되도록 함
      * - 오늘 이미 분석 완료 → 광고 시청 유도 이벤트 emit
      * - 분석 가능 → 분석 실행 + 사용 기록 저장
      */
     private fun handleAiAnalyzeClick() {
-        viewModelScope.launch {
-            val availResult = checkDailyAnalysisAvailableUseCase()
-            when {
-                availResult is Result.Error -> analyzeLog()
-                availResult is Result.Success && availResult.data -> {
-                    analyzeLog()
-                }
-                else -> {
-                    _event.emit(WriteEvent.ShowRewardAdDialog)
-                }
-            }
-        }
-    }
-
-    private fun analyzeLog() {
         val currentState = _state.value
+        // 이미 로딩중이거나 제목/내용이 없으면 무시/에러 (analyzeLog 내부 코드 당겨옴)
         if (currentState.isLoading || currentState.isAiAnalyzing) return
         if (currentState.title.isBlank() || currentState.learnings.isBlank()) {
             viewModelScope.launch {
@@ -165,6 +154,28 @@ class WriteViewModel @Inject constructor(
             return
         }
 
+        viewModelScope.launch {
+            // 네트워크(API 호출 등) 딜레이 발생 전, UI부터 즉각 분석 상태로 전환
+            _state.update { it.copy(isAiAnalyzing = true) }
+
+            val availResult = checkDailyAnalysisAvailableUseCase()
+            when {
+                availResult is Result.Error -> analyzeLog()
+                availResult is Result.Success && availResult.data -> {
+                    analyzeLog()
+                }
+                else -> {
+                    // 분석 불가(광고 봐야 함)일 경우 로딩 상태 해제
+                    _state.update { it.copy(isAiAnalyzing = false) }
+                    _event.emit(WriteEvent.ShowRewardAdDialog)
+                }
+            }
+        }
+    }
+
+    private fun analyzeLog() {
+        val currentState = _state.value
+        
         viewModelScope.launch {
             _state.update { it.copy(isAiAnalyzing = true) }
 
