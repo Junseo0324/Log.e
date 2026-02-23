@@ -35,6 +35,7 @@ import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
 import com.patrykandpatrick.vico.compose.component.shape.shader.toDynamicShader
 import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
 import com.patrykandpatrick.vico.core.axis.AxisPosition
@@ -105,6 +106,13 @@ fun ScoreDifficultySection(
     // 축 설정
     val horizontalAxisValueFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, _ ->
         xLabels.getOrNull(value.toInt()) ?: ""
+    }
+
+    // 데이터를 약 5개 구간으로 나누어 라벨이 5개 정도만 보이도록 간격 설정
+    val labelSpacing = if (emotionScoreList.size > 5) {
+        (emotionScoreList.size / 4).coerceAtLeast(1)
+    } else {
+        1
     }
 
     val verticalAxisValueFormatter = AxisValueFormatter<AxisPosition.Vertical.Start> { value, _ ->
@@ -187,9 +195,14 @@ fun ScoreDifficultySection(
                     ),
                     bottomAxis = rememberBottomAxis(
                         valueFormatter = horizontalAxisValueFormatter,
+                        itemPlacer = AxisItemPlacer.Horizontal.default(
+                            spacing = labelSpacing,
+                            addExtremeLabelPadding = true
+                        ),
                         guideline = null,
                         label = axisLabelComponent(color = AppColors.subTextColor)
                     ),
+                    chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false),
                     modifier = Modifier.fillMaxSize()
                 )
             }
