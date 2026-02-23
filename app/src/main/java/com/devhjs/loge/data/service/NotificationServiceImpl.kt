@@ -55,7 +55,7 @@ class NotificationServiceImpl @Inject constructor(
 
         // 알림 구성 코드
         val notification = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_home_filled)
             .setContentTitle("오늘의 배움을 기록하셨나요? \uD83D\uDCDD")
             .setContentText("Log.e와 함께 하루를 정리해보세요!")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
