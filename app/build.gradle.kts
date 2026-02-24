@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.Properties
 
 plugins {
@@ -35,12 +38,15 @@ android {
             
         buildConfigField("String", "OPENAI_API_KEY", "\"$openAiApiKey\"")
 
-        // Supabase Configuration
         val supabaseUrl = localProperties.getProperty("SUPABASE_URL") ?: ""
         val supabaseKey = localProperties.getProperty("SUPABASE_KEY") ?: ""
         
         buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
         buildConfigField("String", "SUPABASE_KEY", "\"$supabaseKey\"")
+
+        buildConfigField("String", "VERSION_NAME", "\"${versionName}\"")
+        val currentDate = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date())
+        buildConfigField("String", "UPDATE_DATE", "\"$currentDate\"")
     }
 
     buildTypes {

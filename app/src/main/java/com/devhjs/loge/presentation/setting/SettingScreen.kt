@@ -227,7 +227,7 @@ fun SettingScreen(
                             style = AppTextStyles.JetBrain.Label.copy(color = AppColors.subTextColor, fontSize = 14.sp),
                         )
                         Text(
-                            text = "2024.02.08",
+                            text = state.updateDate,
                             style = AppTextStyles.JetBrain.Label.copy(color = AppColors.contentTextColor, fontSize = 14.sp),
                         )
                     }

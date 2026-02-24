@@ -1,5 +1,6 @@
 package com.devhjs.loge.presentation.setting
 
+import com.devhjs.loge.BuildConfig
 import com.devhjs.loge.domain.model.User
 
 /**
@@ -9,7 +10,8 @@ import com.devhjs.loge.domain.model.User
 data class SettingState(
     val user: User = User.DEFAULT,
     val isLoading: Boolean = false,
-    val appVersion: String = "v1.0.0",
+    val appVersion: String = BuildConfig.VERSION_NAME,
+    val updateDate: String = BuildConfig.UPDATE_DATE,
     val showDeleteDialog: Boolean = false,
     val isExporting: Boolean = false,
     val isTimePickerVisible: Boolean = false
