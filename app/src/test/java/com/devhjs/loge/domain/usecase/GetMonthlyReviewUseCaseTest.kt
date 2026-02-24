@@ -35,7 +35,9 @@ class GetMonthlyReviewUseCaseTest {
     fun `데이터가 없을 때 분석 불가 메시지를 반환해야 한다`() = runBlocking {
         // Given
         val month = "2024-02"
-        coEvery { aiRepository.getSavedMonthlyReview(any()) } returns Result.Success(null)
+        val userId = "test-user-id"
+        coEvery { authRepository.getCurrentUserUid() } returns userId
+        coEvery { aiRepository.getSavedMonthlyReview(any(), any()) } returns Result.Success(null)
         coEvery { tilRepository.getAllTil(any(), any()) } returns flowOf(emptyList())
 
         // When
@@ -86,10 +88,10 @@ class GetMonthlyReviewUseCaseTest {
             comment = "Good job!"
         )
 
-        coEvery { aiRepository.getSavedMonthlyReview(any()) } returns Result.Success(null)
+        coEvery { authRepository.getCurrentUserUid() } returns userId
+        coEvery { aiRepository.getSavedMonthlyReview(any(), any()) } returns Result.Success(null)
         coEvery { tilRepository.getAllTil(any(), any()) } returns flowOf(tils)
         coEvery { aiRepository.getAiFeedback(any(), any(), any(), any()) } returns Result.Success(expectedReport)
-        coEvery { authRepository.getCurrentUserUid() } returns userId
         coEvery { aiRepository.saveMonthlyReview(any(), any(), any()) } returns Result.Success(Unit)
 
         // When
@@ -104,6 +106,7 @@ class GetMonthlyReviewUseCaseTest {
     fun `저장된 회고가 있으면 AI 분석 없이 반환해야 한다`() = runBlocking {
         // Given
         val month = "2024-02"
+        val userId = "test-user-id"
         val savedReport = AiReport(
             date = 1706750000000,
             emotion = "성취감",
@@ -112,7 +115,8 @@ class GetMonthlyReviewUseCaseTest {
             comment = "Saved Comment"
         )
         
-        coEvery { aiRepository.getSavedMonthlyReview(month) } returns Result.Success(savedReport)
+        coEvery { authRepository.getCurrentUserUid() } returns userId
+        coEvery { aiRepository.getSavedMonthlyReview(userId, month) } returns Result.Success(savedReport)
 
         // When
         val result = getMonthlyReviewUseCase(month)
@@ -126,7 +130,9 @@ class GetMonthlyReviewUseCaseTest {
     fun `forceFetchFromAi가 false이고 저장된 데이터가 없으면 null을 반환해야 한다`() = runBlocking {
         // Given
         val month = "2024-02"
-        coEvery { aiRepository.getSavedMonthlyReview(any()) } returns Result.Success(null)
+        val userId = "test-user-id"
+        coEvery { authRepository.getCurrentUserUid() } returns userId
+        coEvery { aiRepository.getSavedMonthlyReview(any(), any()) } returns Result.Success(null)
 
         // When
         val result = getMonthlyReviewUseCase(month, forceFetchFromAi = false)
@@ -140,9 +146,11 @@ class GetMonthlyReviewUseCaseTest {
     fun `repository Error 발생 시 에러 결과를 반환해야 한다`() = runBlocking {
         // Given
         val month = "2024-02"
+        val userId = "test-user-id"
         val exception = RuntimeException("DB Error")
 
-        coEvery { aiRepository.getSavedMonthlyReview(any()) } returns Result.Success(null)
+        coEvery { authRepository.getCurrentUserUid() } returns userId
+        coEvery { aiRepository.getSavedMonthlyReview(any(), any()) } returns Result.Success(null)
         coEvery { tilRepository.getAllTil(any(), any()) } throws exception
 
         // When
