@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserRemoteDto(
     @SerialName("user_id")
-    val userId: String, // Supabase Auth UID
+    val userId: String,
     @SerialName("name")
     val name: String,
     @SerialName("user_name") val githubId: String,

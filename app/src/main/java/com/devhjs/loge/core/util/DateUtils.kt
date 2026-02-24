@@ -6,30 +6,47 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 object DateUtils {
+
+    /**
+     * 공통 시간 포맷팅 헬퍼 함수
+     * @param timestamp 타임스탬프 (밀리초)
+     * @param pattern 변환할 형식 문자열 (예: "yyyy-MM-dd")
+     * @param locale 사용할 지역 설정 (기본값: Locale.KOREA)
+     */
+    fun formatTimestamp(timestamp: Long, pattern: String, locale: Locale = Locale.KOREA): String {
+        return Instant.ofEpochMilli(timestamp)
+            .atZone(ZoneId.systemDefault())
+            .format(DateTimeFormatter.ofPattern(pattern, locale))
+    }
+
+    /**
+     * 특정 날짜(LocalDate)의 시작(00:00:00)과 끝(23:59:59.999999999) 타임스탬프 반환 헬퍼 함수
+     */
+    private fun getDayStartEndTimestamps(date: LocalDate): Pair<Long, Long> {
+        val startOfDay = date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val endOfDay = date.atTime(23, 59, 59, 999_999_999).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        return Pair(startOfDay, endOfDay)
+    }
 
     /** 해당 월의 시작/종료 타임스탬프 반환 ("yyyy-MM" → Pair<시작, 종료>) */
     fun getMonthStartEndTimestamps(month: String): Pair<Long, Long> {
         val yearMonth = YearMonth.parse(month)
         val startOfMonth = yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        val endOfMonth = yearMonth.atEndOfMonth().atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val endOfMonth = yearMonth.atEndOfMonth().atTime(23, 59, 59, 999_999_999).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         return Pair(startOfMonth, endOfMonth)
     }
 
     /** 타임스탬프 → ISO 날짜 문자열 ("yyyy-MM-dd") */
     fun formatToIsoDate(timestamp: Long): String {
-        return Instant.ofEpochMilli(timestamp)
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate()
-            .format(DateTimeFormatter.ISO_DATE)
+        return formatTimestamp(timestamp, "yyyy-MM-dd")
     }
 
     /** 타임스탬프 → 연도-월 문자열 ("yyyy-MM") */
     fun formatToYearMonth(timestamp: Long): String {
-        return Instant.ofEpochMilli(timestamp)
-            .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofPattern("yyyy-MM", java.util.Locale.KOREA))
+        return formatTimestamp(timestamp, "yyyy-MM")
     }
 
     /** 타임스탬프에서 해당 월의 일(day) 값 추출 (1~31) */
@@ -42,23 +59,17 @@ object DateUtils {
 
     /** 타임스탬프 → 시간 문자열 ("오전 09:30") */
     fun formatToTime(timestamp: Long): String {
-        return Instant.ofEpochMilli(timestamp)
-            .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofPattern("a hh:mm", java.util.Locale.KOREA))
+        return formatTimestamp(timestamp, "a hh:mm")
     }
 
     /** 타임스탬프 → 날짜 문자열 ("yyyy.MM.dd") */
     fun formatToDate(timestamp: Long): String {
-        return Instant.ofEpochMilli(timestamp)
-            .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofPattern("yyyy.MM.dd", java.util.Locale.KOREA))
+        return formatTimestamp(timestamp, "yyyy.MM.dd")
     }
 
     /** 타임스탬프 → 요일 문자열 ("월", "화" 등) */
     fun formatToDayOfWeek(timestamp: Long): String {
-        return Instant.ofEpochMilli(timestamp)
-            .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofPattern("E", java.util.Locale.KOREA))
+        return formatTimestamp(timestamp, "E")
     }
 
     /** 현재 월의 시작(1일 00:00:00)/종료(말일 23:59:59) 타임스탬프 반환 */
@@ -71,10 +82,7 @@ object DateUtils {
 
     /** 오늘의 시작(00:00:00)/종료(23:59:59) 타임스탬프 반환 */
     fun getTodayStartEnd(): Pair<Long, Long> {
-        val now = LocalDate.now()
-        val startOfDay = now.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        val endOfDay = now.atTime(23, 59, 59, 999_999_999).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        return Pair(startOfDay, endOfDay)
+        return getDayStartEndTimestamps(LocalDate.now())
     }
 
     /** 오늘 날짜를 "yyyy.MM.dd" 형식으로 반환 */
@@ -82,21 +90,9 @@ object DateUtils {
         return formatToDate(System.currentTimeMillis())
     }
 
-    /** formatToDate의 별칭 */
-    fun formatDate(timestamp: Long): String {
-        return formatToDate(timestamp)
-    }
-
-    /** formatToTime의 별칭 */
-    fun formatTime(timestamp: Long): String {
-        return formatToTime(timestamp)
-    }
-
     /** 타임스탬프 → 날짜+시간 문자열 ("yyyy-MM-dd HH:mm") */
     fun formatDateTime(timestamp: Long): String {
-        return Instant.ofEpochMilli(timestamp)
-            .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", java.util.Locale.KOREA))
+        return formatTimestamp(timestamp, "yyyy-MM-dd HH:mm")
     }
 
     /**
@@ -107,7 +103,7 @@ object DateUtils {
         val startOfYear = LocalDate.of(year, 1, 1)
             .atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
         val endOfYear = LocalDate.of(year, 12, 31)
-            .atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            .atTime(23, 59, 59, 999_999_999).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         return Pair(startOfYear, endOfYear)
     }
 
@@ -144,9 +140,6 @@ object DateUtils {
     }
 
     /**
-     * 현재 주(일요일 ~ 토요일)의 시작/종료 타임스탬프 반환
-     */
-    /**
      * 특정 날짜가 속한 주(일요일 ~ 토요일)의 시작/종료 타임스탬프 반환
      */
     fun getWeekStartEnd(date: LocalDate): Pair<Long, Long> {
@@ -159,13 +152,6 @@ object DateUtils {
         val endTimestamp = endOfWeek.atTime(23, 59, 59, 999_999_999).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
         return Pair(startTimestamp, endTimestamp)
-    }
-
-    /** 타임스탬프 → LocalDate 변환 */
-    fun toLocalDate(timestamp: Long): LocalDate {
-        return Instant.ofEpochMilli(timestamp)
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate()
     }
 
     /**

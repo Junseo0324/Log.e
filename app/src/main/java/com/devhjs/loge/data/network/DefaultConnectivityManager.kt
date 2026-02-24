@@ -44,7 +44,7 @@ class DefaultConnectivityManager @Inject constructor(
                 trySend(false)
             }
 
-            // 네트워크 기능 변경 (Wi-Fi ↔ 셀룰러 전환 등)
+            // 네트워크 기능 변경
             override fun onCapabilitiesChanged(
                 network: Network,
                 networkCapabilities: NetworkCapabilities

@@ -7,7 +7,7 @@ import com.devhjs.loge.data.local.dao.MonthlyReviewDao
 import com.devhjs.loge.data.local.entity.MonthlyReviewEntity
 import com.devhjs.loge.data.remote.AiPromptBuilder
 import com.devhjs.loge.data.remote.OpenAiService
-import com.devhjs.loge.data.remote.dto.toRemoteDto
+import com.devhjs.loge.data.mapper.toRemoteDto
 import com.devhjs.loge.data.remote.mapper.AiResponseMapper
 import com.devhjs.loge.domain.model.AiReport
 import com.devhjs.loge.domain.repository.AiRepository
@@ -22,8 +22,8 @@ import javax.inject.Inject
 
 class AiRepositoryImpl @Inject constructor(
     private val openAiService: OpenAiService,
-    private val promptBuilder: AiPromptBuilder,       // 프롬프트 생성 위임
-    private val responseMapper: AiResponseMapper,     // 응답 파싱·변환 위임
+    private val promptBuilder: AiPromptBuilder,
+    private val responseMapper: AiResponseMapper,
     private val monthlyReviewDao: MonthlyReviewDao,
     private val supabaseClient: SupabaseClient
 ) : AiRepository {
