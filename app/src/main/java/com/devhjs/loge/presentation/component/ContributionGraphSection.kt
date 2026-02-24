@@ -47,6 +47,24 @@ fun ContributionGraphSection(
     // DateUtils에서 그리드 정보 계산
     val gridInfo = remember(year) { DateUtils.getYearGridInfo(year) }
 
+    // UI 재구성을 방지하기 위한 모든 날짜 상태 1년치 사전 계산 (캐싱)
+    val gridCells = remember(year, gridInfo, learnedDateSet) {
+        val baseDate = LocalDate.of(year, 1, 1)
+        List(gridInfo.totalWeeks) { weekIndex ->
+            List(7) { dayOfWeek ->
+                val dayIndex = weekIndex * 7 + dayOfWeek - gridInfo.startOffset + 1
+                val isValidDay = dayIndex in 1..gridInfo.totalDays
+                val isFilled = if (isValidDay) {
+                    val date = baseDate.plusDays((dayIndex - 1).toLong())
+                    learnedDateSet.contains(date.toString())
+                } else {
+                    false
+                }
+                ContributionCellState(isValidDay = isValidDay, isFilled = isFilled)
+            }
+        }
+    }
+
     // 요일 라벨
     val dayLabels = listOf("월", "화", "수", "목", "금", "토", "일")
 
@@ -134,34 +152,22 @@ fun ContributionGraphSection(
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
-                            repeat(gridInfo.totalWeeks) { weekIndex ->
+                            gridCells.forEach { weekColumn ->
                                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                                    repeat(7) { dayOfWeek ->
-                                        val dayIndex = weekIndex * 7 + dayOfWeek - gridInfo.startOffset + 1
-                                        val isValidDay = dayIndex in 1..gridInfo.totalDays
-
-                                        // 유효한 날짜인 경우 학습 여부 확인
-                                        val isFilled = if (isValidDay) {
-                                            // "yyyy-MM-dd" 형식으로 날짜 문자열 생성
-                                            val date = LocalDate.of(year, 1, 1).plusDays((dayIndex - 1).toLong())
-                                            learnedDateSet.contains(date.toString())
-                                        } else {
-                                            false
-                                        }
-
+                                    weekColumn.forEach { cell ->
                                         Box(
                                             modifier = Modifier
                                                 .size(12.dp)
                                                 .background(
                                                     color = when {
-                                                        !isValidDay -> Color.Transparent
-                                                        isFilled -> AppColors.iconPrimary
+                                                        !cell.isValidDay -> Color.Transparent
+                                                        cell.isFilled -> AppColors.iconPrimary
                                                         else -> AppColors.darkBlue
                                                     },
                                                     shape = RoundedCornerShape(2.dp)
                                                 )
                                                 .then(
-                                                    if (isValidDay && !isFilled) {
+                                                    if (cell.isValidDay && !cell.isFilled) {
                                                         Modifier.border(
                                                             width = 0.5.dp,
                                                             color = AppColors.border2,
@@ -210,6 +216,11 @@ fun ContributionGraphSection(
         }
     }
 }
+
+private data class ContributionCellState(
+    val isValidDay: Boolean,
+    val isFilled: Boolean
+)
 
 @Preview
 @Composable
