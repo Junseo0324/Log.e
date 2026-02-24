@@ -7,7 +7,7 @@ data class User(
     val avatarUrl: String? = null,
     val isNotificationEnabled: Boolean,
     val isDarkModeEnabled: Boolean,
-    val notificationTime: Pair<Int, Int> // (Hour, Minute)
+    val notificationTime: Pair<Int, Int>
 ) {
     companion object {
         val DEFAULT = User(

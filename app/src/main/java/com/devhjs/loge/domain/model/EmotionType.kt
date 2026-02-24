@@ -20,17 +20,11 @@ enum class EmotionType(val label: String) {
 
         fun fromString(emotion: String): EmotionType {
             return when (emotion) {
-                // New mappings
                 "성취감" -> FULFILLMENT
                 "만족" -> SATISFACTION
                 "평범" -> NORMAL
                 "어려움" -> DIFFICULTY
                 "좌절" -> FRUSTRATION
-                
-                // Legacy mappings (for backward compatibility)
-                "기쁨" -> SATISFACTION
-                "혼란" -> DIFFICULTY
-                "고군분투" -> FRUSTRATION
                 
                 else -> NORMAL
             }
