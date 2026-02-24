@@ -5,7 +5,6 @@ import com.devhjs.loge.data.mapper.toDomain
 import com.devhjs.loge.data.mapper.toEntity
 import com.devhjs.loge.data.mapper.toRemoteDto
 import com.devhjs.loge.domain.model.User
-import com.devhjs.loge.domain.repository.AuthRepository
 import com.devhjs.loge.domain.repository.UserRepository
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
@@ -19,8 +18,7 @@ import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
-    private val supabaseClient: SupabaseClient,
-    private val authRepository: AuthRepository
+    private val supabaseClient: SupabaseClient
 ) : UserRepository {
 
     override fun getUser(): Flow<User> {
@@ -29,22 +27,19 @@ class UserRepositoryImpl @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    override suspend fun saveUser(user: User) {
+    override suspend fun saveUser(user: User, userId: String?) {
         withContext(Dispatchers.IO) {
             // 로컬 DB에 저장
             userDao.insertUser(user.toEntity())
 
             // 로그인 상태라면 원격 DB에도 동기화
-            if (authRepository.isUserLoggedIn()) {
-                val userId = authRepository.getCurrentUserUid()
-                if (userId != null) {
-                    launch {
-                        try {
-                            supabaseClient.from("users").upsert(user.toRemoteDto(userId))
-                        } catch (e: Exception) {
-                            // 원격 동기화 실패 시 로컬 데이터는 유지
-                            e.printStackTrace()
-                        }
+            if (userId != null) {
+                launch {
+                    try {
+                        supabaseClient.from("users").upsert(user.toRemoteDto(userId))
+                    } catch (e: Exception) {
+                        // 원격 동기화 실패 시 로컬 데이터는 유지
+                        e.printStackTrace()
                     }
                 }
             }

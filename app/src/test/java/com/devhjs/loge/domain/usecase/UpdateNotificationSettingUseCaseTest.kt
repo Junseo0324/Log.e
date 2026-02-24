@@ -1,8 +1,9 @@
 package com.devhjs.loge.domain.usecase
 
+import com.devhjs.loge.core.util.Result
 import com.devhjs.loge.domain.model.User
 import com.devhjs.loge.domain.repository.NotificationRepository
-import com.devhjs.loge.domain.repository.UserRepository
+import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
@@ -11,16 +12,16 @@ import org.junit.Test
 
 class UpdateNotificationSettingUseCaseTest {
 
-    private lateinit var userRepository: UserRepository
+    private lateinit var saveUserUseCase: SaveUserUseCase
     private lateinit var notificationRepository: NotificationRepository
     private lateinit var updateNotificationSettingUseCase: UpdateNotificationSettingUseCase
 
     @Before
     fun setUp() {
-        userRepository = mockk(relaxed = true)
+        saveUserUseCase = mockk(relaxed = true)
         notificationRepository = mockk(relaxed = true)
         updateNotificationSettingUseCase = UpdateNotificationSettingUseCase(
-            userRepository,
+            saveUserUseCase,
             notificationRepository
         )
     }
@@ -38,12 +39,13 @@ class UpdateNotificationSettingUseCaseTest {
             isDarkModeEnabled = false,
             notificationTime = Pair(customHour, customMinute)
         )
+        coEvery { saveUserUseCase(user) } returns Result.Success(Unit)
 
         // When
         updateNotificationSettingUseCase(user)
 
         // Then
-        coVerify(exactly = 1) { userRepository.saveUser(user) }
+        coVerify(exactly = 1) { saveUserUseCase(user) }
         coVerify(exactly = 1) { notificationRepository.scheduleReminder(customHour, customMinute) }
         coVerify(exactly = 0) { notificationRepository.cancelReminder() }
     }
@@ -59,12 +61,13 @@ class UpdateNotificationSettingUseCaseTest {
             isDarkModeEnabled = false,
             notificationTime = Pair(21, 0)
         )
+        coEvery { saveUserUseCase(user) } returns Result.Success(Unit)
 
         // When
         updateNotificationSettingUseCase(user)
 
         // Then
-        coVerify(exactly = 1) { userRepository.saveUser(user) }
+        coVerify(exactly = 1) { saveUserUseCase(user) }
         coVerify(exactly = 0) { notificationRepository.scheduleReminder(any(), any()) }
         coVerify(exactly = 1) { notificationRepository.cancelReminder() }
     }
