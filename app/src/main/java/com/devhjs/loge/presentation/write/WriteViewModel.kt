@@ -128,9 +128,6 @@ class WriteViewModel @Inject constructor(
             is WriteAction.OnAiAnalyzeClick -> {
                 handleAiAnalyzeClick()
             }
-            is WriteAction.OnAiAnalyzeAfterAd -> {
-                analyzeLog()
-            }
             is WriteAction.OnConsumeError -> {
                 _state.update { it.copy(errorMessage = null) }
             }
@@ -165,9 +162,9 @@ class WriteViewModel @Inject constructor(
                     analyzeLog()
                 }
                 else -> {
-                    // 분석 불가(광고 봐야 함)일 경우 로딩 상태 해제
+                    // 분석 불가(일일 횟수 제한 초과)일 경우 로딩 상태 해제
                     _state.update { it.copy(isAiAnalyzing = false) }
-                    _event.emit(WriteEvent.ShowRewardAdDialog)
+                    _event.emit(WriteEvent.ShowError("오늘의 AI 분석 횟수를 모두 사용했어요."))
                 }
             }
         }

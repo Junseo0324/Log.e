@@ -8,5 +8,4 @@ sealed interface StatAction {
     data object OnPreviousMonthClick : StatAction
     data object OnNextMonthClick : StatAction
     data object OnAiAnalyzeClick : StatAction
-    data object OnAiReAnalyzeAfterAd : StatAction // 광고 시청 완료 후 월간 재분석
 }

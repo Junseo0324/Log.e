@@ -61,11 +61,7 @@ class StatViewModel @Inject constructor(
             }
             is StatAction.OnAiAnalyzeClick -> {
                 // 첫 분석 시도: 가용성 체크 후 처리
-                handleAiAnalyzeClick(forceRefresh = false)
-            }
-            is StatAction.OnAiReAnalyzeAfterAd -> {
-                // 광고 시청 완료 후 재분석: 캐시 무시하고 강제 재호출
-                analyzeMonthlyLog(forceRefresh = true)
+                handleAiAnalyzeClick()
             }
         }
     }
@@ -76,7 +72,7 @@ class StatViewModel @Inject constructor(
      * - 이미 분석됨: 광고 시청 유도 이벤트 emit
      * - 모두 충족: 분석 실행
      */
-    private fun handleAiAnalyzeClick(forceRefresh: Boolean) {
+    private fun handleAiAnalyzeClick() {
         viewModelScope.launch {
             val count = _state.value.totalLogCount
 
@@ -88,14 +84,14 @@ class StatViewModel @Inject constructor(
                 return@launch
             }
 
-            // 조건 2: 이미 이번 달 분석 완료 → 광고 시청 유도
+            // 조건 2: 이미 이번 달 분석 완료
             if (_state.value.isMonthlyAnalyzed) {
-                _event.emit(StatEvent.ShowMonthlyRewardAd)
+                _event.emit(StatEvent.ShowError("이미 이번 달 분석을 완료했어요."))
                 return@launch
             }
 
             // 조건 모두 통과 → 분석 실행
-            analyzeMonthlyLog(forceRefresh = forceRefresh)
+            analyzeMonthlyLog(forceRefresh = false)
         }
     }
 
@@ -162,7 +158,7 @@ class StatViewModel @Inject constructor(
                             val canAnalyze = count >= 10 && !isAnalyzed
                             val limitMsg = when {
                                 count < 10 -> "AI 분석은 최소 10개 이상의 기록이 필요해요. (현재 ${count}개)"
-                                isAnalyzed -> "이미 이번 달 분석을 완료했어요. 광고를 시청하면 재분석할 수 있어요."
+                                isAnalyzed -> "이미 이번 달 분석을 완료했어요."
                                 else -> null
                             }
 

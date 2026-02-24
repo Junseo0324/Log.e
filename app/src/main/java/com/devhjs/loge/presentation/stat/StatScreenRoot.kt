@@ -24,10 +24,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.component.CustomDialog
 import com.devhjs.loge.presentation.component.LogESnackbar
 import com.devhjs.loge.presentation.component.LogETopBar
-import com.devhjs.loge.presentation.component.RewardAdManager
 import com.devhjs.loge.presentation.designsystem.AppColors
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
@@ -40,19 +38,6 @@ fun StatScreenRoot(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
-    // 리워드 광고 매니저 (Activity에서만 동작)
-    val rewardAdManager = remember {
-        (context as? Activity)?.let { RewardAdManager(it) }
-    }
-
-    // 광고 시청 확인 다이얼로그 표시 여부
-    var showAdConfirmDialog by remember { mutableStateOf(false) }
-
-    // 리워드 광고 미리 로드
-    LaunchedEffect(Unit) {
-        rewardAdManager?.loadAd()
-    }
-
     // 일회성 이벤트 수집
     LaunchedEffect(viewModel.event) {
         viewModel.event.collect { statEvent ->
@@ -60,32 +45,8 @@ fun StatScreenRoot(
                 is StatEvent.ShowError -> {
                     snackbarHostState.showSnackbar(statEvent.message)
                 }
-                is StatEvent.ShowMonthlyRewardAd -> {
-                    // 광고 바로 노출 금지 → 확인 다이얼로그 먼저 표시
-                    showAdConfirmDialog = true
-                }
             }
         }
-    }
-
-    // 광고 시청 확인 다이얼로그
-    if (showAdConfirmDialog) {
-        CustomDialog(
-            title = "광고 시청 후 재분석",
-            description = "이번 달 AI 분석을 이미 완료했어요.\n짧은 광고를 시청하면 한 번 더 분석할 수 있어요.",
-            confirmText = "광고 보기",
-            dismissText = "취소",
-            onConfirm = {
-                showAdConfirmDialog = false
-                if (rewardAdManager != null) {
-                    rewardAdManager.showAd(
-                        onRewarded = { viewModel.onAction(StatAction.OnAiReAnalyzeAfterAd) },
-                        onFailed = {}
-                    )
-                }
-            },
-            onDismiss = { showAdConfirmDialog = false }
-        )
     }
 
     Scaffold(

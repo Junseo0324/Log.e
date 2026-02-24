@@ -171,7 +171,4 @@ dependencies {
     implementation(libs.work.runtime.ktx)
     implementation(libs.hilt.work)
     ksp(libs.hilt.compiler.work)
-
-    // ADMob (리워드 광고)
-    implementation("com.google.android.gms:play-services-ads:23.5.0")
 }

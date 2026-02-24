@@ -12,6 +12,5 @@ sealed interface WriteAction {
     data object OnSaveClick : WriteAction
     data object OnBackClick : WriteAction
     data object OnAiAnalyzeClick : WriteAction      // AI 분석 버튼 클릭 (일일 제한 체크)
-    data object OnAiAnalyzeAfterAd : WriteAction    // 광고 시청 완료 후 AI 분석
     data object OnConsumeError : WriteAction
 }
