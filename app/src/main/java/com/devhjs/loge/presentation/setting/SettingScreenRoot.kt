@@ -28,6 +28,7 @@ fun SettingScreenRoot(
     onNavigateToLicenses: () -> Unit,
     onNavigateToProfileEdit: () -> Unit,
     onNavigateToFeedback: () -> Unit,
+    onNavigateToOnboarding: () -> Unit,
     onShowSnackbar: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -72,6 +73,9 @@ fun SettingScreenRoot(
                 }
                 is SettingEvent.NavigateToFeedback -> {
                     onNavigateToFeedback()
+                }
+                is SettingEvent.NavigateToOnboarding -> {
+                    onNavigateToOnboarding()
                 }
             }
         }

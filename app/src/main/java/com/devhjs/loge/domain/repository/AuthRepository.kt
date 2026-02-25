@@ -12,4 +12,5 @@ interface AuthRepository {
     fun getGithubName(): String?
     fun getGithubAvatarUrl(): String?
     fun getGithubId(): String?
+    suspend fun deleteUser()
 }

@@ -99,6 +99,7 @@ class SettingViewModel @Inject constructor(
                         is Result.Success -> {
                             _state.update { it.copy(showDeleteDialog = false) }
                             _event.emit(SettingEvent.ShowSnackbar("모든 데이터가 삭제되었습니다."))
+                            _event.emit(SettingEvent.NavigateToOnboarding)
                         }
                         is Result.Error -> {
                             _state.update { it.copy(showDeleteDialog = false) }

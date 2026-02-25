@@ -14,7 +14,9 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun MainScreenRoot() {
+fun MainScreenRoot(
+    onNavigateToOnboarding: () -> Unit
+) {
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -38,6 +40,7 @@ fun MainScreenRoot() {
         MainNavGraph(
             navController = navController,
             modifier = modifier,
+            onNavigateToOnboarding = onNavigateToOnboarding,
             onShowSnackbar = { message ->
                 scope.launch {
                     snackbarHostState.showSnackbar(message)

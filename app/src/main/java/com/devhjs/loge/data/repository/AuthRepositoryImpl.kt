@@ -7,6 +7,8 @@ import io.github.jan.supabase.auth.providers.Github
 import javax.inject.Inject
 
 import io.github.jan.supabase.auth.status.SessionStatus
+import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.rpc
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.contentOrNull
@@ -58,5 +60,9 @@ class AuthRepositoryImpl @Inject constructor(
     override fun getGithubId(): String? {
         return supabaseClient.auth.currentUserOrNull()
             ?.userMetadata?.get("user_name")?.jsonPrimitive?.contentOrNull
+    }
+
+    override suspend fun deleteUser() {
+        supabaseClient.postgrest.rpc("delete_user")
     }
 }

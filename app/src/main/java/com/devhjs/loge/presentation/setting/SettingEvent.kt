@@ -11,4 +11,5 @@ sealed interface SettingEvent {
     data class LaunchExport(val fileName: String) : SettingEvent
     data object RequestNotificationPermission : SettingEvent
     data object NavigateToFeedback : SettingEvent
+    data object NavigateToOnboarding : SettingEvent
 }

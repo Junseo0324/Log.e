@@ -23,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 fun MainNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    onNavigateToOnboarding: () -> Unit,
     onShowSnackbar: (String) -> Unit
 ) {
     NavHost(
@@ -53,6 +54,7 @@ fun MainNavGraph(
                 onNavigateToFeedback = {
                     navController.navigate(MainRoute.Feedback.route)
                 },
+                onNavigateToOnboarding = onNavigateToOnboarding,
                 onShowSnackbar = onShowSnackbar
             )
         }
