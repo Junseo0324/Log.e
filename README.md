@@ -1,8 +1,5 @@
 # LogE (Log Emotion)
 
-<p align="center">
-  <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" width="128" height="128" alt="LogE Logo">
-</p>
 
 **LogE**는 사용자의 일상과 감정을 기록하고, 이를 데이터 기반 통계로 시각화하여 자신의 마음을 더 깊이 이해하도록 돕는 안드로이드 애플리케이션입니다.  
 
@@ -46,28 +43,28 @@ LogE는 단순한 일기장을 넘어, 사용자가 하루의 감정을 기록(*
 ```mermaid
 graph TD
     subgraph "Presentation Layer (MVI)"
-        UI[Jetpack Compose UI]
-        VM[ViewModel]
-        State[State / Action]
+        UI["Jetpack Compose UI"]
+        VM["ViewModel"]
+        State["State / Action"]
     end
 
     subgraph "Domain Layer"
-        UC[UseCase]
-        Model[Domain Model]
-        RepoIntf[Repository Interface]
+        UC["UseCase"]
+        Model["Domain Model"]
+        RepoIntf["Repository Interface"]
     end
 
     subgraph "Data Layer"
-        RepoImpl[Repository Implementation]
-        Local[Room DB / DataStore]
-        Remote[Supabase / External API]
+        RepoImpl["Repository Implementation"]
+        Local["Room DB / DataStore"]
+        Remote["Supabase / External API"]
     end
 
     UI <--> State
     UI --> VM
     VM --> UC
     UC --> RepoIntf
-    RepoImpl ..|> RepoIntf
+    RepoImpl -.-> RepoIntf
     RepoImpl --> Local
     RepoImpl --> Remote
 ```
