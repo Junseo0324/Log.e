@@ -13,6 +13,7 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devhjs.loge.R
@@ -40,6 +41,7 @@ fun HomeScreen(
         modifier = modifier
             .fillMaxSize()
             .background(AppColors.background)
+            .testTag("home_screen")
     ) {
         // 상단 앱바
         LogETopBar(

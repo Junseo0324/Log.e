@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
@@ -36,6 +37,7 @@ fun WriteScreen(
             .padding(16.dp)
             .imePadding()
             .verticalScroll(rememberScrollState())
+            .testTag("write_screen")
     ) {
         Spacer(modifier = Modifier.height(24.dp))
 
