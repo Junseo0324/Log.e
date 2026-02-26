@@ -1,4 +1,6 @@
 package com.devhjs.loge.data.repository
+ 
+import com.devhjs.loge.data.dto.TilRemoteDto
 
 import com.devhjs.loge.data.local.dao.TilDao
 import com.devhjs.loge.data.local.entity.TilEntity
@@ -181,6 +183,37 @@ class TilRepositoryImpl @Inject constructor(
                 Timber.d("syncAllTilsToRemote 성공: ${dtos.size}개 동기화 완료")
             } catch (e: Exception) {
                 Timber.e(e, "syncAllTilsToRemote 실패")
+                throw e
+            }
+        }
+    }
+
+    /**
+     * 원격(Supabase) 데이터를 로컬 DB로 가져옴
+     */
+    override suspend fun fetchRemoteTilsToLocal() {
+        withContext(Dispatchers.IO) {
+            if (!authRepository.isUserLoggedIn()) return@withContext
+
+            val userId = authRepository.getCurrentUserUid() ?: return@withContext
+            Timber.d("fetchRemoteTilsToLocal 시작: userId=$userId")
+
+            try {
+                val remoteTils = supabaseClient.from("tils")
+                    .select {
+                        filter { eq("user_id", userId) }
+                    }
+                    .decodeList<TilRemoteDto>()
+
+                if (remoteTils.isNotEmpty()) {
+                    val entities = remoteTils.map { it.toEntity() }
+                    tilDao.insertTils(entities)
+                    Timber.d("fetchRemoteTilsToLocal 성공: ${entities.size}개 가져옴")
+                } else {
+                    Timber.d("가져올 원격 데이터가 없습니다.")
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "fetchRemoteTilsToLocal 실패")
                 throw e
             }
         }

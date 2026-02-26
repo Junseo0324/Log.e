@@ -44,7 +44,10 @@ class SyncOnReconnectUseCaseTest {
 
         // Then
         assertEquals(1, result.size) // 한 번 동기화 이벤트 발생
-        coVerify(exactly = 1) { tilRepository.syncAllTilsToRemote() }
+        io.mockk.coVerifyOrder {
+            tilRepository.fetchRemoteTilsToLocal()
+            tilRepository.syncAllTilsToRemote()
+        }
     }
 
     @Test
@@ -58,7 +61,10 @@ class SyncOnReconnectUseCaseTest {
 
         // Then
         assertEquals(1, result.size) // 이벤트는 발생하지만
-        coVerify(exactly = 0) { tilRepository.syncAllTilsToRemote() } // 실제 동기화는 호출되지 않음
+        coVerify(exactly = 0) {
+            tilRepository.fetchRemoteTilsToLocal()
+            tilRepository.syncAllTilsToRemote()
+        }
     }
 
     @Test
@@ -72,6 +78,9 @@ class SyncOnReconnectUseCaseTest {
 
         // Then
         assertEquals(1, result.size) // 초기 (false->true) 감지 1회만 발생
-        coVerify(exactly = 1) { tilRepository.syncAllTilsToRemote() }
+        coVerify(exactly = 1) {
+            tilRepository.fetchRemoteTilsToLocal()
+            tilRepository.syncAllTilsToRemote()
+        }
     }
 }

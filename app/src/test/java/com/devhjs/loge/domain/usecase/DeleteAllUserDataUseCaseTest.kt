@@ -1,6 +1,7 @@
 package com.devhjs.loge.domain.usecase
 
 import com.devhjs.loge.core.util.Result
+import com.devhjs.loge.domain.repository.AuthRepository
 import com.devhjs.loge.domain.repository.TilRepository
 import com.devhjs.loge.domain.repository.UserRepository
 import io.mockk.coEvery
@@ -15,7 +16,8 @@ class DeleteAllUserDataUseCaseTest {
 
     private val tilRepository: TilRepository = mockk(relaxed = true)
     private val userRepository: UserRepository = mockk(relaxed = true)
-    private val useCase = DeleteAllUserDataUseCase(tilRepository, userRepository)
+    private val authRepository: AuthRepository = mockk(relaxed = true)
+    private val useCase = DeleteAllUserDataUseCase(tilRepository, userRepository, authRepository)
 
     @Test
     fun `모든 데이터 삭제가 성공하면 Success를 반환하는지 확인`() = runTest {

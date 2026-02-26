@@ -23,6 +23,8 @@ interface TilDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTil(til: TilEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTils(tils: List<TilEntity>)
 
     @Update
     fun updateTil(til: TilEntity)

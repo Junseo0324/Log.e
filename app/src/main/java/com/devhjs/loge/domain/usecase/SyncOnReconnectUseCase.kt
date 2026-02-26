@@ -43,8 +43,12 @@ class SyncOnReconnectUseCase @Inject constructor(
         if (!authRepository.isUserLoggedIn()) return
 
         try {
-            // TIL 데이터 일괄 동기화
+            // 1. 원격 데이터를 로컬로 가져오기 (원격 -> 로컬)
+            tilRepository.fetchRemoteTilsToLocal()
+            
+            // 2. 로컬 데이터를 원격으로 동기화 (로컬 -> 원격)
             tilRepository.syncAllTilsToRemote()
+            
             Timber.d("TIL 동기화 완료")
         } catch (e: Exception) {
             Timber.e(e, "TIL 동기화 실패")

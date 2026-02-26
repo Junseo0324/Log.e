@@ -23,17 +23,35 @@ class SyncTilsUseCaseTest {
     }
 
     @Test
-    fun `TIL 동기화가 성공하면 Success 결과를 반환해야 한다`() = runBlocking {
+    fun `TIL 동기화 시 원격 데이터를 먼저 가져오고 로컬 데이터를 업로드해야 한다`() = runBlocking {
         // When
         val result = syncTilsUseCase()
 
         // Then
         assertTrue(result is Result.Success)
-        coVerify(exactly = 1) { tilRepository.syncAllTilsToRemote() }
+        io.mockk.coVerifyOrder {
+            tilRepository.fetchRemoteTilsToLocal()
+            tilRepository.syncAllTilsToRemote()
+        }
     }
 
     @Test
-    fun `TIL 동기화 중 에러가 발생하면 Error 결과를 반환해야 한다`() = runBlocking {
+    fun `원격 데이터를 가져오는 중 에러가 발생하면 동기화가 중단되고 Error 결과를 반환해야 한다`() = runBlocking {
+        // Given
+        val exception = RuntimeException("Fetch Failed")
+        coEvery { tilRepository.fetchRemoteTilsToLocal() } throws exception
+
+        // When
+        val result = syncTilsUseCase()
+
+        // Then
+        assertTrue(result is Result.Error)
+        assertEquals(exception, (result as Result.Error).error)
+        coVerify(exactly = 0) { tilRepository.syncAllTilsToRemote() }
+    }
+
+    @Test
+    fun `로컬 데이터를 업로드하는 중 에러가 발생하면 Error 결과를 반환해야 한다`() = runBlocking {
         // Given
         val exception = RuntimeException("Sync Failed")
         coEvery { tilRepository.syncAllTilsToRemote() } throws exception

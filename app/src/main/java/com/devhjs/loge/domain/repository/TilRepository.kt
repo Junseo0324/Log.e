@@ -15,4 +15,5 @@ interface TilRepository {
     suspend fun deleteAll()
     fun getMonthlyStats(month: String): Flow<Stat>
     suspend fun syncAllTilsToRemote()
+    suspend fun fetchRemoteTilsToLocal()
 }

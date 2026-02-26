@@ -57,3 +57,21 @@ fun Til.toRemoteDto(userId: String): TilRemoteDto {
         tomorrowPlan = tomorrowPlan
     )
 }
+/**
+ * Supabase DTO → 로컬 엔티티 변환
+ */
+fun TilRemoteDto.toEntity(): TilEntity {
+    return TilEntity(
+        id = localId,
+        createdAt = createdAt,
+        title = title,
+        learned = learned,
+        difficult = difficult,
+        emotionScore = emotionScore,
+        emotion = emotion,
+        difficultyLevel = difficultyLevel,
+        updatedAt = updatedAt,
+        aiFeedBack = aiFeedback,
+        tomorrowPlan = tomorrowPlan
+    )
+}

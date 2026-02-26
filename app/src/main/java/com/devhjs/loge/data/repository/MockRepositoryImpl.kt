@@ -111,4 +111,8 @@ class MockRepositoryImpl @Inject constructor() : TilRepository {
     override suspend fun syncAllTilsToRemote() {
         // Mock 이라 필요없음.
     }
+
+    override suspend fun fetchRemoteTilsToLocal() {
+        // Mock 이라 필요없음.
+    }
 }
