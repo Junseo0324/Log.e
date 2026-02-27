@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 /**
@@ -29,9 +29,9 @@ fun FeedbackTypeButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = if (isSelected) selectedColor.copy(alpha = 0.2f) else AppColors.cardInner
-    val borderColor = if (isSelected) selectedColor else AppColors.border
-    val textColor = if (isSelected) selectedColor else AppColors.labelTextColor
+    val backgroundColor = if (isSelected) selectedColor.copy(alpha = 0.2f) else LogETheme.colors.cardInner
+    val borderColor = if (isSelected) selectedColor else LogETheme.colors.border
+    val textColor = if (isSelected) selectedColor else LogETheme.colors.labelTextColor
 
     Column(
         modifier = modifier

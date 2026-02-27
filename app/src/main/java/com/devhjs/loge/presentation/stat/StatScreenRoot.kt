@@ -26,7 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devhjs.loge.R
 import com.devhjs.loge.presentation.component.LogESnackbar
 import com.devhjs.loge.presentation.component.LogETopBar
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -65,7 +65,7 @@ fun StatScreenRoot(
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_back),
                                 contentDescription = "이전 달",
-                                tint = AppColors.contentTextColor
+                                tint = LogETheme.colors.contentTextColor
                             )
                         }
                         Row(
@@ -76,14 +76,14 @@ fun StatScreenRoot(
                             Text(
                                 // "yyyy-MM" → "yyyy.MM" 표시 형식으로 변환
                                 text = state.selectedMonth.replace("-", "."),
-                                style = AppTextStyles.Pretendard.Header3.copy(color = AppColors.titleTextColor)
+                                style = AppTextStyles.Pretendard.Header3.copy(color = LogETheme.colors.titleTextColor)
                             )
                         }
                         IconButton(onClick = { viewModel.onAction(StatAction.OnNextMonthClick) }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_forward),
                                 contentDescription = "다음 달",
-                                tint = AppColors.contentTextColor,
+                                tint = LogETheme.colors.contentTextColor,
                             )
                         }
                     }
@@ -95,7 +95,7 @@ fun StatScreenRoot(
                 LogESnackbar(data = data)
             }
         },
-        containerColor = AppColors.background,
+        containerColor = LogETheme.colors.background,
         modifier = modifier
     ) { paddingValues ->
         StatScreen(

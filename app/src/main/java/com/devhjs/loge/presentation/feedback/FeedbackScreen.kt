@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
 import com.devhjs.loge.domain.model.FeedbackType
 import com.devhjs.loge.presentation.component.FeedbackTypeButton
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -43,7 +43,7 @@ fun FeedbackScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(AppColors.background)
+            .background(LogETheme.colors.background)
             .padding(horizontal = 24.dp)
             .verticalScroll(rememberScrollState())
     ) {
@@ -53,7 +53,7 @@ fun FeedbackScreen(
         Text(
             text = "피드백 보내기",
             style = AppTextStyles.JetBrain.Label.copy(
-                color = AppColors.titleTextColor,
+                color = LogETheme.colors.titleTextColor,
                 fontSize = 18.sp
             ),
             textAlign = TextAlign.Center,
@@ -63,7 +63,7 @@ fun FeedbackScreen(
         Text(
             text = "앱에 대한 피드백을 보내주세요. 개선 사항이나 버그를\n알려주시면 감사하겠습니다.",
             style = AppTextStyles.JetBrain.Label.copy(
-                color = AppColors.labelTextColor,
+                color = LogETheme.colors.labelTextColor,
                 fontSize = 14.sp
             ),
             textAlign = TextAlign.Center,
@@ -76,7 +76,7 @@ fun FeedbackScreen(
         Text(
             text = "피드백 유형",
             style = AppTextStyles.JetBrain.Label.copy(
-                color = AppColors.contentTextColor,
+                color = LogETheme.colors.contentTextColor,
                 fontSize = 14.sp
             )
         )
@@ -88,21 +88,21 @@ fun FeedbackScreen(
             FeedbackTypeButton(
                 text = "버그",
                 isSelected = state.type == FeedbackType.BUG,
-                selectedColor = AppColors.red,
+                selectedColor = LogETheme.colors.red,
                 onClick = { onAction(FeedbackAction.OnTypeSelected(FeedbackType.BUG)) },
                 modifier = Modifier.weight(1f)
             )
             FeedbackTypeButton(
                 text = "기능",
                 isSelected = state.type == FeedbackType.FEATURE,
-                selectedColor = AppColors.primary,
+                selectedColor = LogETheme.colors.primary,
                 onClick = { onAction(FeedbackAction.OnTypeSelected(FeedbackType.FEATURE)) },
                 modifier = Modifier.weight(1f)
             )
             FeedbackTypeButton(
                 text = "기타",
                 isSelected = state.type == FeedbackType.OTHER,
-                selectedColor = AppColors.blue,
+                selectedColor = LogETheme.colors.blue,
                 onClick = { onAction(FeedbackAction.OnTypeSelected(FeedbackType.OTHER)) },
                 modifier = Modifier.weight(1f)
             )
@@ -114,7 +114,7 @@ fun FeedbackScreen(
         Text(
             text = "제목",
             style = AppTextStyles.JetBrain.Label.copy(
-                color = AppColors.contentTextColor,
+                color = LogETheme.colors.contentTextColor,
                 fontSize = 14.sp
             )
         )
@@ -126,21 +126,21 @@ fun FeedbackScreen(
                 Text(
                     text = "피드백 제목을 입력하세요",
                     style = AppTextStyles.JetBrain.Label.copy(
-                        color = AppColors.subTextColor,
+                        color = LogETheme.colors.subTextColor,
                         fontSize = 16.sp
                     )
                 )
             },
             textStyle = AppTextStyles.JetBrain.Label.copy(
-                color = AppColors.titleTextColor,
+                color = LogETheme.colors.titleTextColor,
                 fontSize = 16.sp
             ),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = AppColors.cardInner,
-                unfocusedContainerColor = AppColors.cardInner,
-                focusedBorderColor = AppColors.border,
-                unfocusedBorderColor = AppColors.border,
-                cursorColor = AppColors.primary
+                focusedContainerColor = LogETheme.colors.cardInner,
+                unfocusedContainerColor = LogETheme.colors.cardInner,
+                focusedBorderColor = LogETheme.colors.border,
+                unfocusedBorderColor = LogETheme.colors.border,
+                cursorColor = LogETheme.colors.primary
             ),
             shape = RoundedCornerShape(8.dp),
             singleLine = true,
@@ -153,7 +153,7 @@ fun FeedbackScreen(
         Text(
             text = "내용",
             style = AppTextStyles.JetBrain.Label.copy(
-                color = AppColors.contentTextColor,
+                color = LogETheme.colors.contentTextColor,
                 fontSize = 14.sp
             )
         )
@@ -165,21 +165,21 @@ fun FeedbackScreen(
                 Text(
                     text = "피드백 내용을 자세히 작성해주세요",
                     style = AppTextStyles.JetBrain.Label.copy(
-                        color = AppColors.subTextColor,
+                        color = LogETheme.colors.subTextColor,
                         fontSize = 16.sp
                     )
                 )
             },
             textStyle = AppTextStyles.JetBrain.Label.copy(
-                color = AppColors.titleTextColor,
+                color = LogETheme.colors.titleTextColor,
                 fontSize = 16.sp
             ),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = AppColors.cardInner,
-                unfocusedContainerColor = AppColors.cardInner,
-                focusedBorderColor = AppColors.border,
-                unfocusedBorderColor = AppColors.border,
-                cursorColor = AppColors.primary
+                focusedContainerColor = LogETheme.colors.cardInner,
+                unfocusedContainerColor = LogETheme.colors.cardInner,
+                focusedBorderColor = LogETheme.colors.border,
+                unfocusedBorderColor = LogETheme.colors.border,
+                cursorColor = LogETheme.colors.primary
             ),
             shape = RoundedCornerShape(8.dp),
             minLines = 5,
@@ -194,9 +194,9 @@ fun FeedbackScreen(
             onClick = { onAction(FeedbackAction.OnSubmit) },
             enabled = !state.isLoading,
             colors = ButtonDefaults.buttonColors(
-                containerColor = AppColors.primary,
+                containerColor = LogETheme.colors.primary,
                 contentColor = Color.White,
-                disabledContainerColor = AppColors.primary.copy(alpha = 0.5f)
+                disabledContainerColor = LogETheme.colors.primary.copy(alpha = 0.5f)
             ),
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier
@@ -232,19 +232,19 @@ fun FeedbackScreen(
         Button(
             onClick = { onAction(FeedbackAction.OnCancel) },
             colors = ButtonDefaults.buttonColors(
-                containerColor = AppColors.cardInner,
-                contentColor = AppColors.contentTextColor
+                containerColor = LogETheme.colors.cardInner,
+                contentColor = LogETheme.colors.contentTextColor
             ),
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(44.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, AppColors.border)
+            border = androidx.compose.foundation.BorderStroke(1.dp, LogETheme.colors.border)
         ) {
             Text(
                 text = "취소",
                 style = AppTextStyles.JetBrain.Label.copy(
-                    color = AppColors.contentTextColor,
+                    color = LogETheme.colors.contentTextColor,
                     fontSize = 14.sp
                 )
             )

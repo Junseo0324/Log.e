@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.domain.model.ChartPoint
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 import com.patrykandpatrick.vico.compose.axis.axisLabelComponent
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
@@ -75,8 +75,8 @@ fun ScoreDifficultySection(
 
     val xLabels = emotionScoreList.map { "${it.x.toInt()}일" }
 
-    val scoreColor = AppColors.primary
-    val difficultyColor = AppColors.red
+    val scoreColor = LogETheme.colors.primary
+    val difficultyColor = LogETheme.colors.red
 
     // 차트 라인 설정 - 점수 + 난이도 두 개의 라인
     val lines = listOf(
@@ -127,7 +127,7 @@ fun ScoreDifficultySection(
     )
 
     val guideline = LineComponent(
-        color = AppColors.border.toArgb(),
+        color = LogETheme.colors.border.toArgb(),
         thicknessDp = 1f,
         shape = dashedShape
     )
@@ -136,14 +136,14 @@ fun ScoreDifficultySection(
         modifier = Modifier
             .fillMaxWidth()
             .height(300.dp)
-            .background(AppColors.cardBackground, RoundedCornerShape(10.dp))
-            .border(1.dp, AppColors.border, RoundedCornerShape(10.dp))
+            .background(LogETheme.colors.cardBackground, RoundedCornerShape(10.dp))
+            .border(1.dp, LogETheme.colors.border, RoundedCornerShape(10.dp))
             .padding(16.dp)
     ) {
         Column {
             Text(
                 text = "점수 & 난이도",
-                style = AppTextStyles.Pretendard.Header5.copy(color = AppColors.subTextColor)
+                style = AppTextStyles.Pretendard.Header5.copy(color = LogETheme.colors.subTextColor)
             )
             
             Spacer(modifier = Modifier.height(16.dp))
@@ -197,7 +197,7 @@ fun ScoreDifficultySection(
                     startAxis = rememberStartAxis(
                         valueFormatter = verticalAxisValueFormatter,
                         guideline = guideline,
-                        label = axisLabelComponent(color = AppColors.subTextColor),
+                        label = axisLabelComponent(color = LogETheme.colors.subTextColor),
                         itemPlacer = AxisItemPlacer.Vertical.default(maxItemCount = 5)
                     ),
                     bottomAxis = rememberBottomAxis(
@@ -208,7 +208,7 @@ fun ScoreDifficultySection(
                             shiftExtremeTicks = true
                         ),
                         guideline = null,
-                        label = axisLabelComponent(color = AppColors.subTextColor)
+                        label = axisLabelComponent(color = LogETheme.colors.subTextColor)
                     ),
                     chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false),
                     modifier = Modifier.fillMaxSize()
@@ -231,7 +231,7 @@ fun ScoreDifficultySection(
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = "점수",
-                        style = AppTextStyles.Pretendard.Label.copy(color = AppColors.subTextColor, fontSize = 12.sp)
+                        style = AppTextStyles.Pretendard.Label.copy(color = LogETheme.colors.subTextColor, fontSize = 12.sp)
                     )
                 }
                 Spacer(modifier = Modifier.width(24.dp))
@@ -244,7 +244,7 @@ fun ScoreDifficultySection(
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = "난이도",
-                        style = AppTextStyles.Pretendard.Label.copy(color = AppColors.subTextColor, fontSize = 12.sp)
+                        style = AppTextStyles.Pretendard.Label.copy(color = LogETheme.colors.subTextColor, fontSize = 12.sp)
                     )
                 }
             }

@@ -20,7 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 /**
@@ -44,7 +44,7 @@ fun CustomAppBar(
         modifier = modifier
             .fillMaxWidth()
             .height(64.dp)
-            .background(AppColors.cardBackground)
+            .background(LogETheme.colors.cardBackground)
             .padding(horizontal = 4.dp)
     ) {
         // 좌측 뒤로 가기 버튼
@@ -55,7 +55,7 @@ fun CustomAppBar(
             Icon(
                 painter = painterResource(id = R.drawable.ic_arrow_back),
                 contentDescription = "Back",
-                tint = AppColors.contentTextColor
+                tint = LogETheme.colors.contentTextColor
             )
         }
 
@@ -67,14 +67,14 @@ fun CustomAppBar(
             Icon(
                 painter = painterResource(id = titleIcon),
                 contentDescription = null,
-                tint = AppColors.iconPrimary,
+                tint = LogETheme.colors.iconPrimary,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = title,
                 style = AppTextStyles.Pretendard.Header1,
-                color = AppColors.white
+                color = LogETheme.colors.white
             )
         }
 
@@ -99,14 +99,14 @@ private fun DetailAppBarPreview() {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_edit),
                     contentDescription = "Edit",
-                    tint = AppColors.contentTextColor
+                    tint = LogETheme.colors.contentTextColor
                 )
             }
             IconButton(onClick = { }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_delete),
                     contentDescription = "Delete",
-                    tint = AppColors.red
+                    tint = LogETheme.colors.red
                 )
             }
         }
@@ -125,10 +125,10 @@ private fun WriteAppBarPreview() {
                 modifier = Modifier
                     .width(80.dp)
                     .padding(end = 8.dp),
-                backgroundColor = AppColors.primary,
+                backgroundColor = LogETheme.colors.primary,
                 icon = R.drawable.ic_save,
                 text = "저장",
-                contentColor = AppColors.black,
+                contentColor = LogETheme.colors.black,
                 onClick = { }
             )
         }

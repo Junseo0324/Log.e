@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,7 +50,7 @@ fun CustomTimePickerDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),
         modifier = Modifier
             .fillMaxWidth(0.9f)
-            .background(AppColors.background, RoundedCornerShape(16.dp))
+            .background(LogETheme.colors.background, RoundedCornerShape(16.dp))
     ) {
         Column(
             modifier = Modifier.padding(24.dp),
@@ -68,7 +68,7 @@ fun CustomTimePickerDialog(
             Text(
                 text = "매일 알림을 받을 시간을 선택해주세요",
                 style = AppTextStyles.JetBrain.Label.copy(
-                    color = AppColors.subTextColor,
+                    color = LogETheme.colors.subTextColor,
                     fontSize = 14.sp
                 )
             )
@@ -85,7 +85,7 @@ fun CustomTimePickerDialog(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_time), // Ensure this icon exists
                         contentDescription = null,
-                        tint = AppColors.iconPrimary,
+                        tint = LogETheme.colors.iconPrimary,
                         modifier = Modifier.padding(end = 8.dp)
                     )
                     Text(
@@ -109,7 +109,7 @@ fun CustomTimePickerDialog(
                     Text(
                         text = "시",
                         style = AppTextStyles.JetBrain.Label.copy(
-                            color = AppColors.subTextColor,
+                            color = LogETheme.colors.subTextColor,
                             fontSize = 12.sp
                         ),
                         modifier = Modifier.padding(bottom = 4.dp)
@@ -127,7 +127,7 @@ fun CustomTimePickerDialog(
                     Text(
                         text = "분",
                         style = AppTextStyles.JetBrain.Label.copy(
-                            color = AppColors.subTextColor,
+                            color = LogETheme.colors.subTextColor,
                             fontSize = 12.sp
                         ),
                         modifier = Modifier.padding(bottom = 4.dp)
@@ -149,7 +149,7 @@ fun CustomTimePickerDialog(
                     .fillMaxWidth()
                     .height(48.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(AppColors.primary)
+                    .background(LogETheme.colors.primary)
                     .clickable { onTimeSelected(selectedHour, selectedMinute) },
                 contentAlignment = Alignment.Center
             ) {
@@ -168,14 +168,14 @@ fun CustomTimePickerDialog(
                     .fillMaxWidth()
                     .height(48.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(AppColors.cardInner)
+                    .background(LogETheme.colors.cardInner)
                     .clickable { onDismissRequest() },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "취소",
                     style = AppTextStyles.JetBrain.Label.copy(
-                        color = AppColors.white,
+                        color = LogETheme.colors.white,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )

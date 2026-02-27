@@ -14,7 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 /**
@@ -26,14 +26,14 @@ fun EmptyChartSection(title: String) {
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp)
-            .background(AppColors.cardBackground, RoundedCornerShape(10.dp))
-            .border(1.dp, AppColors.border, RoundedCornerShape(10.dp))
+            .background(LogETheme.colors.cardBackground, RoundedCornerShape(10.dp))
+            .border(1.dp, LogETheme.colors.border, RoundedCornerShape(10.dp))
             .padding(16.dp)
     ) {
         Column {
             Text(
                 text = title,
-                style = AppTextStyles.Pretendard.Header5.copy(color = AppColors.subTextColor)
+                style = AppTextStyles.Pretendard.Header5.copy(color = LogETheme.colors.subTextColor)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Box(
@@ -42,7 +42,7 @@ fun EmptyChartSection(title: String) {
             ) {
                 Text(
                     text = "데이터가 없습니다",
-                    style = AppTextStyles.Pretendard.Label.copy(color = AppColors.subTextColor)
+                    style = AppTextStyles.Pretendard.Label.copy(color = LogETheme.colors.subTextColor)
                 )
             }
         }

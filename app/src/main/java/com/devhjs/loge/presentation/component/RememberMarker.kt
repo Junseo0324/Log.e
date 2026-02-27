@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.patrykandpatrick.vico.compose.component.overlayingComponent
 import com.patrykandpatrick.vico.compose.component.shapeComponent
 import com.patrykandpatrick.vico.compose.component.textComponent
@@ -37,8 +37,8 @@ internal fun rememberMarker(
 ): Marker {
     val labelBackground = shapeComponent(
         shape = Shapes.roundedCornerShape(allPercent = 25),
-        color = AppColors.background,
-        strokeColor = AppColors.white.copy(alpha = 0.5f),
+        color = LogETheme.colors.background,
+        strokeColor = LogETheme.colors.white.copy(alpha = 0.5f),
         strokeWidth = 1.dp
     )
 
@@ -47,17 +47,17 @@ internal fun rememberMarker(
         lineCount = 5,
         padding = dimensionsOf(start = 12.dp, top = 8.dp, end = 12.dp, bottom = 8.dp),
         typeface = Typeface.MONOSPACE,
-        color = AppColors.white,
+        color = LogETheme.colors.white,
     )
 
     val indicatorInner = shapeComponent(
         shape = Shapes.pillShape,
-        color = AppColors.iconPrimary
+        color = LogETheme.colors.iconPrimary
     )
 
     val indicatorCenter = shapeComponent(
         shape = Shapes.pillShape,
-        color = AppColors.white
+        color = LogETheme.colors.white
     )
 
     val indicator = overlayingComponent(

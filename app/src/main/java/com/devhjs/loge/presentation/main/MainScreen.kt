@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import com.devhjs.loge.core.routing.MainRoute
 import com.devhjs.loge.presentation.component.BottomNavigationBar
 import com.devhjs.loge.presentation.component.LogESnackbar
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 
 @Composable
 fun MainScreen(
@@ -20,7 +20,7 @@ fun MainScreen(
     content: @Composable (Modifier) -> Unit
 ) {
     Scaffold(
-        containerColor = AppColors.cardBackground,
+        containerColor = LogETheme.colors.cardBackground,
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) { data ->
                 LogESnackbar(data = data)

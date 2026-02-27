@@ -18,7 +18,7 @@ import com.devhjs.loge.presentation.component.MoodFrequencySection
 import com.devhjs.loge.presentation.component.MoodTrendSection
 import com.devhjs.loge.presentation.component.ScoreDifficultySection
 import com.devhjs.loge.presentation.component.StatSummarySection
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 
 @Composable
 fun StatScreen(
@@ -34,7 +34,7 @@ fun StatScreen(
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator(
-                color = AppColors.primary
+                color = LogETheme.colors.primary
             )
         }
     } else {

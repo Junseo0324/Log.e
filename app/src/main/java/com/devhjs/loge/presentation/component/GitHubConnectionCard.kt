@@ -21,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 import com.devhjs.loge.presentation.profile.ProfileAction
 import com.devhjs.loge.presentation.profile.ProfileState
@@ -37,10 +37,10 @@ fun GitHubConnectionCard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(AppColors.cardBackground, RoundedCornerShape(10.dp))
+            .background(LogETheme.colors.cardBackground, RoundedCornerShape(10.dp))
             .border(
                 width = 1.dp,
-                color = AppColors.border,
+                color = LogETheme.colors.border,
                 shape = RoundedCornerShape(10.dp)
             )
             .padding(horizontal = 24.dp, vertical = 24.dp)
@@ -54,12 +54,12 @@ fun GitHubConnectionCard(
                 modifier = Modifier
                     .size(38.dp)
                     .background(
-                        color = AppColors.background,
+                        color = LogETheme.colors.background,
                         shape = RoundedCornerShape(10.dp)
                     )
                     .border(
                         width = 1.dp,
-                        color = AppColors.border,
+                        color = LogETheme.colors.border,
                         shape = RoundedCornerShape(10.dp)
                     ),
                 contentAlignment = Alignment.Center
@@ -67,7 +67,7 @@ fun GitHubConnectionCard(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_github),
                     contentDescription = "GitHub",
-                    tint = AppColors.white,
+                    tint = LogETheme.colors.white,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -78,7 +78,7 @@ fun GitHubConnectionCard(
                 Text(
                     text = "GitHub 연동",
                     style = AppTextStyles.Pretendard.Header5.copy(
-                        color = AppColors.white,
+                        color = LogETheme.colors.white,
                         fontSize = 14.sp,
                         lineHeight = 20.sp
                     )
@@ -87,7 +87,7 @@ fun GitHubConnectionCard(
                 Text(
                     text = "GitHub 계정을 연결하여 프로필을 동기화하세요",
                     style = AppTextStyles.Pretendard.Body.copy(
-                        color = AppColors.contentTextColor,
+                        color = LogETheme.colors.contentTextColor,
                         fontSize = 12.sp,
                         lineHeight = 16.sp
                     )

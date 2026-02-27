@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.devhjs.loge.R
 import com.devhjs.loge.presentation.component.CustomAppBar
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 
 @Composable
@@ -25,13 +25,13 @@ fun LicensesScreen(
                 onBackClick = onBackClick
             )
         },
-        containerColor = AppColors.background
+        containerColor = LogETheme.colors.background
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(AppColors.background)
+                .background(LogETheme.colors.background)
         ) {
             LibrariesContainer(
                 modifier = Modifier.fillMaxSize(),

@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -32,7 +32,7 @@ fun SettingActionItem(
     title: String,
     subtitle: String? = null,
     onClick: () -> Unit,
-    titleColor: Color = AppColors.titleTextColor,
+    titleColor: Color = LogETheme.colors.titleTextColor,
     containerColor: Color = Color.Transparent
 ) {
     Row(
@@ -49,7 +49,7 @@ fun SettingActionItem(
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = null,
-                tint = if (titleColor == AppColors.red) AppColors.red else AppColors.white,
+                tint = if (titleColor == LogETheme.colors.red) LogETheme.colors.red else LogETheme.colors.white,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
@@ -64,7 +64,7 @@ fun SettingActionItem(
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = subtitle,
-                        style = AppTextStyles.JetBrain.Label.copy(color = AppColors.labelTextColor, fontSize = 12.sp),
+                        style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.labelTextColor, fontSize = 12.sp),
                     )
                 }
             }
@@ -73,7 +73,7 @@ fun SettingActionItem(
         Icon(
             painter = painterResource(id = R.drawable.ic_forward),
             contentDescription = null,
-            tint = AppColors.labelTextColor,
+            tint = LogETheme.colors.labelTextColor,
             modifier = Modifier.size(20.dp)
         )
     }

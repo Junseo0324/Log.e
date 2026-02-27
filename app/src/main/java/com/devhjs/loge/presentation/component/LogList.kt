@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.devhjs.loge.R
 import com.devhjs.loge.core.util.DateUtils
 import com.devhjs.loge.domain.model.Til
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 
 /**
  * 로그 리스트 컴포넌트
@@ -71,7 +71,7 @@ fun LogList(
                 state = dismissState,
                 backgroundContent = {
                     val color = if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) {
-                        AppColors.red
+                        LogETheme.colors.red
                     } else {
                         Color.Transparent
                     }

@@ -19,7 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,18 +40,18 @@ fun CustomDialog(
     ) {
         Box(
             modifier = Modifier
-                .background(AppColors.cardBackground, RoundedCornerShape(16.dp))
+                .background(LogETheme.colors.cardBackground, RoundedCornerShape(16.dp))
                 .padding(24.dp)
         ) {
             Column {
                 Text(
                     text = title,
-                    style = AppTextStyles.Pretendard.Header3.copy(color = AppColors.white)
+                    style = AppTextStyles.Pretendard.Header3.copy(color = LogETheme.colors.white)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = description,
-                    style = AppTextStyles.Pretendard.Body.copy(color = AppColors.subTextColor)
+                    style = AppTextStyles.Pretendard.Body.copy(color = LogETheme.colors.subTextColor)
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 Row(
@@ -61,13 +61,13 @@ fun CustomDialog(
                     TextButton(onClick = onDismiss) {
                         Text(
                             text = dismissText,
-                            style = AppTextStyles.Pretendard.Body.copy(color = AppColors.labelTextColor)
+                            style = AppTextStyles.Pretendard.Body.copy(color = LogETheme.colors.labelTextColor)
                         )
                     }
                     TextButton(onClick = onConfirm) {
                         Text(
                             text = confirmText,
-                            style = AppTextStyles.Pretendard.Body.copy(color = AppColors.red)
+                            style = AppTextStyles.Pretendard.Body.copy(color = LogETheme.colors.red)
                         )
                     }
                 }

@@ -10,7 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devhjs.loge.R
 import com.devhjs.loge.domain.model.EmotionType
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 
 @Composable
 fun StatSummarySection(
@@ -34,13 +34,13 @@ fun StatSummarySection(
                 icon = R.drawable.ic_home_filled,
                 label = "commits",
                 value = totalTil.toString(),
-                iconTint = AppColors.primary
+                iconTint = LogETheme.colors.primary
             )
             StatCard(
                 icon = R.drawable.ic_growth,
                 label = "avg score",
                 value = "%.0f".format(avgScore),
-                iconTint = AppColors.orange
+                iconTint = LogETheme.colors.orange
             )
         }
         Column(
@@ -52,13 +52,13 @@ fun StatSummarySection(
                 label = "mood",
                 value = dominantEmotionLabel,
                 valueSize = 20,
-                iconTint = AppColors.pink
+                iconTint = LogETheme.colors.pink
             )
             StatCard(
                 icon = R.drawable.ic_difficulty,
                 label = "difficulty",
                 value = "%.1f".format(avgDifficulty),
-                iconTint = AppColors.red
+                iconTint = LogETheme.colors.red
             )
         }
     }

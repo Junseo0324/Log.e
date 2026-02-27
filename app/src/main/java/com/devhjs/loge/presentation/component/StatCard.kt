@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -32,14 +32,14 @@ fun StatCard(
     label: String,
     value: String,
     valueSize: Int = 24,
-    iconTint: Color = AppColors.white
+    iconTint: Color = LogETheme.colors.white
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(90.dp)
-            .background(AppColors.cardBackground, RoundedCornerShape(10.dp))
-            .border(1.dp, AppColors.border, RoundedCornerShape(10.dp))
+            .background(LogETheme.colors.cardBackground, RoundedCornerShape(10.dp))
+            .border(1.dp, LogETheme.colors.border, RoundedCornerShape(10.dp))
             .padding(16.dp)
     ) {
         Column {
@@ -53,13 +53,13 @@ fun StatCard(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = label,
-                    style = AppTextStyles.Pretendard.Label.copy(color = AppColors.contentTextColor, fontSize = 12.sp)
+                    style = AppTextStyles.Pretendard.Label.copy(color = LogETheme.colors.contentTextColor, fontSize = 12.sp)
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = value,
-                style = AppTextStyles.Pretendard.Header1.copy(fontSize = valueSize.sp, color = AppColors.titleTextColor)
+                style = AppTextStyles.Pretendard.Header1.copy(fontSize = valueSize.sp, color = LogETheme.colors.titleTextColor)
             )
         }
     }
@@ -72,6 +72,6 @@ private fun StatCardPreview() {
         icon = R.drawable.ic_code,
         label = "commits",
         value = "6",
-        iconTint = AppColors.primary
+        iconTint = LogETheme.colors.primary
     )
 }

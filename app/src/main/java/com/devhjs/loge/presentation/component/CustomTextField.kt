@@ -23,7 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -43,14 +43,14 @@ fun CustomTextField(
                 Icon(
                     painter = painterResource(id = leadingIconRes),
                     contentDescription = null,
-                    tint = AppColors.labelTextColor,
+                    tint = LogETheme.colors.labelTextColor,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = label,
                     style = AppTextStyles.JetBrain.Label.copy(
-                        color = AppColors.labelTextColor,
+                        color = LogETheme.colors.labelTextColor,
                         fontSize = 14.sp
                     )
                 )
@@ -63,16 +63,16 @@ fun CustomTextField(
             onValueChange = onValueChange,
             enabled = enabled,
             textStyle = AppTextStyles.JetBrain.Label.copy(
-                color = if (enabled) AppColors.contentTextColor else AppColors.subTextColor,
+                color = if (enabled) LogETheme.colors.contentTextColor else LogETheme.colors.subTextColor,
                 fontSize = 14.sp
             ),
-            cursorBrush = SolidColor(AppColors.primary),
+            cursorBrush = SolidColor(LogETheme.colors.primary),
             decorationBox = { innerTextField ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(AppColors.cardInner, RoundedCornerShape(10.dp))
-                        .border(1.dp, AppColors.border, RoundedCornerShape(10.dp))
+                        .background(LogETheme.colors.cardInner, RoundedCornerShape(10.dp))
+                        .border(1.dp, LogETheme.colors.border, RoundedCornerShape(10.dp))
                         .padding(horizontal = 16.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -84,7 +84,7 @@ fun CustomTextField(
                             Text(
                                 text = placeholder,
                                 style = AppTextStyles.JetBrain.Label.copy(
-                                    color = AppColors.subTextColor, 
+                                    color = LogETheme.colors.subTextColor, 
                                     fontSize = 14.sp
                                 )
                             )

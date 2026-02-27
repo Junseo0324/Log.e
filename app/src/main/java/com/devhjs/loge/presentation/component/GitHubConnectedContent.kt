@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 
@@ -43,12 +43,12 @@ fun GitHubConnectedContent(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = AppColors.background,
+                color = LogETheme.colors.background,
                 shape = RoundedCornerShape(10.dp)
             )
             .border(
                 width = 1.dp,
-                color = AppColors.primary.copy(alpha = 0.3f),
+                color = LogETheme.colors.primary.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(10.dp)
             )
             .padding(16.dp)
@@ -64,14 +64,14 @@ fun GitHubConnectedContent(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_check),
                     contentDescription = null,
-                    tint = AppColors.primary,
+                    tint = LogETheme.colors.primary,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "연결됨",
                     style = AppTextStyles.Pretendard.Header5.copy(
-                        color = AppColors.primary,
+                        color = LogETheme.colors.primary,
                         fontSize = 14.sp,
                         lineHeight = 20.sp
                     )
@@ -80,7 +80,7 @@ fun GitHubConnectedContent(
             Icon(
                 painter = painterResource(id = R.drawable.ic_github),
                 contentDescription = null,
-                tint = AppColors.contentTextColor,
+                tint = LogETheme.colors.contentTextColor,
                 modifier = Modifier.size(16.dp)
             )
         }
@@ -92,7 +92,7 @@ fun GitHubConnectedContent(
             Text(
                 text = "Username: ",
                 style = AppTextStyles.Pretendard.Body.copy(
-                    color = AppColors.labelTextColor,
+                    color = LogETheme.colors.labelTextColor,
                     fontSize = 12.sp,
                     lineHeight = 16.sp
                 )
@@ -100,7 +100,7 @@ fun GitHubConnectedContent(
             Text(
                 text = username,
                 style = AppTextStyles.Pretendard.Body.copy(
-                    color = AppColors.subTextColor,
+                    color = LogETheme.colors.subTextColor,
                     fontSize = 12.sp,
                     lineHeight = 16.sp
                 )
@@ -113,7 +113,7 @@ fun GitHubConnectedContent(
         Text(
             text = "github.com/$username",
             style = AppTextStyles.Pretendard.Body.copy(
-                color = AppColors.lightBlue,
+                color = LogETheme.colors.lightBlue,
                 fontSize = 12.sp,
                 lineHeight = 16.sp
             )
@@ -134,13 +134,13 @@ fun GitHubConnectedContent(
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = AppColors.red.copy(alpha = 0.3f)
+            color = LogETheme.colors.red.copy(alpha = 0.3f)
         )
     ) {
         Text(
             text = "연결 해제",
             style = AppTextStyles.Pretendard.Header5.copy(
-                color = AppColors.red,
+                color = LogETheme.colors.red,
                 fontSize = 14.sp
             )
         )

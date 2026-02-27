@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 /**
@@ -36,7 +36,7 @@ fun LevelIndicator(
         Text(
             text = text,
             style = AppTextStyles.Pretendard.Label.copy(
-                color = AppColors.labelTextColor,
+                color = LogETheme.colors.labelTextColor,
                 fontSize = 12.sp
             )
         )
@@ -49,7 +49,7 @@ fun LevelIndicator(
                 modifier = Modifier
                     .size(8.dp)
                     .background(
-                        color = if (index < level) AppColors.primary else AppColors.labelTextColor.copy(
+                        color = if (index < level) LogETheme.colors.primary else LogETheme.colors.labelTextColor.copy(
                             alpha = 0.3f
                         ),
                         shape = CircleShape

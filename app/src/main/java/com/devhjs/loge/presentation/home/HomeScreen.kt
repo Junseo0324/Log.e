@@ -23,7 +23,7 @@ import com.devhjs.loge.presentation.component.CustomButton
 import com.devhjs.loge.presentation.component.EmptyLogView
 import com.devhjs.loge.presentation.component.LogETopBar
 import com.devhjs.loge.presentation.component.LogList
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 
@@ -40,7 +40,7 @@ fun HomeScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(AppColors.background)
+            .background(LogETheme.colors.background)
             .testTag("home_screen")
     ) {
         // 상단 앱바
@@ -51,30 +51,30 @@ fun HomeScreen(
             actions = {
                 CustomButton(
                     modifier = Modifier.width(70.dp),
-                    backgroundColor = AppColors.primary,
+                    backgroundColor = LogETheme.colors.primary,
                     icon = R.drawable.ic_add,
                     contentDescription = "Add Icon",
                     text = "추가",
-                    contentColor = AppColors.black,
+                    contentColor = LogETheme.colors.black,
                     onClick = { onAction(HomeAction.OnAddClick) }
                 )
             },
             bottomContent = {
                 Text(
                     text = state.currentDate,
-                    style = AppTextStyles.Pretendard.Label.copy(color = AppColors.homeLabelTextColor)
+                    style = AppTextStyles.Pretendard.Label.copy(color = LogETheme.colors.homeLabelTextColor)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 VerticalDivider(
                     modifier = Modifier.height(20.dp),
                     thickness = 1.dp,
-                    color = AppColors.homeLabelTextColor
+                    color = LogETheme.colors.homeLabelTextColor
                 )
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
                     text = "${state.totalLogCount} logs",
-                    style = AppTextStyles.Pretendard.Label.copy(color = AppColors.homeLabelTextColor)
+                    style = AppTextStyles.Pretendard.Label.copy(color = LogETheme.colors.homeLabelTextColor)
                 )
             }
         )
@@ -85,7 +85,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = AppColors.primary)
+                CircularProgressIndicator(color = LogETheme.colors.primary)
             }
         } else if (state.logs.isEmpty()) {
             EmptyLogView()

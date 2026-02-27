@@ -34,7 +34,7 @@ import com.devhjs.loge.domain.model.Til
 import com.devhjs.loge.presentation.component.ContentCard
 import com.devhjs.loge.presentation.component.InformationChip
 import com.devhjs.loge.presentation.component.LevelIndicator
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 import com.devhjs.loge.presentation.util.color
 import com.devhjs.loge.presentation.util.iconResId
@@ -49,7 +49,7 @@ fun DetailScreen(
             modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator(color = AppColors.primary)
+            CircularProgressIndicator(color = LogETheme.colors.primary)
         }
         return
     }
@@ -117,7 +117,7 @@ fun DetailScreen(
             text = log.title,
             modifier = Modifier.fillMaxWidth(),
             style = AppTextStyles.Pretendard.Header1.copy(
-                color = AppColors.white,
+                color = LogETheme.colors.white,
                 fontWeight = FontWeight.Bold,
                 fontSize = 28.sp
             )
@@ -130,7 +130,7 @@ fun DetailScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
-                .background(AppColors.cardBackground, RoundedCornerShape(12.dp))
+                .background(LogETheme.colors.cardBackground, RoundedCornerShape(12.dp))
                 .padding(horizontal = 20.dp),
             contentAlignment = Alignment.CenterStart
         ) {
@@ -141,7 +141,7 @@ fun DetailScreen(
             ) {
                 Text(
                     text = "난이도",
-                    style = AppTextStyles.Pretendard.Header3.copy(color = AppColors.white)
+                    style = AppTextStyles.Pretendard.Header3.copy(color = LogETheme.colors.white)
                 )
                 LevelIndicator(level = log.difficultyLevel)
             }
@@ -153,7 +153,7 @@ fun DetailScreen(
         ContentCard(
             title = "학습 내용",
             content = log.learned,
-            titleColor = AppColors.primary
+            titleColor = LogETheme.colors.primary
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -162,7 +162,7 @@ fun DetailScreen(
         ContentCard(
             title = "어려웠던 점",
             content = log.difficult,
-            titleColor = AppColors.orange
+            titleColor = LogETheme.colors.orange
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -172,7 +172,7 @@ fun DetailScreen(
             ContentCard(
                 title = "내일 할 일",
                 content = log.tomorrowPlan,
-                titleColor = AppColors.primary
+                titleColor = LogETheme.colors.primary
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -184,8 +184,8 @@ fun DetailScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(AppColors.cardBackground, RoundedCornerShape(12.dp))
-                    .border(1.dp, AppColors.lightBlue30, RoundedCornerShape(12.dp))
+                    .background(LogETheme.colors.cardBackground, RoundedCornerShape(12.dp))
+                    .border(1.dp, LogETheme.colors.lightBlue30, RoundedCornerShape(12.dp))
                     .padding(20.dp)
             ) {
                 Column {
@@ -193,14 +193,14 @@ fun DetailScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_ai),
                             contentDescription = null,
-                            tint = AppColors.lightBlue,
+                            tint = LogETheme.colors.lightBlue,
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "AI 피드백",
                             style = AppTextStyles.Pretendard.Header3.copy(
-                                color = AppColors.white,
+                                color = LogETheme.colors.white,
                                 fontWeight = FontWeight.Bold
                             )
                         )
@@ -209,7 +209,7 @@ fun DetailScreen(
                     Text(
                         text = feedback,
                         style = AppTextStyles.Pretendard.Body.copy(
-                            color = AppColors.subTextColor,
+                            color = LogETheme.colors.subTextColor,
                             fontSize = 15.sp,
                             lineHeight = 22.sp
                         )
@@ -223,7 +223,7 @@ fun DetailScreen(
         Text(
             text = "created: ${DateUtils.formatDateTime(log.createdAt)}",
             style = AppTextStyles.Pretendard.Label.copy(
-                color = AppColors.labelTextColor,
+                color = LogETheme.colors.labelTextColor,
                 fontSize = 12.sp
             )
         )

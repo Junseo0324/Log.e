@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -30,7 +30,7 @@ fun ContentCard(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(AppColors.cardBackground, RoundedCornerShape(12.dp))
+            .background(LogETheme.colors.cardBackground, RoundedCornerShape(12.dp))
             .padding(20.dp)
     ) {
         Column {
@@ -46,7 +46,7 @@ fun ContentCard(
                 Text(
                     text = title,
                     style = AppTextStyles.Pretendard.Header3.copy(
-                        color = AppColors.white,
+                        color = LogETheme.colors.white,
                         fontWeight = FontWeight.Bold
                     )
                 )
@@ -55,7 +55,7 @@ fun ContentCard(
             Text(
                 text = content,
                 style = AppTextStyles.Pretendard.Body.copy(
-                    color = AppColors.subTextColor,
+                    color = LogETheme.colors.subTextColor,
                     fontSize = 15.sp,
                     lineHeight = 22.sp
                 )

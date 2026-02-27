@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -46,17 +46,17 @@ fun WriteInputSection(
         Text(
             text = label,
             style = AppTextStyles.Pretendard.Label,
-            color = AppColors.subTextColor
+            color = LogETheme.colors.subTextColor
         )
         Spacer(modifier = Modifier.height(8.dp))
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(minHeight)
-                .background(AppColors.cardBackground, RoundedCornerShape(8.dp))
+                .background(LogETheme.colors.cardBackground, RoundedCornerShape(8.dp))
                 .border(
                     width = 1.dp,
-                    color = if (isFocused) AppColors.iconPrimary else AppColors.border,
+                    color = if (isFocused) LogETheme.colors.iconPrimary else LogETheme.colors.border,
                     shape = RoundedCornerShape(8.dp)
                 )
                 .padding(horizontal = 12.dp, vertical = 12.dp),
@@ -65,9 +65,9 @@ fun WriteInputSection(
             BasicTextField(
                 value = value,
                 onValueChange = onValueChange,
-                textStyle = AppTextStyles.Pretendard.Body.copy(color = AppColors.titleTextColor),
+                textStyle = AppTextStyles.Pretendard.Body.copy(color = LogETheme.colors.titleTextColor),
                 maxLines = if (singleLine) 1 else Int.MAX_VALUE,
-                cursorBrush = SolidColor(AppColors.white),
+                cursorBrush = SolidColor(LogETheme.colors.white),
                 keyboardOptions = keyboardOptions,
                 keyboardActions = keyboardActions,
                 modifier = modifier
@@ -79,7 +79,7 @@ fun WriteInputSection(
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            style = AppTextStyles.Pretendard.Body.copy(color = AppColors.placeholderTextColor)
+                            style = AppTextStyles.Pretendard.Body.copy(color = LogETheme.colors.placeholderTextColor)
                         )
                     }
                     innerTextField()

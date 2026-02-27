@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -35,15 +35,15 @@ fun EmptyLogView() {
                 .width(56.dp)
                 .height(56.dp)
                 .background(
-                    color = AppColors.cardBackground,
+                    color = LogETheme.colors.cardBackground,
                     shape = RoundedCornerShape(12.dp)
                 )
-                .border(1.dp, color = AppColors.border,RoundedCornerShape(12.dp)),
+                .border(1.dp, color = LogETheme.colors.border,RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_home_filled),
-                tint = AppColors.border,
+                tint = LogETheme.colors.border,
                 contentDescription = "empty icon"
             )
         }
@@ -51,7 +51,7 @@ fun EmptyLogView() {
         Text(
             text = "// 로그가 없습니다",
             style = AppTextStyles.JetBrain.Body.copy(
-                color = AppColors.white,
+                color = LogETheme.colors.white,
                 fontWeight = FontWeight.Bold
             )
         )
@@ -59,7 +59,7 @@ fun EmptyLogView() {
         Text(
             text = "개발 여정을 기록해보세요",
             style = AppTextStyles.Pretendard.Body.copy(
-                color = AppColors.labelTextColor
+                color = LogETheme.colors.labelTextColor
             )
         )
     }

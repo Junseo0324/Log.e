@@ -12,25 +12,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 
 @Composable
 fun InfoItem(label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(AppColors.background, RoundedCornerShape(10.dp))
+            .background(LogETheme.colors.background, RoundedCornerShape(10.dp))
             .padding(horizontal = 12.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
             text = label,
-            color = AppColors.labelTextColor,
+            color = LogETheme.colors.labelTextColor,
             fontSize = 14.sp
         )
         Text(
             text = value,
-            color = AppColors.titleTextColor,
+            color = LogETheme.colors.titleTextColor,
             fontSize = 14.sp
         )
     }

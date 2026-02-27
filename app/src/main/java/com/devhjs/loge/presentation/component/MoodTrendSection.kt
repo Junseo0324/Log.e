@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.domain.model.ChartPoint
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 import com.patrykandpatrick.vico.compose.axis.axisLabelComponent
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
@@ -77,7 +77,7 @@ fun MoodTrendSection(
         gapLengthDp = 5f
     )
     val guideline = LineComponent(
-        color = AppColors.border.toArgb(),
+        color = LogETheme.colors.border.toArgb(),
         thicknessDp = 1f,
         shape = dashedShape
     )
@@ -85,14 +85,14 @@ fun MoodTrendSection(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(AppColors.cardBackground, RoundedCornerShape(10.dp))
-            .border(1.dp, AppColors.border, RoundedCornerShape(10.dp))
+            .background(LogETheme.colors.cardBackground, RoundedCornerShape(10.dp))
+            .border(1.dp, LogETheme.colors.border, RoundedCornerShape(10.dp))
             .padding(16.dp)
     ) {
         Column {
             Text(
                 text = "감정 점수 추이",
-                style = AppTextStyles.Pretendard.Header5.copy(color = AppColors.subTextColor)
+                style = AppTextStyles.Pretendard.Header5.copy(color = LogETheme.colors.subTextColor)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -101,7 +101,7 @@ fun MoodTrendSection(
                 chart = lineChart(
                     lines = listOf(
                         LineChart.LineSpec(
-                            lineColor = AppColors.iconPrimary.toArgb(),
+                            lineColor = LogETheme.colors.iconPrimary.toArgb(),
                             lineThicknessDp = 3f,
                             lineBackgroundShader = null,
                             point = null,
@@ -118,7 +118,7 @@ fun MoodTrendSection(
                     valueFormatter = verticalAxisValueFormatter,
                     itemPlacer = AxisItemPlacer.Vertical.default(maxItemCount = 5),
                     guideline = guideline,
-                    label = axisLabelComponent(color = AppColors.subTextColor, textSize = 10.sp)
+                    label = axisLabelComponent(color = LogETheme.colors.subTextColor, textSize = 10.sp)
                 ),
                 bottomAxis = rememberBottomAxis(
                     valueFormatter = horizontalAxisValueFormatter,
@@ -128,7 +128,7 @@ fun MoodTrendSection(
                         shiftExtremeTicks = true
                     ),
                     guideline = null,
-                    label = axisLabelComponent(color = AppColors.subTextColor)
+                    label = axisLabelComponent(color = LogETheme.colors.subTextColor)
                 ),
                 chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false),
                 modifier = Modifier

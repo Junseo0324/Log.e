@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -24,13 +24,13 @@ fun SectionHeader(iconRes: Int, title: String) {
         Icon(
             painter = painterResource(id = iconRes),
             contentDescription = null,
-            tint = AppColors.white,
+            tint = LogETheme.colors.white,
             modifier = Modifier.size(16.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = title,
-            style = AppTextStyles.JetBrain.Label.copy(color = AppColors.subTextColor, fontSize = 14.sp),
+            style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.subTextColor, fontSize = 14.sp),
         )
     }
     Spacer(modifier = Modifier.height(16.dp))

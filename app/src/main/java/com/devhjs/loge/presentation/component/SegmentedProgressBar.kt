@@ -12,14 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 
 @Composable
 fun SegmentedProgressBar(
     maxSteps: Int,
     currentStep: Float,
     activeColor: Color,
-    inactiveColor: Color = AppColors.placeholderTextColor,
+    inactiveColor: Color = LogETheme.colors.placeholderTextColor,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),

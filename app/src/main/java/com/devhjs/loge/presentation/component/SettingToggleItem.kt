@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -34,7 +34,7 @@ fun SettingToggleItem(
     onCheckedChange: (Boolean) -> Unit,
     enabled: Boolean = true,
     isReadOnly: Boolean = false,
-    checkedColor: Color = AppColors.primary
+    checkedColor: Color = LogETheme.colors.primary
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -45,18 +45,18 @@ fun SettingToggleItem(
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = null,
-                tint = AppColors.white,
+                tint = LogETheme.colors.white,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
                     text = title,
-                    style = AppTextStyles.JetBrain.Label.copy(color = AppColors.titleTextColor, fontSize = 14.sp),
+                    style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.titleTextColor, fontSize = 14.sp),
                 )
                 Text(
                     text = subtitle,
-                    style = AppTextStyles.JetBrain.Label.copy(color = AppColors.labelTextColor, fontSize = 14.sp),
+                    style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.labelTextColor, fontSize = 14.sp),
                 )
             }
         }
@@ -66,9 +66,9 @@ fun SettingToggleItem(
             onCheckedChange = if (isReadOnly) null else onCheckedChange,
             enabled = enabled,
             colors = SwitchDefaults.colors(
-                checkedThumbColor = AppColors.white,
+                checkedThumbColor = LogETheme.colors.white,
                 checkedTrackColor = checkedColor,
-                uncheckedThumbColor = AppColors.white,
+                uncheckedThumbColor = LogETheme.colors.white,
                 uncheckedTrackColor = Color(0xFF404040),
                 disabledCheckedTrackColor = checkedColor.copy(alpha = 0.5f),
                 disabledUncheckedTrackColor = Color(0xFF404040).copy(alpha = 0.5f)

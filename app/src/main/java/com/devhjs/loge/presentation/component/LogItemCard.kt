@@ -27,7 +27,7 @@ import com.devhjs.loge.R
 import com.devhjs.loge.core.util.DateUtils
 import com.devhjs.loge.domain.model.EmotionType
 import com.devhjs.loge.domain.model.Til
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 /**
@@ -47,8 +47,8 @@ fun LogItemCard(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 6.dp)
             .clip(RoundedCornerShape(10.dp))
-            .background(AppColors.cardBackground)
-            .border(1.dp, AppColors.border, RoundedCornerShape(10.dp))
+            .background(LogETheme.colors.cardBackground)
+            .border(1.dp, LogETheme.colors.border, RoundedCornerShape(10.dp))
             .clickable(onClick = onClick)
             .padding(16.dp)
     ) {
@@ -70,7 +70,7 @@ fun LogItemCard(
                 Text(
                     text = time,
                     style = AppTextStyles.Pretendard.Label.copy(
-                        color = AppColors.labelTextColor,
+                        color = LogETheme.colors.labelTextColor,
                         fontSize = 14.sp
                     )
                 )
@@ -81,7 +81,7 @@ fun LogItemCard(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_forward),
                     contentDescription = "상세 보기",
-                    tint = AppColors.labelTextColor,
+                    tint = LogETheme.colors.labelTextColor,
                 )
             }
             
@@ -91,7 +91,7 @@ fun LogItemCard(
             Text(
                 text = item.title,
                 style = AppTextStyles.Pretendard.Header3.copy(
-                    color = AppColors.titleTextColor
+                    color = LogETheme.colors.titleTextColor
                 ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -103,7 +103,7 @@ fun LogItemCard(
             Text(
                 text = item.learned,
                 style = AppTextStyles.Pretendard.Body.copy(
-                    color = AppColors.contentTextColor,
+                    color = LogETheme.colors.contentTextColor,
                     fontSize = 14.sp
                 ),
                 maxLines = 2,

@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 /**
@@ -44,7 +44,7 @@ fun LogETopBar(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(AppColors.cardBackground)
+            .background(LogETheme.colors.cardBackground)
     ) {
         Column(
             modifier = Modifier
@@ -61,7 +61,7 @@ fun LogETopBar(
                     if (titleIcon != null) {
                         Icon(
                             painter = painterResource(id = titleIcon),
-                            tint = AppColors.iconPrimary,
+                            tint = LogETheme.colors.iconPrimary,
                             contentDescription = null,
                             modifier = Modifier.size(24.dp)
                         )
@@ -71,7 +71,7 @@ fun LogETopBar(
                     // 타이틀
                     Text(
                         text = title,
-                        style = AppTextStyles.JetBrain.Header1.copy(color = AppColors.white,),
+                        style = AppTextStyles.JetBrain.Header1.copy(color = LogETheme.colors.white,),
                     )
                 }
 

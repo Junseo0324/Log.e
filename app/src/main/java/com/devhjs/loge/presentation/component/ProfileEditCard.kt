@@ -21,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.profile.ProfileAction
 import com.devhjs.loge.presentation.profile.ProfileState
 
@@ -38,7 +38,7 @@ fun ProfileEditCard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(AppColors.cardBackground, RoundedCornerShape(10.dp))
+            .background(LogETheme.colors.cardBackground, RoundedCornerShape(10.dp))
             .padding(24.dp),
     ) {
         // 프로필 아이콘 영역
@@ -64,7 +64,7 @@ fun ProfileEditCard(
                         .clip(CircleShape)
                         .background(
                             brush = Brush.linearGradient(
-                                colors = listOf(AppColors.primary, AppColors.gradient2)
+                                colors = listOf(LogETheme.colors.primary, LogETheme.colors.gradient2)
                             )
                         ),
                     contentAlignment = Alignment.Center
@@ -72,7 +72,7 @@ fun ProfileEditCard(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_profile),
                         contentDescription = null,
-                        tint = AppColors.white,
+                        tint = LogETheme.colors.white,
                         modifier = Modifier.size(48.dp)
                     )
                 }

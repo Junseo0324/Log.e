@@ -2,36 +2,97 @@ package com.devhjs.loge.presentation.designsystem
 
 import androidx.compose.ui.graphics.Color
 
-object AppColors {
-    val background = Color(0xFF1E1E1E)
-    val cardBackground = Color(0xFF0D0D0D)
-    val cardInner = Color(0x80252525)
-    val iconPrimary = Color(0xFF00D492)
-    val primary = Color(0xFF00BC7D)
-    val red = Color(0xFFFF6467)
-    val blue = Color(0xFF42A5F5)
-    val amber = Color(0xFFFFCA28)
-    val orange = Color(0xFFFFA726)
-    val pink = Color(0xFFFB64B6)
-    val purple = Color(0xFF8B5CF6)
-    val border = Color(0xFF27272A)
-    val border2 = Color(0xFF314158)
-    val titleTextColor = Color(0xFFF4F4F5)
-    val contentTextColor = Color(0xFF9F9FA9)
-    val labelTextColor = Color(0xFF71717B)
-    val subTextColor = Color(0xFFD4D4D8)
-    val homeLabelTextColor = Color(0xFF90A1B9)
-    val placeholderTextColor = Color(0xFF52525C)
-    val white = Color(0xFFFFFFFF)
-    val black = Color(0xFF000000)
-    val lightBlue = Color(0xFF00D3F2)
-    val lightBlue30 = Color(0x3000B8DB)
-    val darkBlue = Color(0x601D293D)
+data class AppColors(
+    val background: Color,
+    val cardBackground: Color,
+    val cardInner: Color,
+    val iconPrimary: Color,
+    val primary: Color,
+    val red: Color,
+    val blue: Color,
+    val amber: Color,
+    val orange: Color,
+    val pink: Color,
+    val purple: Color,
+    val border: Color,
+    val border2: Color,
+    val titleTextColor: Color,
+    val contentTextColor: Color,
+    val labelTextColor: Color,
+    val subTextColor: Color,
+    val homeLabelTextColor: Color,
+    val placeholderTextColor: Color,
+    val white: Color,
+    val black: Color,
+    val lightBlue: Color,
+    val lightBlue30: Color,
+    val darkBlue: Color,
 
     // 그라데이션
-    val gradient1 = Color(0xFF009966)
-    val gradient2 = Color(0xFF0092B8)
+    val gradient1: Color,
+    val gradient2: Color,
+    val gradient3: Color,
+    val gradient4: Color,
+)
 
-    val gradient3 = Color(0xFFFF4081)
-    val gradient4 = Color(0xFF00E676)
-}
+val DarkAppColors = AppColors(
+    background = Color(0xFF1E1E1E),
+    cardBackground = Color(0xFF0D0D0D),
+    cardInner = Color(0x80252525),
+    iconPrimary = Color(0xFF00D492),
+    primary = Color(0xFF00BC7D),
+    red = Color(0xFFFF6467),
+    blue = Color(0xFF42A5F5),
+    amber = Color(0xFFFFCA28),
+    orange = Color(0xFFFFA726),
+    pink = Color(0xFFFB64B6),
+    purple = Color(0xFF8B5CF6),
+    border = Color(0xFF27272A),
+    border2 = Color(0xFF314158),
+    titleTextColor = Color(0xFFF4F4F5),
+    contentTextColor = Color(0xFF9F9FA9),
+    labelTextColor = Color(0xFF71717B),
+    subTextColor = Color(0xFFD4D4D8),
+    homeLabelTextColor = Color(0xFF90A1B9),
+    placeholderTextColor = Color(0xFF52525C),
+    white = Color(0xFFFFFFFF),
+    black = Color(0xFF000000),
+    lightBlue = Color(0xFF00D3F2),
+    lightBlue30 = Color(0x3000B8DB),
+    darkBlue = Color(0x601D293D),
+    gradient1 = Color(0xFF009966),
+    gradient2 = Color(0xFF0092B8),
+    gradient3 = Color(0xFFFF4081),
+    gradient4 = Color(0xFF00E676),
+)
+
+val LightAppColors = AppColors(
+    background = Color(0xFFF2F2F7),
+    cardBackground = Color(0xFFFFFFFF),
+    cardInner = Color(0xFFF8F8FA),
+    iconPrimary = Color(0xFF00BC7D),
+    primary = Color(0xFF00A36D),
+    red = Color(0xFFFF3B30),
+    blue = Color(0xFF007AFF),
+    amber = Color(0xFFFFCC00),
+    orange = Color(0xFFFF9500),
+    pink = Color(0xFFFF2D55),
+    purple = Color(0xFF5856D6),
+    border = Color(0xFFC6C6C8),
+    border2 = Color(0xFFD1D1D6),
+    titleTextColor = Color(0xFF1C1C1E),
+    contentTextColor = Color(0xFF3A3A3C),
+    labelTextColor = Color(0xFF8E8E93),
+    subTextColor = Color(0xFF48484A),
+    homeLabelTextColor = Color(0xFF636366),
+    placeholderTextColor = Color(0xFFC7C7CC),
+    white = Color(0xFFFFFFFF),
+    black = Color(0xFF000000),
+    lightBlue = Color(0xFF5AC8FA),
+    lightBlue30 = Color(0x305AC8FA),
+    darkBlue = Color(0xFFE5E5EA),
+    gradient1 = Color(0xFF009966),
+    gradient2 = Color(0xFF0092B8),
+    gradient3 = Color(0xFFFF4081),
+    gradient4 = Color(0xFF00E676),
+)

@@ -23,7 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -38,8 +38,8 @@ fun AiAnalyzeButton(
             .background(
                 brush = Brush.horizontalGradient(
                     colors = listOf(
-                        AppColors.gradient1,
-                        AppColors.gradient2,
+                        LogETheme.colors.gradient1,
+                        LogETheme.colors.gradient2,
                     )
                 ),
                 shape = RoundedCornerShape(8.dp)
@@ -53,27 +53,27 @@ fun AiAnalyzeButton(
             if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(16.dp),
-                    color = AppColors.white,
+                    color = LogETheme.colors.white,
                     strokeWidth = 2.dp
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "분석중...",
                     style = AppTextStyles.Pretendard.Label,
-                    color = AppColors.white
+                    color = LogETheme.colors.white
                 )
             } else {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_ai),
                     contentDescription = null,
-                    tint = AppColors.white,
+                    tint = LogETheme.colors.white,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "ai 분석하기",
                     style = AppTextStyles.Pretendard.Label,
-                    color = AppColors.white
+                    color = LogETheme.colors.white
                 )
             }
         }

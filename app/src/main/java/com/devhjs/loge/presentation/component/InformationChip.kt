@@ -13,7 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -29,7 +29,7 @@ fun InformationChip(
         Icon(
             modifier = Modifier.size(16.dp),
             painter = painterResource(icon),
-            tint = AppColors.iconPrimary,
+            tint = LogETheme.colors.iconPrimary,
             contentDescription = text,
         )
         Spacer(modifier = Modifier.width(8.dp))
@@ -37,7 +37,7 @@ fun InformationChip(
         Text(
             text = text,
             style = AppTextStyles.Pretendard.Label.copy(
-                color = AppColors.labelTextColor
+                color = LogETheme.colors.labelTextColor
             )
         )
         Spacer(modifier = Modifier.width(16.dp))

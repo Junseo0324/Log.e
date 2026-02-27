@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 
@@ -35,7 +35,7 @@ fun ProfileInfoRow(
         Text(
             text = label,
             style = AppTextStyles.Pretendard.Body.copy(
-                color = AppColors.labelTextColor,
+                color = LogETheme.colors.labelTextColor,
                 fontSize = 12.sp,
                 lineHeight = 16.sp
             )
@@ -46,7 +46,7 @@ fun ProfileInfoRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = AppColors.background,
+                    color = LogETheme.colors.background,
                     shape = RoundedCornerShape(10.dp)
                 )
                 .padding(horizontal = 16.dp, vertical = 14.dp)
@@ -54,14 +54,14 @@ fun ProfileInfoRow(
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = null,
-                tint = AppColors.subTextColor,
+                tint = LogETheme.colors.subTextColor,
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = value,
                 style = AppTextStyles.Pretendard.Body.copy(
-                    color = AppColors.white,
+                    color = LogETheme.colors.white,
                     fontSize = 14.sp,
                     lineHeight = 20.sp
                 )

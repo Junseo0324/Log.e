@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -40,7 +40,7 @@ fun TimeDropdown(
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp)
-            .background(AppColors.cardInner, RoundedCornerShape(8.dp))
+            .background(LogETheme.colors.cardInner, RoundedCornerShape(8.dp))
             .clickable { expanded = true }
             .padding(horizontal = 16.dp),
         contentAlignment = Alignment.CenterStart
@@ -52,12 +52,12 @@ fun TimeDropdown(
         ) {
             Text(
                 text = format(selectedItem),
-                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.white)
+                style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.white)
             )
             Icon(
                 painter = painterResource(id = R.drawable.ic_arrow_down),
                 contentDescription = null,
-                tint = AppColors.subTextColor
+                tint = LogETheme.colors.subTextColor
             )
         }
 
@@ -65,7 +65,7 @@ fun TimeDropdown(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier
-                .background(AppColors.cardInner)
+                .background(LogETheme.colors.cardInner)
                 .height(200.dp)
         ) {
             items.forEach { item ->
@@ -74,7 +74,7 @@ fun TimeDropdown(
                         Text(
                             text = format(item),
                             style = AppTextStyles.JetBrain.Label.copy(
-                                color = if (item == selectedItem) AppColors.primary else Color.White
+                                color = if (item == selectedItem) LogETheme.colors.primary else Color.White
                             )
                         )
                     },

@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 /**
@@ -38,12 +38,12 @@ fun GitHubDisconnectedContent(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = AppColors.background,
+                color = LogETheme.colors.background,
                 shape = RoundedCornerShape(10.dp)
             )
             .border(
                 width = 1.dp,
-                color = AppColors.primary.copy(alpha = 0.3f),
+                color = LogETheme.colors.primary.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(10.dp)
             )
             .padding(16.dp)
@@ -59,7 +59,7 @@ fun GitHubDisconnectedContent(
             Text(
                 text = "GitHub 연동 시 다음 혜택을 받을 수 있습니다:",
                 style = AppTextStyles.Pretendard.Body.copy(
-                    color = AppColors.subTextColor,
+                    color = LogETheme.colors.subTextColor,
                     fontSize = 12.sp,
                     lineHeight = 16.sp
                 )
@@ -82,7 +82,7 @@ fun GitHubDisconnectedContent(
                 Text(
                     text = "→",
                     style = AppTextStyles.Pretendard.Body.copy(
-                        color = AppColors.primary,
+                        color = LogETheme.colors.primary,
                         fontSize = 12.sp
                     )
                 )
@@ -90,7 +90,7 @@ fun GitHubDisconnectedContent(
                 Text(
                     text = benefit,
                     style = AppTextStyles.Pretendard.Body.copy(
-                        color = AppColors.contentTextColor,
+                        color = LogETheme.colors.contentTextColor,
                         fontSize = 12.sp,
                         lineHeight = 16.sp
                     )
@@ -108,25 +108,25 @@ fun GitHubDisconnectedContent(
             .height(44.dp)
             .border(
                 width = 1.dp,
-                color = AppColors.border,
+                color = LogETheme.colors.border,
                 shape = RoundedCornerShape(8.dp)
             ),
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = AppColors.cardBackground
+            containerColor = LogETheme.colors.cardBackground
         )
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_github),
             contentDescription = null,
-            tint = AppColors.white,
+            tint = LogETheme.colors.white,
             modifier = Modifier.size(20.dp)
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = "GitHub로 계속하기",
             style = AppTextStyles.Pretendard.Header5.copy(
-                color = AppColors.white,
+                color = LogETheme.colors.white,
                 fontSize = 14.sp
             )
         )
@@ -138,7 +138,7 @@ fun GitHubDisconnectedContent(
     Text(
         text = "로그인 없이도 모든 기능을 사용할 수 있습니다",
         style = AppTextStyles.Pretendard.Body.copy(
-            color = AppColors.contentTextColor,
+            color = LogETheme.colors.contentTextColor,
             fontSize = 12.sp,
             lineHeight = 16.sp
         ),

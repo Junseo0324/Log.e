@@ -25,7 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 
 @Composable
 fun LogESnackbar(
@@ -42,7 +42,7 @@ fun LogESnackbar(
                 spotColor = Color.Black.copy(alpha = 0.1f)
             )
             .background(
-                color = AppColors.white,
+                color = LogETheme.colors.white,
                 shape = RoundedCornerShape(12.dp)
             )
             .padding(vertical = 14.dp, horizontal = 16.dp)

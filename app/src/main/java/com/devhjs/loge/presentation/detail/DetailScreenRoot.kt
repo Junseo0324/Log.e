@@ -20,7 +20,7 @@ import com.devhjs.loge.R
 import com.devhjs.loge.presentation.component.CustomAppBar
 import com.devhjs.loge.presentation.component.CustomDialog
 import com.devhjs.loge.presentation.component.LogESnackbar
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 
 @Composable
 fun DetailScreenRoot(
@@ -76,14 +76,14 @@ fun DetailScreenRoot(
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_edit),
                                 contentDescription = "Edit",
-                                tint = AppColors.contentTextColor
+                                tint = LogETheme.colors.contentTextColor
                             )
                         }
                         IconButton(onClick = { viewModel.onAction(DetailAction.OnDeleteClick(logId)) }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_delete),
                                 contentDescription = "Delete",
-                                tint = AppColors.red
+                                tint = LogETheme.colors.red
                             )
                         }
                     }
@@ -95,7 +95,7 @@ fun DetailScreenRoot(
                 LogESnackbar(data = data)
             }
         },
-        containerColor = AppColors.background
+        containerColor = LogETheme.colors.background
     ) { paddingValues ->
         DetailScreen(
             state = state,

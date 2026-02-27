@@ -14,15 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 
 @Composable
 fun SettingSectionContainer(content: @Composable () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .border(0.7.dp, AppColors.border, RoundedCornerShape(10.dp))
-            .background(AppColors.cardBackground, RoundedCornerShape(10.dp))
+            .border(0.7.dp, LogETheme.colors.border, RoundedCornerShape(10.dp))
+            .background(LogETheme.colors.cardBackground, RoundedCornerShape(10.dp))
     ) {
         content()
     }
@@ -44,7 +44,7 @@ private fun SettingSectionContainerPreview() {
                 iconRes = R.drawable.ic_delete,
                 title = "모든 데이터 삭제",
                 subtitle = "복구할 수 없습니다",
-                titleColor = AppColors.red,
+                titleColor = LogETheme.colors.red,
                 onClick = { }
             )
         }

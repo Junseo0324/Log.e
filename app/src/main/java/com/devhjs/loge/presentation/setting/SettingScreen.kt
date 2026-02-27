@@ -36,7 +36,7 @@ import com.devhjs.loge.presentation.component.SectionHeader
 import com.devhjs.loge.presentation.component.SettingActionItem
 import com.devhjs.loge.presentation.component.SettingSectionContainer
 import com.devhjs.loge.presentation.component.SettingToggleItem
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -48,7 +48,7 @@ fun SettingScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(AppColors.background)
+            .background(LogETheme.colors.background)
     ) {
         Column(
             modifier = Modifier
@@ -78,7 +78,7 @@ fun SettingScreen(
                                 .clip(CircleShape)
                                 .background(
                                     brush = Brush.linearGradient(
-                                        colors = listOf(AppColors.primary, AppColors.gradient2)
+                                        colors = listOf(LogETheme.colors.primary, LogETheme.colors.gradient2)
                                     )
                                 ),
                             contentAlignment = Alignment.Center
@@ -94,7 +94,7 @@ fun SettingScreen(
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_normal),
                                     contentDescription = null,
-                                    tint = AppColors.white,
+                                    tint = LogETheme.colors.white,
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
@@ -103,19 +103,19 @@ fun SettingScreen(
                         Column {
                             Text(
                                 text = state.user.name,
-                                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.titleTextColor, fontSize = 16.sp),
+                                style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.titleTextColor, fontSize = 16.sp),
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = "github.com/${state.user.githubId}",
-                                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.contentTextColor, fontSize = 12.sp),
+                                style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.contentTextColor, fontSize = 12.sp),
                             )
                         }
                         Spacer(modifier = Modifier.weight(1f))
                         Icon(
                             painter = painterResource(id = R.drawable.ic_forward),
                             contentDescription = null,
-                            tint = AppColors.labelTextColor,
+                            tint = LogETheme.colors.labelTextColor,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -149,7 +149,7 @@ fun SettingScreen(
                             val time = state.user.notificationTime
                             Text(
                                 text = "매일 %02d:%02d에 알림".format(time.first, time.second),
-                                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.primary, fontSize = 14.sp)
+                                style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.primary, fontSize = 14.sp)
                             )
                         }
                     }
@@ -182,7 +182,7 @@ fun SettingScreen(
                         iconRes = R.drawable.ic_delete,
                         title = "모든 데이터 삭제",
                         subtitle = "복구할 수 없습니다",
-                        titleColor = AppColors.red,
+                        titleColor = LogETheme.colors.red,
                         onClick = { onAction(SettingAction.OnDeleteAllClick) }
                     )
                 }
@@ -197,18 +197,18 @@ fun SettingScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(AppColors.cardInner, RoundedCornerShape(10.dp))
+                            .background(LogETheme.colors.cardInner, RoundedCornerShape(10.dp))
                             .padding(horizontal = 12.dp, vertical = 12.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = "버전",
-                            style = AppTextStyles.JetBrain.Label.copy(color = AppColors.subTextColor, fontSize = 14.sp),
+                            style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.subTextColor, fontSize = 14.sp),
                         )
                         Text(
                             text = state.appVersion,
-                            style = AppTextStyles.JetBrain.Label.copy(color = AppColors.contentTextColor, fontSize = 14.sp),
+                            style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.contentTextColor, fontSize = 14.sp),
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
@@ -217,18 +217,18 @@ fun SettingScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(AppColors.cardInner, RoundedCornerShape(10.dp))
+                            .background(LogETheme.colors.cardInner, RoundedCornerShape(10.dp))
                             .padding(horizontal = 12.dp, vertical = 12.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = "최근 업데이트 날짜",
-                            style = AppTextStyles.JetBrain.Label.copy(color = AppColors.subTextColor, fontSize = 14.sp),
+                            style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.subTextColor, fontSize = 14.sp),
                         )
                         Text(
                             text = state.updateDate,
-                            style = AppTextStyles.JetBrain.Label.copy(color = AppColors.contentTextColor, fontSize = 14.sp),
+                            style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.contentTextColor, fontSize = 14.sp),
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
@@ -238,7 +238,7 @@ fun SettingScreen(
                         title = "피드백 보내기",
                         subtitle = null,
                         onClick = { onAction(SettingAction.OnFeedbackClick) },
-                        containerColor = AppColors.cardInner
+                        containerColor = LogETheme.colors.cardInner
                     )
                     Spacer(modifier = Modifier.height(12.dp))
 
@@ -248,24 +248,24 @@ fun SettingScreen(
                         title = "오픈소스 라이센스",
                         subtitle = null,
                         onClick = { onAction(SettingAction.OnLicensesClick) },
-                        containerColor = AppColors.cardInner
+                        containerColor = LogETheme.colors.cardInner
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(AppColors.cardInner, RoundedCornerShape(10.dp))
+                            .background(LogETheme.colors.cardInner, RoundedCornerShape(10.dp))
                             .padding(12.dp)
                     ) {
                         Column {
                             Text(
                                 text = " Log.e - 개발자를 위한 TIL 기록 앱",
-                                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.primary, fontSize = 13.sp),
+                                style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.primary, fontSize = 13.sp),
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = "// 매일의 배움을 기록하고 AI로 성장을 분석하세요",
-                                style = AppTextStyles.JetBrain.Label.copy(color = AppColors.labelTextColor, fontSize = 10.sp),
+                                style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.labelTextColor, fontSize = 10.sp),
                             )
                         }
                     }
@@ -277,7 +277,7 @@ fun SettingScreen(
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 Text(
                     text = "Made with 💚 for developers",
-                    style = AppTextStyles.JetBrain.Label.copy(color = AppColors.subTextColor, fontSize = 14.sp),
+                    style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.subTextColor, fontSize = 14.sp),
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))

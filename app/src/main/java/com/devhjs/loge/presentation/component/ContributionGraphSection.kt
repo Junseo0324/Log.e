@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.core.util.DateUtils
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 import java.time.LocalDate
 
@@ -72,8 +72,8 @@ fun ContributionGraphSection(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(AppColors.cardBackground, RoundedCornerShape(10.dp))
-                .border(1.dp, AppColors.border, RoundedCornerShape(10.dp))
+                .background(LogETheme.colors.cardBackground, RoundedCornerShape(10.dp))
+                .border(1.dp, LogETheme.colors.border, RoundedCornerShape(10.dp))
                 .padding(16.dp)
         ) {
             Column {
@@ -81,7 +81,7 @@ fun ContributionGraphSection(
                 Text(
                     text = "${year}년 활동 그래프",
                     style = AppTextStyles.JetBrain.Header3,
-                    color = AppColors.titleTextColor
+                    color = LogETheme.colors.titleTextColor
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -103,7 +103,7 @@ fun ContributionGraphSection(
                                     text = label,
                                     style = AppTextStyles.Pretendard.Label.copy(
                                         fontSize = 9.sp,
-                                        color = AppColors.subTextColor
+                                        color = LogETheme.colors.subTextColor
                                     )
                                 )
                             }
@@ -134,7 +134,7 @@ fun ContributionGraphSection(
                                             text = gridInfo.monthLabels[labelIndex].second,
                                             style = AppTextStyles.Pretendard.Label.copy(
                                                 fontSize = 7.sp,
-                                                color = AppColors.subTextColor
+                                                color = LogETheme.colors.subTextColor
                                             ),
                                             textAlign = TextAlign.Start,
                                             softWrap = false,
@@ -161,8 +161,8 @@ fun ContributionGraphSection(
                                                 .background(
                                                     color = when {
                                                         !cell.isValidDay -> Color.Transparent
-                                                        cell.isFilled -> AppColors.iconPrimary
-                                                        else -> AppColors.darkBlue
+                                                        cell.isFilled -> LogETheme.colors.iconPrimary
+                                                        else -> LogETheme.colors.darkBlue
                                                     },
                                                     shape = RoundedCornerShape(2.dp)
                                                 )
@@ -170,7 +170,7 @@ fun ContributionGraphSection(
                                                     if (cell.isValidDay && !cell.isFilled) {
                                                         Modifier.border(
                                                             width = 0.5.dp,
-                                                            color = AppColors.border2,
+                                                            color = LogETheme.colors.border2,
                                                             shape = RoundedCornerShape(2.dp)
                                                         )
                                                     } else Modifier
@@ -190,25 +190,25 @@ fun ContributionGraphSection(
                     HorizontalDivider(
                         modifier = Modifier.fillMaxWidth(),
                         thickness = 1.dp,
-                        color = AppColors.border
+                        color = LogETheme.colors.border
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             "총 ${totalLogs}개 로그",
-                            style = AppTextStyles.Pretendard.Label.copy(color = AppColors.contentTextColor)
+                            style = AppTextStyles.Pretendard.Label.copy(color = LogETheme.colors.contentTextColor)
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Box(
                             modifier = Modifier
                                 .width(1.dp)
                                 .height(12.dp)
-                                .background(AppColors.border)
+                                .background(LogETheme.colors.border)
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
                             "${activeDays}일 활동",
-                            style = AppTextStyles.Pretendard.Label.copy(color = AppColors.contentTextColor)
+                            style = AppTextStyles.Pretendard.Label.copy(color = LogETheme.colors.contentTextColor)
                         )
                     }
                 }

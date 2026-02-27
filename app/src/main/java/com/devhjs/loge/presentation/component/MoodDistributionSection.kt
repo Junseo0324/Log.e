@@ -33,7 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.domain.model.EmotionType
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 import com.devhjs.loge.presentation.util.color
 import kotlin.math.atan2
@@ -62,14 +62,14 @@ fun MoodDistributionSection(
         modifier = Modifier
             .fillMaxWidth()
             .height(350.dp)
-            .background(AppColors.cardBackground, RoundedCornerShape(10.dp))
-            .border(1.dp, AppColors.border, RoundedCornerShape(10.dp))
+            .background(LogETheme.colors.cardBackground, RoundedCornerShape(10.dp))
+            .border(1.dp, LogETheme.colors.border, RoundedCornerShape(10.dp))
             .padding(16.dp)
     ) {
         Column {
             Text(
                 text = "감정 분포",
-                style = AppTextStyles.Pretendard.Header3.copy(color = AppColors.subTextColor),
+                style = AppTextStyles.Pretendard.Header3.copy(color = LogETheme.colors.subTextColor),
             )
             Spacer(modifier = Modifier.height(24.dp))
             
@@ -171,20 +171,20 @@ fun MoodDistributionSection(
                     if (selectedIndex != -1) {
                         Text(
                             text = slices[selectedIndex].third,
-                            style = AppTextStyles.Pretendard.Header4.copy(color = AppColors.white)
+                            style = AppTextStyles.Pretendard.Header4.copy(color = LogETheme.colors.white)
                         )
                         Text(
                             text = "${(slices[selectedIndex].first * 100).toInt()}%",
-                            style = AppTextStyles.Pretendard.Label.copy(fontSize = 12.sp, color = AppColors.subTextColor)
+                            style = AppTextStyles.Pretendard.Label.copy(fontSize = 12.sp, color = LogETheme.colors.subTextColor)
                         )
                     } else {
                         Text(
                             text = "총 ${totalLogs}개",
-                            style = AppTextStyles.Pretendard.Header4.copy(color = AppColors.white)
+                            style = AppTextStyles.Pretendard.Header4.copy(color = LogETheme.colors.white)
                         )
                         Text(
                             text = "감정 기록",
-                            style = AppTextStyles.Pretendard.Label.copy(fontSize = 12.sp, color = AppColors.subTextColor)
+                            style = AppTextStyles.Pretendard.Label.copy(fontSize = 12.sp, color = LogETheme.colors.subTextColor)
                         )
                     }
                 }

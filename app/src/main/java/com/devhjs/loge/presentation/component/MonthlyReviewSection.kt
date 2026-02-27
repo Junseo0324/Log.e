@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
 import com.devhjs.loge.domain.model.AiReport
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -41,7 +41,7 @@ fun MonthlyReviewSection(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(AppColors.cardBackground)
+            .background(LogETheme.colors.cardBackground)
             .padding(20.dp)
     ) {
         Row(
@@ -52,7 +52,7 @@ fun MonthlyReviewSection(
             Text(
                 text = "월간 회고",
                 style = AppTextStyles.Pretendard.Header2,
-                color = AppColors.titleTextColor
+                color = LogETheme.colors.titleTextColor
             )
 
             if (!isLoading) {
@@ -62,8 +62,8 @@ fun MonthlyReviewSection(
                     aiReport != null -> if (canAnalyze) "재생성" else "재생성(광고)"
                     else -> "생성"
                 }
-                val buttonBg = if (canAnalyze) AppColors.primary else AppColors.cardBackground
-                val buttonContent = if (canAnalyze) AppColors.white else AppColors.subTextColor
+                val buttonBg = if (canAnalyze) LogETheme.colors.primary else LogETheme.colors.cardBackground
+                val buttonContent = if (canAnalyze) LogETheme.colors.white else LogETheme.colors.subTextColor
 
                 CustomButton(
                     modifier = Modifier.width(if (aiReport != null && !canAnalyze) 100.dp else 78.dp),
@@ -83,7 +83,7 @@ fun MonthlyReviewSection(
             Text(
                 text = limitMsg,
                 style = AppTextStyles.Pretendard.Label.copy(
-                    color = AppColors.subTextColor,
+                    color = LogETheme.colors.subTextColor,
                     fontSize = 12.sp
                 )
             )
@@ -99,7 +99,7 @@ fun MonthlyReviewSection(
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
-                    color = AppColors.primary,
+                    color = LogETheme.colors.primary,
                     modifier = Modifier.size(32.dp)
                 )
             }
@@ -112,7 +112,7 @@ fun MonthlyReviewSection(
                 SummaryCard(
                     modifier = Modifier.weight(1f),
                     icon = R.drawable.ic_heart,
-                    iconColor = AppColors.pink,
+                    iconColor = LogETheme.colors.pink,
                     title = "평균 감정",
                     mainValue = "$emotionPercent",
                     subValue = "/100",
@@ -120,7 +120,7 @@ fun MonthlyReviewSection(
                         GradientProgressBar(
                             progress = emotionPercent / 100f,
                             gradient = Brush.horizontalGradient(
-                                colors = listOf(AppColors.gradient3, AppColors.gradient4)
+                                colors = listOf(LogETheme.colors.gradient3, LogETheme.colors.gradient4)
                             )
                         )
                     }
@@ -136,7 +136,7 @@ fun MonthlyReviewSection(
                 SummaryCard(
                     modifier = Modifier.weight(1f),
                     icon = R.drawable.ic_difficulty,
-                    iconColor = AppColors.purple,
+                    iconColor = LogETheme.colors.purple,
                     title = "난이도",
                     mainValue = "$difficultyScore",
                     subValue = "/5",
@@ -144,7 +144,7 @@ fun MonthlyReviewSection(
                         SegmentedProgressBar(
                             maxSteps = 5,
                             currentStep = difficultyScore,
-                            activeColor = AppColors.purple
+                            activeColor = LogETheme.colors.purple
                         )
                     }
                 )
@@ -152,7 +152,7 @@ fun MonthlyReviewSection(
                 SummaryCard(
                     modifier = Modifier.weight(1f),
                     icon = R.drawable.ic_normal,
-                    iconColor = AppColors.primary,
+                    iconColor = LogETheme.colors.primary,
                     title = "주요 감정",
                     mainValue = aiReport.emotion,
                     subValue = "",
@@ -167,7 +167,7 @@ fun MonthlyReviewSection(
             Text(
                 text = aiReport.comment,
                 style = AppTextStyles.Pretendard.Body,
-                color = AppColors.contentTextColor,
+                color = LogETheme.colors.contentTextColor,
                 lineHeight = 22.sp
             )
 

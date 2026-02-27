@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 /**
@@ -38,7 +38,7 @@ fun DateSectionHeader(
         Text(
             text = "→",
             style = AppTextStyles.Pretendard.Header4.copy(
-                color = AppColors.primary
+                color = LogETheme.colors.primary
             )
         )
         
@@ -48,7 +48,7 @@ fun DateSectionHeader(
         Text(
             text = "$date ($dayOfWeek)",
             style = AppTextStyles.Pretendard.Header4.copy(
-                color = AppColors.titleTextColor
+                color = LogETheme.colors.titleTextColor
             )
         )
         
@@ -59,7 +59,7 @@ fun DateSectionHeader(
             Box(
                 modifier = Modifier
                     .background(
-                        color = AppColors.primary,
+                        color = LogETheme.colors.primary,
                         shape = RoundedCornerShape(12.dp)
                     )
                     .padding(horizontal = 12.dp, vertical = 4.dp)
@@ -67,7 +67,7 @@ fun DateSectionHeader(
                 Text(
                     text = "오늘",
                     style = AppTextStyles.Pretendard.Label.copy(
-                        color = AppColors.black,
+                        color = LogETheme.colors.black,
                         fontSize = 12.sp
                     )
                 )

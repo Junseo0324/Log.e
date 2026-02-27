@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devhjs.loge.R
 import com.devhjs.loge.domain.model.EmotionType
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -39,8 +39,8 @@ fun AiAnalysisResultCard(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(AppColors.cardBackground, RoundedCornerShape(10.dp))
-            .border(1.dp, AppColors.border, RoundedCornerShape(10.dp))
+            .background(LogETheme.colors.cardBackground, RoundedCornerShape(10.dp))
+            .border(1.dp, LogETheme.colors.border, RoundedCornerShape(10.dp))
             .padding(16.dp)
     ) {
         Column {
@@ -49,14 +49,14 @@ fun AiAnalysisResultCard(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_ai),
                     contentDescription = null,
-                    tint = AppColors.iconPrimary,
+                    tint = LogETheme.colors.iconPrimary,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "분석 결과",
-                    style = AppTextStyles.Pretendard.Header4.copy(color = AppColors.titleTextColor, fontWeight = FontWeight.Bold),
-                    color = AppColors.titleTextColor
+                    style = AppTextStyles.Pretendard.Header4.copy(color = LogETheme.colors.titleTextColor, fontWeight = FontWeight.Bold),
+                    color = LogETheme.colors.titleTextColor
                 )
             }
 
@@ -70,7 +70,7 @@ fun AiAnalysisResultCard(
             ) {
                 Text(
                     text = "감정:",
-                    style = AppTextStyles.Pretendard.Body.copy(color = AppColors.subTextColor)
+                    style = AppTextStyles.Pretendard.Body.copy(color = LogETheme.colors.subTextColor)
                 )
                 EmotionTag(
                     emotion = emotion,
@@ -88,26 +88,26 @@ fun AiAnalysisResultCard(
             ) {
                 Text(
                     text = "난이도:",
-                    style = AppTextStyles.Pretendard.Body.copy(color = AppColors.subTextColor)
+                    style = AppTextStyles.Pretendard.Body.copy(color = LogETheme.colors.subTextColor)
                 )
                 LevelIndicator(level = difficultyLevel)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            HorizontalDivider(color = AppColors.border, thickness = 1.dp)
+            HorizontalDivider(color = LogETheme.colors.border, thickness = 1.dp)
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // AI 피드백
             Text(
                 text = "// AI 피드백",
-                style = AppTextStyles.Pretendard.Body.copy(color = AppColors.subTextColor, fontWeight = FontWeight.Bold)
+                style = AppTextStyles.Pretendard.Body.copy(color = LogETheme.colors.subTextColor, fontWeight = FontWeight.Bold)
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = comment,
-                style = AppTextStyles.Pretendard.Body.copy(color = AppColors.subTextColor, lineHeight = 20.sp)
+                style = AppTextStyles.Pretendard.Body.copy(color = LogETheme.colors.subTextColor, lineHeight = 20.sp)
             )
         }
     }

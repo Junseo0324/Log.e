@@ -21,17 +21,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devhjs.loge.R
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
 fun CustomButton(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = AppColors.iconPrimary,
+    backgroundColor: Color = LogETheme.colors.iconPrimary,
     icon: Int = R.drawable.ic_home_filled,
     contentDescription: String = "",
     text: String = "",
-    contentColor: Color = AppColors.white,
+    contentColor: Color = LogETheme.colors.white,
     onClick: () -> Unit = {},
 ) {
     Row(

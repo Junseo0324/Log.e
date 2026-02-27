@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -37,7 +37,7 @@ fun SummaryCard(
 ) {
     Column(
         modifier = modifier
-            .background(AppColors.background, RoundedCornerShape(12.dp))
+            .background(LogETheme.colors.background, RoundedCornerShape(12.dp))
             .padding(12.dp),
         verticalArrangement = Arrangement.Center
     ) {
@@ -67,14 +67,14 @@ fun SummaryCard(
             Text(
                 text = mainValue,
                 style = AppTextStyles.Pretendard.Header2,
-                color = AppColors.white,
+                color = LogETheme.colors.white,
                 fontSize = 20.sp
             )
             if (subValue.isNotEmpty()) {
                 Text(
                     text = " $subValue",
                     style = AppTextStyles.Pretendard.Label,
-                    color = AppColors.labelTextColor,
+                    color = LogETheme.colors.labelTextColor,
                     fontSize = 11.sp,
                     modifier = Modifier.padding(bottom = 3.dp)
                 )

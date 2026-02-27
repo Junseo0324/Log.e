@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -30,7 +30,7 @@ fun MoodLegendItem(color: Color, label: String) {
         Text(
             text = label,
             style = AppTextStyles.Pretendard.Label.copy(
-                color = AppColors.contentTextColor,
+                color = LogETheme.colors.contentTextColor,
                 fontSize = 12.sp
             )
         )
@@ -40,5 +40,5 @@ fun MoodLegendItem(color: Color, label: String) {
 @Preview
 @Composable
 private fun MoodLegendItemPreview() {
-    MoodLegendItem(color = AppColors.red, label = "자부심 (1)")
+    MoodLegendItem(color = LogETheme.colors.red, label = "자부심 (1)")
 }

@@ -22,7 +22,7 @@ import com.devhjs.loge.presentation.component.CustomAppBar
 import com.devhjs.loge.presentation.component.CustomButton
 import com.devhjs.loge.presentation.component.CustomDialog
 import com.devhjs.loge.presentation.component.LogESnackbar
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 
 @Composable
 fun WriteScreenRoot(
@@ -58,10 +58,10 @@ fun WriteScreenRoot(
                         modifier = Modifier
                             .width(68.dp)
                             .padding(end = 4.dp),
-                        backgroundColor = AppColors.primary,
+                        backgroundColor = LogETheme.colors.primary,
                         icon = R.drawable.ic_save,
                         text = "저장",
-                        contentColor = AppColors.black,
+                        contentColor = LogETheme.colors.black,
                         onClick = { viewModel.onAction(WriteAction.OnSaveClick) }
                     )
                 }
@@ -72,7 +72,7 @@ fun WriteScreenRoot(
                 LogESnackbar(data = data)
             }
         },
-        containerColor = AppColors.background,
+        containerColor = LogETheme.colors.background,
         modifier = modifier
     ) { paddingValues ->
         WriteScreen(

@@ -18,7 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devhjs.loge.R
 import com.devhjs.loge.presentation.component.CustomDialog
 import com.devhjs.loge.presentation.component.LogETopBar
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 
 @Composable
@@ -89,13 +89,13 @@ fun SettingScreenRoot(
                 bottomContent = {
                     Text(
                         text = "앱 환경설정 및 데이터 관리",
-                        style = AppTextStyles.JetBrain.Label.copy(color = AppColors.labelTextColor, fontSize = 12.sp),
+                        style = AppTextStyles.JetBrain.Label.copy(color = LogETheme.colors.labelTextColor, fontSize = 12.sp),
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
                 }
             )
         },
-        containerColor = AppColors.background,
+        containerColor = LogETheme.colors.background,
         modifier = modifier
     ) { paddingValues ->
         SettingScreen(

@@ -11,7 +11,7 @@ import androidx.compose.ui.res.painterResource
 import com.devhjs.loge.R
 import com.devhjs.loge.core.routing.BottomNavItem
 import com.devhjs.loge.core.routing.MainRoute
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 
 @Composable
 fun BottomNavigationBar(
@@ -37,7 +37,7 @@ fun BottomNavigationBar(
     )
 
     NavigationBar(
-        containerColor = AppColors.cardBackground
+        containerColor = LogETheme.colors.cardBackground
     ) {
         bottomNavItems.forEach { item ->
             NavigationBarItem(
@@ -51,10 +51,10 @@ fun BottomNavigationBar(
                 },
                 label = { Text(item.label) },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = AppColors.iconPrimary,
-                    selectedTextColor = AppColors.iconPrimary,
-                    unselectedIconColor = AppColors.labelTextColor,
-                    unselectedTextColor = AppColors.labelTextColor,
+                    selectedIconColor = LogETheme.colors.iconPrimary,
+                    selectedTextColor = LogETheme.colors.iconPrimary,
+                    unselectedIconColor = LogETheme.colors.labelTextColor,
+                    unselectedTextColor = LogETheme.colors.labelTextColor,
                     indicatorColor = Color.Transparent,
                 )
             )

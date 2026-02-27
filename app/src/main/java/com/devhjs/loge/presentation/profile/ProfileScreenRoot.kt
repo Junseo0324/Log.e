@@ -16,7 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devhjs.loge.R
 import com.devhjs.loge.presentation.component.CustomAppBar
 import com.devhjs.loge.presentation.component.CustomButton
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 
 @Composable
 fun ProfileScreenRoot(
@@ -56,17 +56,17 @@ fun ProfileScreenRoot(
                         modifier = Modifier
                             .width(68.dp)
                             .padding(end = 4.dp),
-                        backgroundColor = AppColors.primary,
+                        backgroundColor = LogETheme.colors.primary,
                         icon = R.drawable.ic_save,
                         text = "저장",
-                        contentColor = AppColors.black,
+                        contentColor = LogETheme.colors.black,
                         onClick = { viewModel.onAction(ProfileAction.OnSaveClick) }
                     )
                 }
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = AppColors.background
+        containerColor = LogETheme.colors.background
     ) { paddingValues ->
         ProfileScreen(
             state = state,

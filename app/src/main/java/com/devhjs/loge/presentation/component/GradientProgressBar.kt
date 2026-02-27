@@ -11,13 +11,13 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 
 @Composable
 fun GradientProgressBar(
     progress: Float,
     gradient: Brush,
-    trackColor: Color = AppColors.placeholderTextColor
+    trackColor: Color = LogETheme.colors.placeholderTextColor
 ) {
     Canvas(
         modifier = Modifier

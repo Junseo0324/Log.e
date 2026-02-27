@@ -19,7 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devhjs.loge.R
 import com.devhjs.loge.presentation.component.LogESnackbar
 import com.devhjs.loge.presentation.component.LogETopBar
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 
 @Composable
 fun FeedbackScreenRoot(
@@ -53,7 +53,7 @@ fun FeedbackScreenRoot(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_back),
                         contentDescription = "뒤로 가기",
-                        tint = AppColors.iconPrimary,
+                        tint = LogETheme.colors.iconPrimary,
                         modifier = Modifier
                             .size(24.dp)
                             .clickable { onBackClick() }
@@ -66,7 +66,7 @@ fun FeedbackScreenRoot(
                 LogESnackbar(data = data)
             }
         },
-        containerColor = AppColors.background,
+        containerColor = LogETheme.colors.background,
         modifier = modifier
     ) { paddingValues ->
         FeedbackScreen(

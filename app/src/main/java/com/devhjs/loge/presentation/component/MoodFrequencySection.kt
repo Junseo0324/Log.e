@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devhjs.loge.domain.model.EmotionType
-import com.devhjs.loge.presentation.designsystem.AppColors
+import com.devhjs.loge.presentation.designsystem.LogETheme
 import com.devhjs.loge.presentation.designsystem.AppTextStyles
 import com.patrykandpatrick.vico.compose.axis.axisLabelComponent
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
@@ -79,7 +79,7 @@ fun MoodFrequencySection(
     )
 
     val guideline = LineComponent(
-        color = AppColors.border.toArgb(),
+        color = LogETheme.colors.border.toArgb(),
         thicknessDp = 1f,
         shape = dashedShape
     )
@@ -88,14 +88,14 @@ fun MoodFrequencySection(
         modifier = Modifier
             .fillMaxWidth()
             .height(300.dp)
-            .background(AppColors.cardBackground, RoundedCornerShape(10.dp))
-            .border(1.dp, AppColors.border, RoundedCornerShape(10.dp))
+            .background(LogETheme.colors.cardBackground, RoundedCornerShape(10.dp))
+            .border(1.dp, LogETheme.colors.border, RoundedCornerShape(10.dp))
             .padding(16.dp)
     ) {
         Column {
             Text(
                 text = "감정별 빈도",
-                style = AppTextStyles.Pretendard.Header5.copy(color = AppColors.subTextColor)
+                style = AppTextStyles.Pretendard.Header5.copy(color = LogETheme.colors.subTextColor)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Chart(
@@ -107,12 +107,12 @@ fun MoodFrequencySection(
                 startAxis = rememberStartAxis(
                     valueFormatter = verticalAxisValueFormatter,
                     guideline = guideline,
-                    label = axisLabelComponent(color = AppColors.subTextColor)
+                    label = axisLabelComponent(color = LogETheme.colors.subTextColor)
                 ),
                 bottomAxis = rememberBottomAxis(
                     valueFormatter = horizontalAxisValueFormatter,
                     guideline = null,
-                    label = axisLabelComponent(color = AppColors.subTextColor)
+                    label = axisLabelComponent(color = LogETheme.colors.subTextColor)
                 ),
                 modifier = Modifier.fillMaxSize()
             )
