@@ -81,23 +81,6 @@ graph TD
 
 ---
 
-## 🚀 시작하기 (Getting Started)
-
-### 사전 요구 사항
-- Android Studio Ladybug 이상
-- JDK 17 이상
-- Supabase 프로젝트 (URL 및 API Key 필요)
-
-### 설정 방법
-1. 프로젝트 루트에 `local.properties` 파일을 생성하거나 수정합니다.
-2. 아래의 키 값을 추가합니다:
-   ```properties
-   SUPABASE_URL="YOUR_SUPABASE_PROJECT_URL"
-   SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY"
-   ```
-3. Gradle Sync를 실행한 후 빌드를 진행합니다.
-
----
 
 ## 💎 Technical Charm Points (핵심 경쟁력)
 
