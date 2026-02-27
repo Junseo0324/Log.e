@@ -6,7 +6,7 @@ import com.devhjs.loge.core.util.Result
 import com.devhjs.loge.domain.usecase.DeleteAllUserDataUseCase
 import com.devhjs.loge.domain.usecase.ExportTilUseCase
 import com.devhjs.loge.domain.usecase.GetUserUseCase
-import com.devhjs.loge.domain.usecase.UpdateNotificationSettingUseCase
+import com.devhjs.loge.domain.usecase.UpdateUserSettingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
-    private val updateNotificationSettingUseCase: UpdateNotificationSettingUseCase, // Changed
+    private val updateUserSettingUseCase: UpdateUserSettingUseCase,
     private val deleteAllUserDataUseCase: DeleteAllUserDataUseCase,
     private val exportTilUseCase: ExportTilUseCase
 ) : ViewModel() {
@@ -61,6 +61,9 @@ class SettingViewModel @Inject constructor(
                 } else {
                     updateNotificationSetting(false)
                 }
+            }
+            is SettingAction.OnDarkModeToggle -> {
+                updateDarkModeSetting(action.enabled)
             }
             is SettingAction.OnProfileClick -> {
                 viewModelScope.launch { _event.emit(SettingEvent.NavigateToProfile) }
@@ -144,7 +147,7 @@ class SettingViewModel @Inject constructor(
         val newUser = currentUser.copy(isNotificationEnabled = enabled)
         
         viewModelScope.launch {
-            updateNotificationSettingUseCase(newUser)
+            updateUserSettingUseCase(newUser)
         }
     }
 
@@ -154,7 +157,18 @@ class SettingViewModel @Inject constructor(
         val newUser = currentUser.copy(notificationTime = Pair(hour, minute))
 
         viewModelScope.launch {
-            updateNotificationSettingUseCase(newUser)
+            updateUserSettingUseCase(newUser)
+        }
+    }
+
+    // 다크 모드 설정 변경
+    private fun updateDarkModeSetting(enabled: Boolean) {
+        val currentUser = _state.value.user
+        val newUser = currentUser.copy(isDarkModeEnabled = enabled)
+
+        viewModelScope.launch {
+            updateUserSettingUseCase(newUser)
+            // 성공 시 바로 UI 상태 값도 최산화되어 뷰에 전달됨(getUserUseCase flow를 통해)
         }
     }
 }

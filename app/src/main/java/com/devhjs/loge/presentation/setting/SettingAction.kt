@@ -6,6 +6,7 @@ package com.devhjs.loge.presentation.setting
  */
 sealed interface SettingAction {
     data class OnNotificationToggle(val enabled: Boolean) : SettingAction
+    data class OnDarkModeToggle(val enabled: Boolean) : SettingAction
     data object OnProfileClick : SettingAction
     data object OnExportClick : SettingAction
     data object OnDeleteAllClick : SettingAction

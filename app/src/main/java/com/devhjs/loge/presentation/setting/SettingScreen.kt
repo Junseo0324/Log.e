@@ -158,9 +158,9 @@ fun SettingScreen(
                     SettingToggleItem(
                         iconRes = R.drawable.ic_dart,
                         title = "모드 설정",
-                        subtitle = "현재는 다크 모드만 지원",
+                        subtitle = "다크 모드 여부",
                         checked = state.user.isDarkModeEnabled,
-                        onCheckedChange = { /* Dark mode toggle logic if needed */ }
+                        onCheckedChange = { onAction(SettingAction.OnDarkModeToggle(it)) }
                     )
                 }
             }

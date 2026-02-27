@@ -4,7 +4,7 @@ import com.devhjs.loge.domain.model.User
 import com.devhjs.loge.domain.repository.NotificationRepository
 import javax.inject.Inject
 
-class UpdateNotificationSettingUseCase @Inject constructor(
+class UpdateUserSettingUseCase @Inject constructor(
     private val saveUserUseCase: SaveUserUseCase,
     private val notificationRepository: NotificationRepository
 ) {

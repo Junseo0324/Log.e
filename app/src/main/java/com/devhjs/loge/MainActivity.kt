@@ -17,6 +17,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.handleDeeplinks
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.foundation.isSystemInDarkTheme
+import com.devhjs.loge.core.util.Result
+import com.devhjs.loge.domain.usecase.GetUserUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,6 +33,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var syncOnReconnectUseCase: SyncOnReconnectUseCase
+
+    @Inject
+    lateinit var getUserUseCase: GetUserUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +56,13 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            LogETheme {
+            val userResult by getUserUseCase().collectAsState(initial = null)
+            val isDarkTheme = when (val result = userResult) {
+                is Result.Success -> result.data.isDarkModeEnabled
+                else -> isSystemInDarkTheme()
+            }
+
+            LogETheme(darkTheme = isDarkTheme) {
                 LogEApp(
                     onNavigateToOnboarding = {
                         val intent = Intent(this@MainActivity, MainActivity::class.java).apply {
