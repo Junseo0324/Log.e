@@ -10,17 +10,17 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 
-class UpdateNotificationSettingUseCaseTest {
+class UpdateUserSettingUseCaseTest {
 
     private lateinit var saveUserUseCase: SaveUserUseCase
     private lateinit var notificationRepository: NotificationRepository
-    private lateinit var updateNotificationSettingUseCase: UpdateNotificationSettingUseCase
+    private lateinit var updateUserSettingUseCase: UpdateUserSettingUseCase
 
     @Before
     fun setUp() {
         saveUserUseCase = mockk(relaxed = true)
         notificationRepository = mockk(relaxed = true)
-        updateNotificationSettingUseCase = UpdateNotificationSettingUseCase(
+        updateUserSettingUseCase = UpdateUserSettingUseCase(
             saveUserUseCase,
             notificationRepository
         )
@@ -42,7 +42,7 @@ class UpdateNotificationSettingUseCaseTest {
         coEvery { saveUserUseCase(user) } returns Result.Success(Unit)
 
         // When
-        updateNotificationSettingUseCase(user)
+        updateUserSettingUseCase(user)
 
         // Then
         coVerify(exactly = 1) { saveUserUseCase(user) }
@@ -64,11 +64,32 @@ class UpdateNotificationSettingUseCaseTest {
         coEvery { saveUserUseCase(user) } returns Result.Success(Unit)
 
         // When
-        updateNotificationSettingUseCase(user)
+        updateUserSettingUseCase(user)
 
         // Then
         coVerify(exactly = 1) { saveUserUseCase(user) }
         coVerify(exactly = 0) { notificationRepository.scheduleReminder(any(), any()) }
         coVerify(exactly = 1) { notificationRepository.cancelReminder() }
+    }
+
+    @Test
+    fun `다크 모드 설정 변경 시 유저 정보를 저장해야 한다`() = runBlocking {
+        // Given
+        val user = User(
+            id = 1L,
+            name = "Test",
+            githubId = "id",
+            isNotificationEnabled = true,
+            isDarkModeEnabled = true,
+            notificationTime = Pair(21, 0)
+        )
+        coEvery { saveUserUseCase(user) } returns Result.Success(Unit)
+
+        // When
+        updateUserSettingUseCase(user)
+
+        // Then
+        coVerify(exactly = 1) { saveUserUseCase(user) }
+        // 알림 기능과는 무관하게 저장이 되는지 확인
     }
 }
