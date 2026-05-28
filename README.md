@@ -71,6 +71,60 @@ graph TD
 
 ---
 
+## 🔄 데이터 흐름 (MVI Data Flow)
+
+LogE는 데이터의 단방향 흐름(Unidirectional Data Flow)을 보장하기 위해 **MVI (Model-View-Intent)** 패턴을 준수합니다.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as 사용자
+    participant UI as Compose UI (View)
+    participant VM as ViewModel
+    participant UC as UseCase (Domain)
+    participant Repo as Repository (Data)
+
+    User->>UI: 사용자 행동 발생 (예: 기록 삭제 클릭)
+    UI->>VM: Action 전달 (HomeAction.OnDeleteClick)
+    VM->>UC: UseCase 실행 (DeleteTilUseCase)
+    UC->>Repo: 데이터 조작 및 결과 수집
+    Repo-->>VM: Result (Success/Error Flow) 반환
+    alt 지속적인 상태 변경인 경우
+        VM->>UI: StateFlow (HomeState.logs 갱신)
+        UI-->>User: UI 화면 리렌더링
+    else 일회성 이벤트인 경우 (네비게이션, 스낵바 등)
+        VM->>UI: SharedFlow (HomeEvent.ShowError)
+        UI-->>User: 스낵바 메시지 노출 또는 화면 이동
+    end
+```
+
+1. **User Action**: 사용자가 UI에서 발생시킨 이벤트는 `Action` 객체로 포장되어 ViewModel로 전달됩니다.
+2. **Business Logic**: ViewModel은 비즈니스 요구사항에 따라 `UseCase`를 실행합니다.
+3. **Data Source Access**: Repository는 Room DB 혹은 Supabase API에 접근하여 데이터를 생성/수정/삭제합니다.
+4. **State & Event Emission**:
+   - 화면에 계속해서 반영되어야 하는 UI 상태 정보는 `StateFlow`를 통해 `State` 객체로 UI에 전달됩니다.
+   - 단 한 번만 발생해야 하는 이벤트(예: 화면 이동, 에러 스낵바)는 `SharedFlow`를 통해 `Event` 객체로 방출됩니다.
+5. **UI Rendering**: UI는 변경된 `State`에 반응하여 리렌더링을 진행합니다.
+
+---
+
+## 🔑 DI 구조 (Hilt Dependency Injection)
+
+Dagger-Hilt를 기반으로 한 체계적인 의존성 주입을 통해 객체의 생명주기를 안전하게 관리하고 결합도를 낮췄습니다. `core/di` 패키지 내부에서 관리되는 주요 모듈들은 다음과 같습니다.
+
+| Hilt 모듈명 | 수명 주기 (Scope) | 역할 및 제공 대상 |
+| :--- | :--- | :--- |
+| `DatabaseModule` | `SingletonComponent` | Room DB (`LogEDatabase`) 및 각 테이블 DAO (`TilDao`, `UserDao`, `MonthlyReviewDao`) 제공 |
+| `SupabaseModule` | `SingletonComponent` | Supabase Client 및 Auth, Postgrest 서버리스 API 연동 클라이언트 제공 |
+| `NetworkModule` | `SingletonComponent` | API 연동을 위한 Ktor Client 및 Retrofit 인스턴스 제공 |
+| `RepositoryModule` | `SingletonComponent` | 도메인 레이어의 인터페이스와 데이터 레이어의 구현체를 매핑 및 제공 |
+
+> [!TIP]
+> **Flavor별 조건부 바인딩(Mock vs Production)**:  
+> `RepositoryModule`에서는 빌드 Flavor가 `dev`일 경우 데이터 통신이나 API 없이 즉시 UI 개발과 단위 테스트가 가능한 Mock 구현체(`MockRepositoryImpl`, `MockAiRepositoryImpl`)를 제공하고, `prod`일 경우에는 실제 Supabase 및 로컬 DB 기반의 구현체를 조건부 주입합니다.
+
+---
+
 ## ✨ 주요 기능 (Key Features)
 
 - **Timeline Log**: 타임라인 형태의 홈 화면에서 과거의 감정 기록을 한눈에 조회
@@ -91,12 +145,14 @@ graph TD
 
 ---
 
-## 📂 패키지 구조 (Package Structure)
+## 📦 모듈 및 패키지 구조 (Module & Package Structure)
+
+본 프로젝트는 현재 단일 모듈(`:app`)로 설계되어 있으나, Clean Architecture 아키텍처 원칙에 따라 레이어 간의 디커플링이 명확하게 분리되어 있어 향후 멀티 모듈 멀티플랫폼 환경으로의 마이그레이션이 용이합니다.
 
 ```
 com.devhjs.loge
-├── core             # DI, Common Utilities, Shared Components
-├── data             # Repository Implementation, DataSources (Remote/Local)
-├── domain           # UseCases, Pure Models, Repository Interfaces
-└── presentation     # ViewModel, Screens (Home, Write, Stat, Setting, etc.)
+├── core             # DI, 공통 유틸리티(DateUtils 등), 공통 UI 컴포넌트
+├── data             # Repository 구현체, Data Sources(Room DB, Supabase 원격 DB)
+├── domain           # 비즈니스 로직(UseCase), 순수 도메인 모델, Repository 인터페이스(의존성 역전 적용)
+└── presentation     # ViewModel, 화면 구현체(Home, Write 등), MVI 상태 관리 컴포넌트
 ```
